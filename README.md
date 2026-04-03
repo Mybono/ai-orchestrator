@@ -55,6 +55,7 @@ All code generation runs through local Ollama models, not Claude API tokens.
 
 - [Claude Code](https://claude.ai/code) CLI installed
 - [Ollama](https://ollama.com) installed and running
+- (Optional) [GitHub CLI](https://cli.github.com/) for automated Pull Request creation (`brew install gh && gh auth login`)
 
 ### Ollama models
 
