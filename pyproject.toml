@@ -27,12 +27,13 @@ ai-orchestrator = "ai_orchestrator.cli:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-"*" = [
+ai_orchestrator = [
     "agents/*.md",
     "commands/*.md",
     "skills/*.md",
     "scripts/*.sh",
     "documentation/*.md",
     ".claude/*.template",
-    "llm-config.json"
+    "llm-config.json",
+    "VERSION"
 ]
