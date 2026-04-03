@@ -69,6 +69,11 @@ if [[ -f "$REPO_DIR/call_ollama.sh" ]]; then
   echo "  ✓ call_ollama.sh is executable"
 fi
 
+if [[ -f "$REPO_DIR/local-commit.sh" ]]; then
+  chmod +x "$REPO_DIR/local-commit.sh"
+  echo "  ✓ local-commit.sh is executable"
+fi
+
 echo ""
 echo "Done. To update: cd $REPO_DIR && git pull"
 
