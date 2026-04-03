@@ -107,6 +107,18 @@ Claude also responds to natural language:
 - "implement" → runs /implement
 - "write docs" → runs doc-writer agent
 
+## IDE Agent (Antigravity/Gemini) Delegation Workflow
+
+This repository also supports native IDE-embedded agents (like Antigravity or Gemini) that act as an **Architect and Reviewer**. 
+
+Instead of routing through bash hooks and markdown aliases, the IDE embedded agent will:
+1. Act as the **Planner**, forming isolated context chunks (`/tmp/context.md`).
+2. Delegate heavy generation (like large code writing or documentation writing) to local Ollama via:
+   `python3 ~/Projects/claude-setup/call_ollama.py --model qwen2.5-coder:14b --prompt "implement X" --context-file /tmp/context.md`
+3. Act as the **Reviewer**, validating the Ollama output against language standards, and safely applying it to the open IDE session.
+- **Code generation**: `qwen2.5-coder:14b`
+- **Documentation**: `qwen3:8b` 
+
 ## Updating
 
 ```bash
