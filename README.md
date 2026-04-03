@@ -7,7 +7,9 @@ Works with any project — TypeScript, Python, Flutter, Swift, C++.
 
 ```
 ai-orchestrator/
-├── CLAUDE.md          # Global instructions for Claude Code
+├── documentation/
+│   ├── CLAUDE.md            # Global instructions for Claude CLI
+│   └── IDE_AGENT_RULES.md   # Orchestration rules for embedded IDE Agents
 ├── agents/            # Subagents (run automatically via /implement)
 │   ├── planner.md     # Explores codebase, writes implementation plan
 │   ├── coder.md       # Generates code via local Ollama model
@@ -28,10 +30,10 @@ ai-orchestrator/
 │   ├── swift-code-standarts.md
 │   ├── c-code-standarts.md
 │   └── doc-standarts.md
-├── call_ollama.sh     # Bash script to query local Ollama models on demand
-├── local-commit.sh    # Fast local LLM-driven git commits
-├── IDE_AGENT_RULES.md # Orchestration rules template for IDE embedded agents
-└── install.sh         # Installer — creates symlinks in ~/.claude/ and configures projects
+├── scripts/
+│   ├── call_ollama.sh     # Bash script to query local Ollama models on demand
+│   ├── local-commit.sh    # Fast local LLM-driven git commits
+│   └── install.sh         # Installer — creates symlinks in ~/.claude/ and configures projects
 ```
 
 ## How it works
@@ -72,8 +74,8 @@ The `install.sh` script will offer to pull these automatically.
 ```bash
 git clone https://github.com/Mybono/ai-orchestrator ~/Projects/ai-orchestrator
 cd ~/Projects/ai-orchestrator
-chmod +x install.sh
-./install.sh
+chmod +x scripts/install.sh
+./scripts/install.sh
 ```
 
 The script creates symlinks from `~/.claude/` into this repo, so a `git pull` is enough to update everything — no reinstall needed.
@@ -82,7 +84,7 @@ The script creates symlinks from `~/.claude/` into this repo, so a `git pull` is
 
 1. Creates `~/.claude/` if it doesn't exist
 2. Backs up any existing files to `~/.claude/backups/`
-3. Creates symlinks: `~/.claude/CLAUDE.md`, `/agents/`, `/commands/`, `/skills/`, `call_ollama.sh`, and `local-commit.sh`.
+3. Creates symlinks: `~/.claude/CLAUDE.md`, `~/.claude/IDE_AGENT_RULES.md`, `agents/`, `commands/`, `skills/`, `call_ollama.sh`, and `local-commit.sh`.
 4. Adds `commit` and `local-commit` shell aliases to `~/.zshrc` (or `~/.bashrc`)
 5. Optionally pulls required Ollama models
 6. Optionally initializes or updates `ai_rules.md` in your current project with IDE Agent orchestration rules.

@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CLAUDE_DIR="$HOME/.claude"
 BACKUP_DIR="$CLAUDE_DIR/backups/ai-orchestrator-$(date +%Y%m%d_%H%M%S)"
 
 SYMLINK_TARGETS=(
-  "CLAUDE.md"
+  "documentation/CLAUDE.md"
+  "documentation/IDE_AGENT_RULES.md"
   "agents"
   "commands"
   "skills"
-  "call_ollama.sh"
-  "local-commit.sh"
-  "IDE_AGENT_RULES.md"
+  "scripts/call_ollama.sh"
+  "scripts/local-commit.sh"
 )
 
 echo "Installing ai-orchestrator from: $REPO_DIR"
@@ -31,9 +31,10 @@ backup_if_exists() {
 }
 
 for item in "${SYMLINK_TARGETS[@]}"; do
-  backup_if_exists "$item"
-  ln -sfn "$REPO_DIR/$item" "$CLAUDE_DIR/$item"
-  echo "  ✓ $item"
+  basename_item=$(basename "$item")
+  backup_if_exists "$basename_item"
+  ln -sfn "$REPO_DIR/$item" "$CLAUDE_DIR/$basename_item"
+  echo "  ✓ $basename_item"
 done
 
 # Generate settings.json from template (substitutes __HOME__ with real $HOME)
@@ -67,13 +68,13 @@ else
 fi
 
 # Make helper scripts executable
-if [[ -f "$REPO_DIR/call_ollama.sh" ]]; then
-  chmod +x "$REPO_DIR/call_ollama.sh"
+if [[ -f "$REPO_DIR/scripts/call_ollama.sh" ]]; then
+  chmod +x "$REPO_DIR/scripts/call_ollama.sh"
   echo "  ✓ call_ollama.sh is executable"
 fi
 
-if [[ -f "$REPO_DIR/local-commit.sh" ]]; then
-  chmod +x "$REPO_DIR/local-commit.sh"
+if [[ -f "$REPO_DIR/scripts/local-commit.sh" ]]; then
+  chmod +x "$REPO_DIR/scripts/local-commit.sh"
   echo "  ✓ local-commit.sh is executable"
 fi
 
@@ -108,10 +109,10 @@ if [[ "$gen_rules" =~ ^[Yy]$ ]]; then
   if [[ -f "$PWD/ai_rules.md" ]]; then
     echo "  ! ai_rules.md already exists. Appending IDE orchestrator rules to the EOF..."
     echo "" >> "$PWD/ai_rules.md"
-    cat "$REPO_DIR/IDE_AGENT_RULES.md" >> "$PWD/ai_rules.md"
+    cat "$REPO_DIR/documentation/IDE_AGENT_RULES.md" >> "$PWD/ai_rules.md"
     echo "  ✓ Orchestrator rules successfully appended"
   else
-    cat "$REPO_DIR/IDE_AGENT_RULES.md" > "$PWD/ai_rules.md"
+    cat "$REPO_DIR/documentation/IDE_AGENT_RULES.md" > "$PWD/ai_rules.md"
     echo "  ✓ Created new ai_rules.md with orchestrator templates"
   fi
 fi
