@@ -1,0 +1,38 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c \"\nimport sys, json\nd = json.load(sys.stdin)\nf = d.get('tool_input', {}).get('file_path', '')\nis_doc = f.endswith('README.md') or '/docs/' in f\nif is_doc:\n    print(json.dumps({'hookSpecificOutput': {'hookEventName': 'PreToolUse', 'permissionDecision': 'deny', 'permissionDecisionReason': 'BLOCKED: Use doc-writer agent for documentation changes. Do NOT edit README directly — spawn the doc-writer agent instead.'}}))\n\"",
+            "statusMessage": "Checking if doc-writer agent is required..."
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit -m ':*)",
+      "Bash(claude -p \"say hello\" --model haiku)",
+      "Bash(npx claude:*)",
+      "Read(//Applications/**)",
+      "Read(/__HOME__/.nvm/versions/node/**)",
+      "Bash(claude --version)",
+      "Bash(claude -p \"what is your role? answer in one sentence\" --agent commit --model haiku)",
+      "Read(/__HOME__/**)",
+      "Bash(claude -p \"stage all changes and commit\" --agent commit --model haiku --allowedTools \"Bash\")",
+      "Bash(zsh -i -c \"commit\")",
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "Bash(python3 -c ':*)",
+      "Bash(echo \"exit: $?\")"
+    ],
+    "additionalDirectories": [
+      "__HOME__"
+    ]
+  }
+}

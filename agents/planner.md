@@ -11,6 +11,23 @@ Analyze a coding task, explore the codebase, and write a **context file** to dis
 
 ## Workflow
 
+### Phase 0 — Load Project Overview (fast path)
+Before any exploration, check if `.claude/context/project_overview.md` exists:
+
+```bash
+test -f .claude/context/project_overview.md && echo "EXISTS" || echo "MISSING"
+```
+
+**If EXISTS** — read it immediately. Use it as the starting point for your exploration:
+- Skip re-detecting language (already recorded)
+- Skip re-reading standards file (already recorded)
+- Skip full codebase glob — instead verify only the files listed in the overview still exist and match their described purpose
+- Spot-check 1-2 key files from the overview to confirm the architecture is still accurate
+
+**If MISSING** — proceed with full Phase 1 exploration as normal.
+
+> The overview may be stale. Always verify: if any file listed in the overview is gone or its role has changed, treat the overview as partially stale and re-explore that area.
+
 ### Phase 1 — Explore
 1. **Understand the task** — clarify what needs to be built or fixed
 2. **Detect project language** — check for indicator files in the project root and read the matching standards file:
@@ -26,17 +43,55 @@ Analyze a coding task, explore the codebase, and write a **context file** to dis
 7. **Find patterns** — locate 1-3 existing functions/classes similar to what needs to be built; read them in full as style examples
 
 ### Phase 2 — Write draft
-7. **Write the context file** to `.claude/context/task_context.md` (all sections, see format below)
+8. **Write the context file** to `.claude/context/task_context.md` (all sections, see format below)
 
 ### Phase 3 — Self-critique (mandatory)
-8. **Re-read the draft** you just wrote and answer each question:
+9. **Re-read the draft** you just wrote and answer each question:
    - Did I miss any file that the changed code imports from?
    - Did I miss any edge case that exists in similar code nearby?
    - Are the exact signatures specific enough for coder to write code without guessing?
    - Did I include real code examples (copy-pasted, not paraphrased) for every pattern coder must follow?
    - Would a coder with no prior knowledge of this codebase understand exactly what to write?
-9. **Update the context file** — fix every gap found in step 8
-10. **Return** the path `.claude/context/task_context.md`
+10. **Update the context file** — fix every gap found in step 9
+
+### Phase 4 — Update Project Overview (mandatory, always last)
+After writing `task_context.md`, update `.claude/context/project_overview.md`.
+
+**Rules:**
+- If the file does not exist — create it from scratch using everything you learned during exploration
+- If the file exists — update only the sections that changed; do NOT rewrite sections that are still accurate
+- Never remove information unless you confirmed it is stale (file deleted, pattern abandoned)
+- Add any new files, patterns, or constraints you discovered during this task
+
+Write the overview using this exact format:
+
+```markdown
+# Project Overview
+
+_Last updated: <YYYY-MM-DD> by planner after task: <one-sentence task description>_
+
+## Language(s)
+- <language>: <indicator file(s)> — standards: `.claude/skills/<file>`
+
+## Key Files
+| File | Purpose |
+|------|---------|
+| `<path>` | <one-line description of what this file does> |
+
+## Architecture & Conventions
+- <pattern or convention observed, e.g. "all agents are markdown files in agents/">
+- <naming convention, e.g. "context files go to .claude/context/">
+- <structural rule, e.g. "shared types live in src/bytebuddy/agents/types.py">
+
+## Do Not Touch
+- `<file or pattern>`: <reason>
+
+## Known Constraints
+- <constraint, e.g. "never mock Ollama in tests — flag as requires-Ollama">
+- <constraint, e.g. "README.md is managed by doc-writer agent only">
+```
+
+11. **Return** the path `.claude/context/task_context.md`
 
 ## Context File Format
 

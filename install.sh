@@ -10,7 +10,6 @@ SYMLINK_TARGETS=(
   "agents"
   "commands"
   "skills"
-  "settings.json"
 )
 
 echo "Installing claude-setup from: $REPO_DIR"
@@ -33,6 +32,18 @@ for item in "${SYMLINK_TARGETS[@]}"; do
   ln -sfn "$REPO_DIR/$item" "$CLAUDE_DIR/$item"
   echo "  ✓ $item"
 done
+
+# Generate settings.json from template (substitutes __HOME__ with real $HOME)
+SETTINGS_TEMPLATE="$REPO_DIR/.claude/settings.json.template"
+SETTINGS_DEST="$CLAUDE_DIR/settings.json"
+
+if [[ -f "$SETTINGS_TEMPLATE" ]]; then
+  backup_if_exists "settings.json"
+  sed "s|__HOME__|$HOME|g" "$SETTINGS_TEMPLATE" > "$SETTINGS_DEST"
+  echo "  ✓ settings.json (generated for $HOME)"
+else
+  echo "  WARNING: $SETTINGS_TEMPLATE not found — skipping settings.json generation"
+fi
 
 # Add shell alias
 SHELL_RC="$HOME/.zshrc"

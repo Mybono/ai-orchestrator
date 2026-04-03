@@ -1,2 +1,3 @@
 .claude/settings.json
-.claude/context/
+.claude/context/coder_output.md
+.claude/context/task_context.md
