@@ -28,7 +28,10 @@ ai-orchestrator/
 │   ├── swift-code-standarts.md
 │   ├── c-code-standarts.md
 │   └── doc-standarts.md
-└── install.sh         # Installer — creates symlinks in ~/.claude/
+├── call_ollama.sh     # Bash script to query local Ollama models on demand
+├── local-commit.sh    # Fast local LLM-driven git commits
+├── IDE_AGENT_RULES.md # Orchestration rules template for IDE embedded agents
+└── install.sh         # Installer — creates symlinks in ~/.claude/ and configures projects
 ```
 
 ## How it works
@@ -79,19 +82,21 @@ The script creates symlinks from `~/.claude/` into this repo, so a `git pull` is
 
 1. Creates `~/.claude/` if it doesn't exist
 2. Backs up any existing files to `~/.claude/backups/`
-3. Creates symlinks: `~/.claude/CLAUDE.md`, `~/.claude/agents/`, `~/.claude/commands/`, `~/.claude/skills/`, `~/.claude/settings.json`
-4. Adds `commit` shell alias to `~/.zshrc` (or `~/.bashrc`)
-5. Optionally pulls Ollama models
+3. Creates symlinks: `~/.claude/CLAUDE.md`, `/agents/`, `/commands/`, `/skills/`, `call_ollama.sh`, and `local-commit.sh`.
+4. Adds `commit` and `local-commit` shell aliases to `~/.zshrc` (or `~/.bashrc`)
+5. Optionally pulls required Ollama models
+6. Optionally initializes or updates `ai_rules.md` in your current project with IDE Agent orchestration rules.
 
-### Shell alias
+### Shell aliases
 
-`install.sh` adds a `commit` command to your shell that runs the commit agent directly via local LLMs — no API token overhead:
+`install.sh` injects handy git aliases into your `~/.zshrc` to save API token overhead:
 
 ```bash
-commit   # stage all changes and commit, from any git repo
+commit         # runs Claude CLI commit agent explicitly
+local-commit   # stages all changes and generates commit message via local Ollama in <1 second
 ```
 
-After install, run `source ~/.zshrc` to activate it in the current terminal.
+After install, run `source ~/.zshrc` to activate them in the current terminal.
 
 ## Usage
 
