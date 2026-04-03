@@ -32,10 +32,6 @@ echo "$DIFF" >> "$TMP_CONTEXT"
 
 echo "Ollama (qwen2.5-coder:7b) is drafting your PR description..."
 
-PROMPT=$(cat << 'EOF'
-# 3. Call Ollama (reviewer role)
-echo "🤖 Ollama is drafting your PR description..."
-
 PROMPT="Generate a GitHub PR title and description based on the following git log and diff. 
 Return only the content in the following format:
 Title: <brief meaningful title>
