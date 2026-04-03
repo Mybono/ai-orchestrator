@@ -15,35 +15,18 @@ SYMLINK_TARGETS=(
   "scripts/local-commit.sh"
   "scripts/open-pr.sh"
   "scripts/analyze_hardware.sh"
+  "scripts/analyze_soft.sh"
 )
 
 echo "Installing ai-orchestrator from: $REPO_DIR"
 echo "Target: $CLAUDE_DIR"
 echo ""
 
-mkdir -p "$CLAUDE_DIR"
+# Run software dependency analysis first
+bash "$REPO_DIR/scripts/analyze_soft.sh"
+echo ""
 
-# Check and install dependencies (jq)
-if ! command -v jq &>/dev/null; then
-    echo "jq not found. Attempting to install..."
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        if command -v brew &>/dev/null; then
-            brew install jq
-        else
-            echo "❌ Error: Homebrew not found. Please install jq manually: https://jqlang.github.io/jq/download/"
-            exit 1
-        fi
-    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        if command -v apt-get &>/dev/null; then
-            sudo apt-get update && sudo apt-get install -y jq
-        elif command -v dnf &>/dev/null; then
-            sudo dnf install -y jq
-        else
-            echo "❌ Error: Could not detect package manager. Please install jq manually."
-            exit 1
-        fi
-    fi
-fi
+mkdir -p "$CLAUDE_DIR"
 
 # Initialize llm-config.json in repo if not exists
 REPO_CONFIG="$REPO_DIR/llm-config.json"
@@ -136,29 +119,7 @@ if [[ -f "$REPO_DIR/scripts/open-pr.sh" ]]; then
 fi
 
 echo ""
-echo "Done. To update: cd $REPO_DIR && git pull"
-
-# Optional: pull Ollama models
-if command -v ollama &>/dev/null; then
-  echo ""
-  read -r -p "Pull Ollama models? (y/N) " pull_models
-  if [[ "$pull_models" =~ ^[Yy]$ ]]; then
-    models=(
-      "qwen2.5-coder:14b-instruct-q4_K_M"
-      "qwen2.5-coder:7b"
-      "qwen2.5-coder:1.5b"
-      "qwen3:8b"
-      "nomic-embed-text"
-    )
-    for model in "${models[@]}"; do
-      echo "Pulling $model..."
-      ollama pull "$model"
-    done
-  fi
-else
-  echo ""
-  echo "Note: Ollama not found. Install from https://ollama.com and pull models listed in CLAUDE.md"
-fi
+bash "$REPO_DIR/scripts/analyze_hardware.sh"
 
 echo ""
 read -r -p "Generate/update ai_rules.md for IDE agents in current directory ($PWD)? (y/N) " gen_rules

@@ -50,7 +50,9 @@ planner → coder → build check → reviewer(s) → verdict
 - [Ollama](https://ollama.com) installed and running
 - **`jq`** (JSON processor) — `install.sh` will attempt to install it via brew/apt.
 
-## Installation
+## Installation & Setup
+
+All you need is one command to check dependencies, configure the system, and optimize models for your hardware:
 
 ```bash
 git clone https://github.com/Mybono/ai-orchestrator ~/Projects/ai-orchestrator
@@ -59,15 +61,11 @@ chmod +x scripts/install.sh
 ./scripts/install.sh
 ```
 
-### Setup & Hardware Analysis
-
-After installation, run the hardware analysis script to automatically pick the best models for your RAM/GPU:
-
-```bash
-bash scripts/analyze_hardware.sh
-```
-
-This will populate your `llm-config.json` with recommended models and offer to pull them via `ollama pull`.
+### What happens during installation:
+1. **Software Check**: Scripts detect and help install `jq` and `Ollama`.
+2. **Environment Setup**: Symlinks created in `~/.claude/`, shell aliases added.
+3. **Hardware Analysis**: System RAM/GPU analyzed to pick the best models.
+4. **Configuration**: `llm-config.json` generated and optimized for your machine.
 
 ## Configuration (`llm-config.json`)
 
