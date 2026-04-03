@@ -8,6 +8,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
   gitleaks:
     runs-on: ubuntu-latest
@@ -27,11 +31,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Run ShellCheck
-        uses: koalaman/shellcheck-github-action@v2
+        uses: ludeeus/action-shellcheck@2.0.0
         with:
-          path: "."
-          pattern: "*.sh"
-          exclude: "./node_modules/*"
+          scandir: "."
+          ignore_paths: "./node_modules"
 
   markdownlint:
     runs-on: ubuntu-latest
