@@ -21,25 +21,31 @@ cat /Users/mavox/.claude/skills/doc-standarts.md
 ### Phase 2 — Understand What Changed
 
 1. Get the diff of all recent changes:
+
 ```bash
 git diff HEAD
 ```
+
 If that is empty (changes not yet staged/committed), try:
+
 ```bash
 git diff
 ```
+
 If still empty, ask the user which files were changed.
 
-2. Identify from the diff:
+1. Identify from the diff:
    - New functions, classes, modules, or CLI commands added
    - Existing interfaces modified (signatures, parameters, return types, behavior)
    - Config options added or removed
    - Files added or deleted
 
-3. Find existing documentation:
+2. Find existing documentation:
+
 ```bash
 ls *.md 2>/dev/null; find . -name "*.md" -not -path "*/node_modules/*" -not -path "*/.git/*" | head -20
 ```
+
 Read relevant `.md` files and any inline docstrings in the changed source files.
 
 ### Phase 3 — Draft with Ollama

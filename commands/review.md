@@ -7,16 +7,18 @@ Review the current code changes against the project coding standards.
 ## Output format
 
 For each violation:
-```
+
+```markdown
 ❌ [Rule section] <short description>
    File: <path>:<line>
    Issue: <what's wrong>
    Fix: <concrete fix>
-```
+```markdown
 
 If no violations:
-```
+
+```markdown
 ✅ No violations found. Code follows project standards.
-```
+```markdown
 
 Be concise. Only flag real violations — not style preferences or theoretical issues.

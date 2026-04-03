@@ -90,9 +90,11 @@ ALIAS_LINE="alias commit='claude -p \"stage all changes and commit\" --agent com
 if grep -q "alias commit=" "$SHELL_RC" 2>/dev/null; then
   echo "  ✓ alias commit already exists in $SHELL_RC"
 else
-  echo "" >> "$SHELL_RC"
-  echo "# ai-orchestrator aliases" >> "$SHELL_RC"
-  echo "$ALIAS_LINE" >> "$SHELL_RC"
+{
+  echo ""
+  echo "# ai-orchestrator aliases"
+  echo "$ALIAS_LINE"
+} >> "$SHELL_RC"
   echo "  ✓ alias commit added"
 fi
 

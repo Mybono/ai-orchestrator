@@ -49,8 +49,7 @@ echo "RAM: ${TOTAL_RAM_GB} GB"
 
 if [ "$HAS_DEDICATED_GPU" = true ] && [[ "$OS_TYPE" != "Darwin" ]]; then
     echo "Dedicated GPU detected (VRAM: ~${GPU_VRAM_GB} GB)"
-elif [[ "$OS_TYPE" == "Darwin" ]] && [ "$HAS_DEDICATED_GPU" = true ]; then
-    echo "Unified Memory architecture, available for VRAM: up to ~$(($GPU_VRAM_GB * 3 / 4)) GB (depending on system load)"
+    echo "Unified Memory architecture, available for VRAM: up to ~${GPU_VRAM_GB} GB (depending on system load)"
 else
     echo "No dedicated (NVIDIA) GPU detected. Inference will run on CPU or integrated graphics."
 fi
@@ -111,10 +110,11 @@ echo "======================================"
 # Check currently installed models
 if command -v ollama >/dev/null; then
     INSTALLED_MODELS=$(ollama list | awk 'NR>1 {print $1}')
-    echo "📋 Currently installed models:"
+    echo "Currently installed models:"
+    # shellcheck disable=SC2001
     echo "$INSTALLED_MODELS" | sed 's/^/  - /'
 else
-    echo "⚠️ Ollama not found."
+    echo "Ollama not found."
     INSTALLED_MODELS=""
 fi
 

@@ -48,7 +48,7 @@ echo -e "\nProposed commit message:"
 echo -e "\033[1;32m$MESSAGE\033[0m\n"
 
 # Prompt the user for confirmation
-read -p "Commit with this message? (y/N) " confirm
+read -rp "Commit with this message? (y/N) " confirm
 if [[ "$confirm" =~ ^[Yy]$ ]]; then
     git commit -m "$MESSAGE"
     echo "✅ Committed successfully!"

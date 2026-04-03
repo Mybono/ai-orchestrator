@@ -11,7 +11,9 @@
 ## Structure
 
 ### README.md (project root)
+
 Required sections in order:
+
 1. **One-line description** — what the project does (not how it works)
 2. **Requirements** — language/runtime version, dependencies
 3. **Installation** — minimal steps to get running
@@ -23,11 +25,13 @@ Required sections in order:
 Omit sections that do not apply. Do not add sections not listed above unless strongly justified.
 
 ### API / Module documentation
+
 - Document **public** interfaces only; skip private helpers unless logic is non-obvious
 - Each public function/class needs: what it does, parameters (name + type + purpose), return value, and one usage example if non-trivial
 - Document error conditions and what the caller should do about them
 
 ### Inline code comments
+
 - Comment the **why**, not the **what** — the code already shows what
 - Use comments only where the logic is non-obvious or there is a known gotcha
 - No commented-out code

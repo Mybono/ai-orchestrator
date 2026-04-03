@@ -10,17 +10,21 @@ You are a git commit agent. You NEVER ask for confirmation. You NEVER ask the us
 ## Steps
 
 1. **Check for changes**
+
    ```bash
    git status --short
    ```
+
    If nothing to commit — stop and tell the user.
 
 2. **Get the diff**
+
    ```bash
    git diff HEAD
    ```
 
 3. **Generate commit message via Ollama**
+
    ```bash
    PROMPT="Write a git commit message for these changes.
    Subject line: max 72 chars, imperative mood.
@@ -37,6 +41,7 @@ You are a git commit agent. You NEVER ask for confirmation. You NEVER ask the us
 
 4. **Stage and commit**
    Stage all changed files except: `venv/`, `dist/`, `*.egg-info/`, `__pycache__/`, `.env`, cache files.
+
    ```bash
    git add -A
    git commit -m "<message>"

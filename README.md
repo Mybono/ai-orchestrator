@@ -7,7 +7,7 @@ Works with any project — TypeScript, Python, Flutter, Swift, C++.
 
 ## What's included
 
-```
+```markdown
 ai-orchestrator/
 ├── documentation/
 │   ├── CLAUDE.md            # Global instructions for Claude CLI
@@ -31,14 +31,15 @@ ai-orchestrator/
 │   ├── analyze_hardware.sh # Auto-configures models based on your RAM/GPU
 │   └── install.sh         # Installer — configures dependencies and symlinks
 └── llm-config.json    # Centralized model roles (symlinked to ~/.claude/)
-```
+```markdown
 
 ## How it works
 
 The core workflow is a pipeline triggered by `/implement`:
-```
+
+```markdown
 planner → coder → build check → reviewer(s) → verdict
-```
+```markdown
 
 - **Zero Python dependency**: All agents now call `call_ollama.sh` directly, which uses `curl` and `jq` for API interaction.
 - **Role-based Config**: One source of truth for all models in `llm-config.json`.
@@ -59,9 +60,10 @@ git clone https://github.com/Mybono/ai-orchestrator ~/Projects/ai-orchestrator
 cd ~/Projects/ai-orchestrator
 chmod +x scripts/install.sh
 ./scripts/install.sh
-```
+```markdown
 
-### What happens during installation:
+### What happens during installation
+
 1. **Software Check**: Scripts detect and help install `jq` and `Ollama`.
 2. **Environment Setup**: Symlinks created in `~/.claude/`, shell aliases added.
 3. **Hardware Analysis**: System RAM/GPU analyzed to pick the best models.
@@ -79,6 +81,7 @@ The system uses roles to determine which model to use for which task. The config
 | `embedding` | `nomic-embed-text` | Semantic search and RAG |
 
 Example of `llm-config.json`:
+
 ```json
 {
   "models": {
@@ -88,25 +91,28 @@ Example of `llm-config.json`:
     "embedding": "nomic-embed-text"
   }
 }
-```
+```markdown
 
 ## IDE Agent Delegation Workflow (Antigravity & Cursor)
 
 IDE agents (like Antigravity) act as the Architect but delegate heavy lifting to local models via `call_ollama.sh`:
+
 - **Coding**: Uses the `coder` role from `llm-config.json`.
 - **Review**: Uses the `reviewer` role.
 
 The delegation command:
+
 ```bash
 # Uses the model defined for the 'coder' role in your config
 bash ~/.claude/call_ollama.sh --role coder --prompt "implement X" --context-file /tmp/context.md
-```
+```markdown
 
 ## Project Onboarding
 
 To use these orchestration rules in your project (so IDE agents like Antigravity/Cursor can see them):
 
 1. **Copy the rules** from the system directory to your project root:
+
    ```bash
    cp ~/.claude/ai_rules.md ~/Projects/your-project/ai_rules.md
    ```
@@ -120,6 +126,6 @@ To use these orchestration rules in your project (so IDE agents like Antigravity
 ```bash
 cd ~/Projects/ai-orchestrator
 git pull
-```
+```markdown
 
 Changes apply immediately — no reinstall needed.
