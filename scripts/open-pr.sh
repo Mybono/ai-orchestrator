@@ -6,6 +6,15 @@ OLLAMA_SCRIPT="$SCRIPT_DIR/call_ollama.sh"
 
 echo "Gathering git context for Pull Request..."
 
+# Check if there are uncommitted changes
+if git status --porcelain | grep -q .; then
+    read -p "💡 You have uncommitted changes. Worth committing before opening a PR? (y/N) " confirm
+    if [[ "$confirm" =~ ^[Yy]$ ]]; then
+        echo "Committing locally..."
+        "$SCRIPT_DIR/local-commit.sh"
+    fi
+fi
+
 # Find default target branch (usually main or master)
 TARGET_BRANCH=$(git remote show origin 2>/dev/null | awk '/HEAD branch/ {print $NF}')
 if [ -z "$TARGET_BRANCH" ]; then
@@ -52,18 +61,18 @@ fi
 MESSAGE=$(echo "$MESSAGE" | sed '/^```/d')
 
 # Parse Title and Body
-TITLE=$(echo "$MESSAGE" | grep "^TITLE:" | sed 's/^TITLE:[[:space:]]*//' | head -n 1)
-BODY=$(echo "$MESSAGE" | awk '/^BODY:/{flag=1; next} flag')
+TITLE=$(echo "$MESSAGE" | grep "^Title:" | sed 's/^Title:[[:space:]]*//' | head -n 1)
+BODY=$(echo "$MESSAGE" | awk '/^Description:/{flag=1; next} flag')
 
 if [ -z "$TITLE" ]; then
-    # Fallback if the model didn't strictly format "TITLE:"
+    # Fallback if the model didn't strictly format "Title:"
     TITLE="Update from branch $(git branch --show-current)"
     BODY="$MESSAGE"
 fi
 
 echo -e "\n================= PR PREVIEW ================="
-echo -e "\033[1;34mTITLE:\033[0m $TITLE"
-echo -e "\033[1;34mBODY:\033[0m\n$BODY"
+echo -e "\033[1;34mTitle:\033[0m $TITLE"
+echo -e "\033[1;34mDescription:\033[0m\n$BODY"
 echo -e "==============================================\n"
 
 # Check for Github CLI and Github remote
