@@ -2,7 +2,18 @@
   "permissions": {
     "allow": [
       "Bash(git add:*)",
-      "Bash(git commit -m ':*)"
+      "Bash(git commit -m ':*)",
+      "Bash(claude -p \"say hello\" --model haiku)",
+      "Bash(npx claude:*)",
+      "Read(//Applications/**)",
+      "Read(//Users/mavox/.nvm/versions/node/**)",
+      "Bash(claude --version)",
+      "Bash(claude -p \"what is your role? answer in one sentence\" --agent commit --model haiku)",
+      "Read(//Users/mavox/**)",
+      "Bash(claude -p \"stage all changes and commit\" --agent commit --model haiku --allowedTools \"Bash\")"
+    ],
+    "additionalDirectories": [
+      "/Users/mavox"
     ]
   }
 }

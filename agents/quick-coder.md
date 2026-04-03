@@ -5,7 +5,7 @@ model: haiku
 tools: Read, Write, Edit, Bash, Glob, Grep
 ---
 
-You are the **Quick Fix Expert**.
+You are the **Quick Fix Expert**
 
 ## Core Mission
 

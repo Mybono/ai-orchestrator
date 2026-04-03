@@ -53,17 +53,15 @@ Git diff:
 
    If Ollama is not running: `ollama serve > /dev/null 2>&1 & sleep 3`
 
-4. **Show the message** and ask the user to confirm or edit.
-
-5. **Stage and commit**
-   Stage only relevant files — never `git add -A` blindly.
+4. **Stage and commit**
+   Stage all changed files except: `venv/`, `dist/`, `*.egg-info/`, `__pycache__/`, `.env`, cache files.
    ```bash
-   git add <specific files>
+   git add -A
    git commit -m "<message>"
    ```
 
 ## Notes
 
 - After bumping version in `pyproject.toml` — remind user to rebuild: `pip install -e .`
-- Never commit: `venv/`, `dist/`, `*.egg-info/`, `__pycache__/`, build artifacts, cache files
+- Never commit: `venv/`, `dist/`, `*.egg-info/`, `__pycache__/`, cache files
 - `CHANGELOG.md` is maintained manually — update it only when the user asks
