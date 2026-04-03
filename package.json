@@ -1,0 +1,31 @@
+{
+  "name": "ai-orchestrator",
+  "version": "1.0.0",
+  "description": "A vendor-neutral, shell-based AI orchestration framework for local LLMs.",
+  "main": "scripts/install.sh",
+  "bin": {
+    "ai-orchestrator": "scripts/install.sh"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "echo \"💡 Run 'ai-orchestrator-install' to set up the system.\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mybono/ai-orchestrator.git"
+  },
+  "keywords": [
+    "ai",
+    "orchestrator",
+    "llm",
+    "local",
+    "ollama",
+    "claude"
+  ],
+  "author": "Mybono",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Mybono/ai-orchestrator/issues"
+  },
+  "homepage": "https://github.com/Mybono/ai-orchestrator#readme"
+}

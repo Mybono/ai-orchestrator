@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ai-orchestrator"
+version = "1.0.0"
+description = "A vendor-neutral, shell-based AI orchestration framework for local LLMs."
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "Mybono", email = "mybono@example.com"}
+]
+keywords = ["ai", "orchestrator", "llm", "local", "ollama", "claude"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Environment :: Console",
+]
+
+[project.scripts]
+ai-orchestrator = "ai_orchestrator.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = [
+    "agents/*.md",
+    "commands/*.md",
+    "skills/*.md",
+    "scripts/*.sh",
+    "documentation/*.md",
+    ".claude/*.template",
+    "llm-config.json"
+]

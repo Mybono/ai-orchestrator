@@ -51,16 +51,31 @@ planner → coder → build check → reviewer(s) → verdict
 - [Ollama](https://ollama.com) installed and running
 - **`jq`** (JSON processor) — `install.sh` will attempt to install it via brew/apt.
 
-## Installation & Setup
+### 📦 Distribution & Sharing
 
-All you need is one command to check dependencies, configure the system, and optimize models for your hardware:
+You can also install the orchestrator directly via your favorite package manager (Python/Pip or Node/NPM). These methods are perfect for sharing the tool across machines without manual git cloning.
 
+#### Option A: Install via Pip (Python)
+```bash
+pip install .
+ai-orchestrator
+```
+
+#### Option B: Install via NPM (Node.js)
+```bash
+npm install -g .
+ai-orchestrator
+```
+
+Both methods will download the latest version and run the `scripts/install.sh` automatically to configure your local system.
+
+### Option C: Manual Installation (Git)
 ```bash
 git clone https://github.com/Mybono/ai-orchestrator ~/Projects/ai-orchestrator
 cd ~/Projects/ai-orchestrator
 chmod +x scripts/install.sh
 ./scripts/install.sh
-```markdown
+```
 
 ### What happens during installation
 
