@@ -103,9 +103,9 @@ After install, run `source ~/.zshrc` to activate it in the current terminal.
 | `/commit` | Stage and commit changes |
 
 Claude also responds to natural language:
-- "commit" / "сделай коммит" → runs commit agent
-- "implement" / "напиши код" → runs /implement
-- "write docs" / "обнови документацию" → runs doc-writer agent
+- "commit"  → runs commit agent
+- "implement" → runs /implement
+- "write docs" → runs doc-writer agent
 
 ## Updating
 
