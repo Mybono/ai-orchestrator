@@ -11,7 +11,7 @@ Works with any project — TypeScript, Python, Flutter, Swift, C++.
 ai-orchestrator/
 ├── documentation/
 │   ├── CLAUDE.md            # Global instructions for Claude CLI
-│   └── IDE_AGENT_RULES.md   # Orchestration rules for embedded IDE Agents
+│   └── ai_rules.md          # Orchestration rules for embedded IDE Agents
 ├── agents/            # Subagents (run automatically via /implement)
 │   ├── planner.md     # Explores codebase, writes implementation plan
 │   ├── coder.md       # Generates code via local Ollama (role: coder)
@@ -102,13 +102,18 @@ The delegation command:
 bash ~/.claude/call_ollama.sh --role coder --prompt "implement X" --context-file /tmp/context.md
 ```
 
-## Updating
+## Project Onboarding
 
-```bash
-cd ~/Projects/ai-orchestrator
-git pull
-```
-clean textual response, reviewing it against the standards in `/skills/`, and securely applying the code directly into the active IDE session.
+To use these orchestration rules in your project (so IDE agents like Antigravity/Cursor can see them):
+
+1. **Copy the rules** from the system directory to your project root:
+   ```bash
+   cp ~/.claude/ai_rules.md ~/Projects/your-project/ai_rules.md
+   ```
+
+2. **(Optional) Multi-agent support**: You can also name it `.cursorrules` or `.clauderules` if you use those specific tools.
+
+3. **Check delegation**: Once added, your IDE agent should start using `call_ollama.sh` for heavy lifting instead of spending your cloud tokens.
 
 ## Updating
 

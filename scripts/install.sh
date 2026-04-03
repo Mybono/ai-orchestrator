@@ -7,7 +7,7 @@ BACKUP_DIR="$CLAUDE_DIR/backups/ai-orchestrator-$(date +%Y%m%d_%H%M%S)"
 
 SYMLINK_TARGETS=(
   "documentation/CLAUDE.md"
-  "documentation/IDE_AGENT_RULES.md"
+  "documentation/ai_rules.md"
   "agents"
   "commands"
   "skills"
@@ -61,9 +61,10 @@ backup_if_exists() {
 
 for item in "${SYMLINK_TARGETS[@]}"; do
   basename_item=$(basename "$item")
-  backup_if_exists "$basename_item"
-  ln -sfn "$REPO_DIR/$item" "$CLAUDE_DIR/$basename_item"
-  echo "  ✓ $basename_item"
+  target_name="${basename_item%.template}"
+  backup_if_exists "$target_name"
+  ln -sfn "$REPO_DIR/$item" "$CLAUDE_DIR/$target_name"
+  echo "  ✓ $target_name"
 done
 
 # Generate settings.json from template (substitutes __HOME__ with real $HOME)
@@ -118,19 +119,11 @@ if [[ -f "$REPO_DIR/scripts/open-pr.sh" ]]; then
   echo "  ✓ open-pr.sh is executable"
 fi
 
+
 echo ""
 bash "$REPO_DIR/scripts/analyze_hardware.sh"
 
 echo ""
-read -r -p "Generate/update ai_rules.md for IDE agents in current directory ($PWD)? (y/N) " gen_rules
-if [[ "$gen_rules" =~ ^[Yy]$ ]]; then
-  if [[ -f "$PWD/ai_rules.md" ]]; then
-    echo "  ! ai_rules.md already exists. Appending IDE orchestrator rules to the EOF..."
-    echo "" >> "$PWD/ai_rules.md"
-    cat "$REPO_DIR/documentation/IDE_AGENT_RULES.md" >> "$PWD/ai_rules.md"
-    echo "  ✓ Orchestrator rules successfully appended"
-  else
-    cat "$REPO_DIR/documentation/IDE_AGENT_RULES.md" > "$PWD/ai_rules.md"
-    echo "  ✓ Created new ai_rules.md with orchestrator templates"
-  fi
-fi
+echo "Setup complete! To use orchestrator rules in your project, copy ~/.claude/ai_rules.md to your project root."
+echo "Example: cp ~/.claude/ai_rules.md ~/Projects/my-app/ai_rules.md"
+echo ""
