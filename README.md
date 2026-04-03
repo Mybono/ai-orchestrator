@@ -3,6 +3,8 @@
 Portable AI Developer setup: agents, slash commands, IDE orchestration, and language standards.  
 Works with any project — TypeScript, Python, Flutter, Swift, C++.
 
+**Now 100% Python-free.** All orchestration is handled via pure Bash and `jq`.
+
 ## What's included
 
 ```
@@ -12,64 +14,41 @@ ai-orchestrator/
 │   └── IDE_AGENT_RULES.md   # Orchestration rules for embedded IDE Agents
 ├── agents/            # Subagents (run automatically via /implement)
 │   ├── planner.md     # Explores codebase, writes implementation plan
-│   ├── coder.md       # Generates code via local Ollama model
-│   ├── reviewer.md    # Reviews code against language standards
-│   ├── quick-coder.md # Fast fixes (single function, imports, renames)
-│   ├── commit.md      # Stages and commits changes
-│   ├── doc-writer.md  # Creates/updates documentation
-│   └── test-agent.md  # Writes and runs tests
+│   ├── coder.md       # Generates code via local Ollama (role: coder)
+│   ├── reviewer.md    # Reviews code against standards (role: reviewer)
+│   ├── quick-coder.md # Fast fixes (role: commit)
+│   ├── commit.md      # Stages and commits changes (role: commit)
+│   ├── doc-writer.md  # Creates/updates documentation (role: reviewer)
+│   └── test-agent.md  # Writes and runs tests (role: coder)
 ├── commands/          # Slash commands
 │   ├── implement.md   # /implement — full plan → code → review pipeline
-│   ├── review.md      # /review — check changes against standards
-│   ├── debug.md       # /debug — analyze errors and stack traces
-│   └── standards.md   # /standards — show active language standards
 ├── skills/            # Language coding standards
-│   ├── ts-code-standarts.md
-│   ├── python-code-standarts.md
-│   ├── fluter-code-standarts.md
-│   ├── swift-code-standarts.md
-│   ├── c-code-standarts.md
-│   └── doc-standarts.md
+│   ├── ...-code-standarts.md
 ├── scripts/
-│   ├── call_ollama.sh     # Bash script to query local Ollama models on demand
+│   ├── call_ollama.sh     # Central LLM interface (Bash + jq + curl)
 │   ├── local-commit.sh    # Fast local LLM-driven git commits
 │   ├── open-pr.sh         # Local LLM-driven Pull Request descriptions
-│   └── install.sh         # Installer — creates symlinks in ~/.claude/ and configures projects
+│   ├── analyze_hardware.sh # Auto-configures models based on your RAM/GPU
+│   └── install.sh         # Installer — configures dependencies and symlinks
+└── llm-config.json    # Centralized model roles (symlinked to ~/.claude/)
 ```
 
 ## How it works
 
 The core workflow is a pipeline triggered by `/implement`:
-
 ```
 planner → coder → build check → reviewer(s) → verdict
 ```
 
-- **planner** — detects the project language, reads standards, explores the codebase, writes `.claude/context/task_context.md`
-- **coder** — reads the context file, calls a local Ollama model to generate code
-- **reviewer** — reviews the diff against language standards via Ollama, returns APPROVED or NEEDS CHANGES
-
-All code generation runs through local Ollama models, not Claude API tokens.
+- **Zero Python dependency**: All agents now call `call_ollama.sh` directly, which uses `curl` and `jq` for API interaction.
+- **Role-based Config**: One source of truth for all models in `llm-config.json`.
+- **Portable**: symlinks ensure that updates to this repo apply globally to your system immediately.
 
 ## Requirements
 
 - [Claude Code](https://claude.ai/code) CLI installed
 - [Ollama](https://ollama.com) installed and running
-- (Optional) [GitHub CLI](https://cli.github.com/) for automated Pull Request creation (`brew install gh && gh auth login`)
-
-### Ollama models
-
-Pull the required models:
-
-```bash
-ollama pull hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS     # main code generation
-ollama pull qwen2.5-coder:7b                      # code review
-ollama pull qwen2.5-coder:1.5b                    # quick fixes, commits
-ollama pull qwen3:8b                              # planning fallback, docs
-ollama pull nomic-embed-text                      # semantic search
-```
-
-The `install.sh` script will offer to pull these automatically.
+- **`jq`** (JSON processor) — `install.sh` will attempt to install it via brew/apt.
 
 ## Installation
 
@@ -80,52 +59,58 @@ chmod +x scripts/install.sh
 ./scripts/install.sh
 ```
 
-The script creates symlinks from `~/.claude/` into this repo, so a `git pull` is enough to update everything — no reinstall needed.
+### Setup & Hardware Analysis
 
-### What install.sh does
-
-1. Creates `~/.claude/` if it doesn't exist
-2. Backs up any existing files to `~/.claude/backups/`
-3. Creates symlinks: `~/.claude/CLAUDE.md`, `~/.claude/IDE_AGENT_RULES.md`, `agents/`, `commands/`, `skills/`, `call_ollama.sh`, `local-commit.sh`, and `open-pr.sh`.
-4. Adds `commit`, `local-commit`, and `open-pr` shell aliases to `~/.zshrc` (or `~/.bashrc`)
-5. Optionally pulls required Ollama models
-6. Optionally initializes or updates `ai_rules.md` in your current project with IDE Agent orchestration rules.
-
-### Shell aliases
-
-`install.sh` injects handy git aliases into your `~/.zshrc` to save API token overhead:
+After installation, run the hardware analysis script to automatically pick the best models for your RAM/GPU:
 
 ```bash
-local-commit   # stages all changes and generates commit message via local Ollama in <1 second
-open-pr        # generates a structured PR description from git intent and diffs (auto-creates if gh is installed)
+bash scripts/analyze_hardware.sh
 ```
 
-After install, run `source ~/.zshrc` to activate them in the current terminal.
+This will populate your `llm-config.json` with recommended models and offer to pull them via `ollama pull`.
 
-## Usage
+## Configuration (`llm-config.json`)
 
-| Command | What it does |
-|---------|-------------|
-| `/implement` | Full plan → code → build → review pipeline |
-| `/review` | Check current `git diff` against language standards |
-| `/debug` | Analyze an error or stack trace |
-| `/commit` | Stage and commit changes |
+The system uses roles to determine which model to use for which task. The config is stored in the project root and symlinked to `~/.claude/llm-config.json`.
 
-Claude also responds to natural language:
-- "commit"  → runs commit agent
-- "implement" → runs /implement
-- "write docs" → runs doc-writer agent
+| Role | Default Model | Purpose |
+|------|---------------|---------|
+| `coder` | `qwen2.5-coder:14b...` | Heavy code generation (main agent) |
+| `reviewer` | `qwen2.5-coder:7b` | Code review and documentation |
+| `commit` | `qwen2.5-coder:1.5b` | Commit messages and tiny fixes |
+| `embedding` | `nomic-embed-text` | Semantic search and RAG |
+
+Example of `llm-config.json`:
+```json
+{
+  "models": {
+    "coder": "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
+    "reviewer": "qwen2.5-coder:7b",
+    "commit": "qwen2.5-coder:1.5b",
+    "embedding": "nomic-embed-text"
+  }
+}
+```
 
 ## IDE Agent Delegation Workflow (Antigravity & Cursor)
 
-*Note: The core CLI workflow (with `/implement`, hooks and `.md` agents) remains fully intact and works exactly as described above. The following process applies exclusively to embedded IDE agents.*
+IDE agents (like Antigravity) act as the Architect but delegate heavy lifting to local models via `call_ollama.sh`:
+- **Coding**: Uses the `coder` role from `llm-config.json`.
+- **Review**: Uses the `reviewer` role.
 
-When working with an IDE-embedded agent (like Antigravity), it acts as the Architect and Reviewer directly within the editor. Instead of using the Markdown agent pipeline, it works by:
-1. Creating an isolated task context file (e.g., `/tmp/context.md`).
-2. Delegating heavy code/documentation generation to the local Ollama model via terminal:
-   `bash ~/.claude/call_ollama.sh --model qwen2.5-coder:14b --prompt "implement X" --context-file /tmp/context.md`
-   *(For documentation, `qwen3:8b` is used).*
-3. Receiving the clean textual response, reviewing it against the standards in `/skills/`, and securely applying the code directly into the active IDE session.
+The delegation command:
+```bash
+# Uses the model defined for the 'coder' role in your config
+bash ~/.claude/call_ollama.sh --role coder --prompt "implement X" --context-file /tmp/context.md
+```
+
+## Updating
+
+```bash
+cd ~/Projects/ai-orchestrator
+git pull
+```
+clean textual response, reviewing it against the standards in `/skills/`, and securely applying the code directly into the active IDE session.
 
 ## Updating
 

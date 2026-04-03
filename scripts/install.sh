@@ -45,14 +45,16 @@ if ! command -v jq &>/dev/null; then
     fi
 fi
 
-# Initialize llm-config.json if not exists
-CONFIG_DEST="$CLAUDE_DIR/llm-config.json"
-if [[ ! -f "$CONFIG_DEST" ]]; then
-    echo "Initializing llm-config.json with defaults..."
-    cat > "$CONFIG_DEST" <<EOF
+# Initialize llm-config.json in repo if not exists
+REPO_CONFIG="$REPO_DIR/llm-config.json"
+GLOBAL_CONFIG="$CLAUDE_DIR/llm-config.json"
+
+if [[ ! -f "$REPO_CONFIG" ]]; then
+    echo "Initializing llm-config.json in project root..."
+    cat > "$REPO_CONFIG" <<EOF
 {
   "models": {
-    "coder": "qwen2.5-coder:14b-instruct-q4_K_M",
+    "coder": "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
     "reviewer": "qwen2.5-coder:7b",
     "commit": "qwen2.5-coder:1.5b",
     "embedding": "nomic-embed-text"
@@ -60,6 +62,10 @@ if [[ ! -f "$CONFIG_DEST" ]]; then
 }
 EOF
 fi
+
+# Symlink config to global location
+echo "🔗 Symlinking llm-config.json to $GLOBAL_CONFIG"
+ln -sfn "$REPO_CONFIG" "$GLOBAL_CONFIG"
 
 backup_if_exists() {
   local target="$CLAUDE_DIR/$1"

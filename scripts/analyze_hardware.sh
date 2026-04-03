@@ -56,26 +56,6 @@ else
 fi
 
 echo "======================================"
-
-# Check which models are already installed
-if command -v ollama >/dev/null; then
-    # Get first column of ollama list, skip header
-    INSTALLED_MODELS=$(ollama list | awk 'NR>1 {print $1}')
-    
-    echo "📋 Currently installed models:"
-    if [ -z "$INSTALLED_MODELS" ]; then
-        echo "  (None)"
-    else
-        echo "$INSTALLED_MODELS" | while read -r line; do
-            echo "  - $line"
-        done
-    fi
-else
-    echo "⚠️ Ollama is not installed or not in PATH."
-    INSTALLED_MODELS=""
-fi
-
-echo "======================================"
 echo "🤖 Recommended models for your system:"
 
 # Target config file
