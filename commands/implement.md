@@ -54,7 +54,7 @@ If the reviewer returns **NEEDS CHANGES** or the build step fails:
    - The full `git diff` from step 1 — so coder sees what was already attempted and doesn't repeat the same mistake
 3. Re-run Step 2.5 (build check)
 4. Then spawn the `reviewer` agent again
-5. Repeat at most **2 times** — if still failing after 2 rounds, stop and report the remaining issues to the user
+5. Repeat at most **3 times** — if still failing after 3 rounds, stop and report the remaining issues to the user
 
 ## When to skip the full pipeline
 
