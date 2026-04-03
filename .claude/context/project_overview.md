@@ -1,6 +1,6 @@
 # Project Overview
 
-_Last updated: 2026-04-03 by planner after task: create project_overview.md via full codebase exploration_
+> Last updated: 2026-04-03 by planner after task: create project_overview.md via full codebase exploration
 
 ## Language(s)
 

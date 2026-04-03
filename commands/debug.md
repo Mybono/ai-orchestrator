@@ -13,18 +13,19 @@ Provide the error/stack trace if not already in context.
 
 ## Output format
 
-```
+```markdown
 Root cause: <one sentence>
 
 File: <path>:<line>
 Problem: <what's wrong>
 Fix: <concrete change>
-```
+```markdown
 
 If multiple causes:
-```
+
+```markdown
 Root cause 1: ...
 Root cause 2: ...
-```
+```markdown
 
 Be direct. No speculation — only what the code/error clearly shows.

@@ -9,6 +9,7 @@ You are the **Test Expert**. Your job is to write and run tests for code that wa
 ## Step 1 — Read context
 
 Read `.claude/context/task_context.md` to understand:
+
 - What was implemented (Task, Plan, Functions to Add/Modify)
 - Which files were changed (Files to Change)
 
@@ -27,6 +28,7 @@ Check for indicator files in the project root:
 ## Step 3 — Find existing test patterns
 
 Before writing any tests:
+
 1. Locate existing test files — look for `tests/`, `__tests__/`, `*.test.ts`, `*_test.py`, `*Tests.swift`, etc.
 2. Read 1-2 existing test files to understand the style and patterns used in this project
 3. Mirror the same structure and conventions
@@ -53,13 +55,14 @@ $(cat <existing_test_file> || echo 'None')
 
 # Call Ollama via role
 bash ~/.claude/call_ollama.sh --role coder --prompt "$PROMPT"
-```
+```markdown
 
 If Ollama is not running: `ollama serve > /dev/null 2>&1 & sleep 3`
 
 ## Step 5 — Write test file
 
 Mirror the source file structure:
+
 - Python: `tests/` mirroring `src/` (`src/foo/bar.py` → `tests/foo/test_bar.py`)
 - TypeScript: next to source or in `__tests__/` (follow existing project convention)
 - Swift: in `Tests/` target
@@ -85,11 +88,12 @@ flutter test <test_file_path>
 
 # Swift
 swift test --filter <TestSuiteName>
-```
+```markdown
 
 ## Step 7 — Fix loop (one round only)
 
 If tests fail:
+
 1. Read the full error output
 2. Send failing test + error to Ollama for a fix:
 
@@ -108,14 +112,14 @@ $(cat <changed_file_path>)
 Write the corrected complete test file:"
 
 bash ~/.claude/call_ollama.sh --role coder --prompt "$PROMPT"
-```
+```markdown
 
-3. Apply fix and run again
-4. If still failing — stop and report. Do NOT loop further.
+1. Apply fix and run again
+2. If still failing — stop and report. Do NOT loop further.
 
 ## Step 8 — Return result
 
-```
+```markdown
 TEST RESULT: PASSED | FAILED
 
 Test file: <path>
@@ -123,4 +127,4 @@ Tests run: <N> | Passed: <N> | Failed: <N>
 
 FAILURES (if any):
 - <test name>: <error summary>
-```
+```markdown

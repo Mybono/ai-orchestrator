@@ -41,7 +41,7 @@ Write clean, scalable, and maintainable Flutter applications using modern Dart b
 
 ```dart
 final String name = 'John';
-```
+```markdown
 
 ---
 
@@ -49,7 +49,7 @@ final String name = 'John';
 
 Recommended structure:
 
-```
+```markdown
 lib/
   core/
   features/
@@ -57,7 +57,7 @@ lib/
       data/
       domain/
       presentation/
-```
+```markdown
 
 * Use **feature-based architecture**
 * Keep layers independent
@@ -81,7 +81,7 @@ class UserCard extends StatelessWidget {
     return Text(name);
   }
 }
-```
+```markdown
 
 ---
 
@@ -109,7 +109,7 @@ try {
 } catch (e) {
   handleError(e);
 }
-```
+```markdown
 
 ---
 
@@ -170,7 +170,7 @@ Recommended tools:
 ```dart
 /// Fetch user data from API
 Future<User> fetchUser();
-```
+```markdown
 
 ---
 

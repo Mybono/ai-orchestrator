@@ -4,7 +4,7 @@
 
 **For any non-trivial coding task, always follow this pipeline:**
 
-```
+```markdown
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │  /implement                                                                 │
 │                                                                             │
@@ -18,7 +18,7 @@ Step 1 — planner      │ Claude Sonnet (inherit)  │ detects language, reads
 Step 2 — coder        │ Claude Haiku             │ orchestrates; calls Ollama (role: coder)
 Step 2.5 — build      │ Claude Haiku             │ tsc --noEmit (TS), etc.
 Step 3 — reviewer ×N  │ Claude Haiku (parallel)  │ orchestrates; calls Ollama (role: reviewer)
-```
+```markdown
 
 **LLM Configuration (`llm-config.json`):**
 
@@ -30,6 +30,7 @@ Step 3 — reviewer ×N  │ Claude Haiku (parallel)  │ orchestrates; calls Ol
 | `embedding` | Semantic search and RAG | `nomic-embed-text` |
 
 **Language standards** (auto-detected by planner and reviewer):
+
 - TypeScript → `.claude/skills/ts-code-standarts.md`
 - Python → `.claude/skills/python-code-standarts.md`
 - Flutter/Dart → `.claude/skills/fluter-code-standarts.md`
@@ -46,10 +47,12 @@ Step 3 — reviewer ×N  │ Claude Haiku (parallel)  │ orchestrates; calls Ol
 | `/commit` | Stage and commit changes (uses local LLM) |
 
 **Agents available on demand** (not auto-run):
+
 - `test-agent` — write and run tests (uses `coder` role)
 - `doc-writer` — update documentation (uses `reviewer` role)
 
 **Trigger rules** — BLOCKING REQUIREMENT: invoke the agent/skill BEFORE generating any other response:
+
 - User says "commit", "сделай коммит", "закоммить" → run `commit` agent
 - User says "implement", "напиши код", "добавь фичу" → run `implement` skill
 - User asks to write, create, or update documentation → run `doc-writer` agent

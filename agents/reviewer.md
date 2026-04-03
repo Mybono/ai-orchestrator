@@ -16,12 +16,14 @@ Review code written by the coder agent. You call the local Ollama model for deep
 1. Detect project language from indicator files (`tsconfig.json` → TS, `pubspec.yaml` → Flutter, `Package.swift` → Swift, `CMakeLists.txt` → C++, `pyproject.toml` → Python)
 2. Read the matching standards file from `.claude/skills/`
 3. Get the diff of what changed (not the full file):
+
 ```bash
 git diff HEAD -- <file_path>
 ```
+
 If the output is empty (new file not yet committed), fall back to full file contents.
 
-4. Send diff + standards to Ollama:
+1. Send diff + standards to Ollama:
 
 ```bash
 python3 - <<'PYEOF'
@@ -65,7 +67,7 @@ If Ollama is not running, start it: `ollama serve &` then wait 3 seconds.
 
 ## Output Format
 
-```
+```markdown
 VERDICT: APPROVED | NEEDS CHANGES
 
 FILES REVIEWED:

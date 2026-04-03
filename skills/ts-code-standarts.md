@@ -41,7 +41,7 @@ Write clean, strongly-typed, maintainable, and scalable TypeScript code using mo
 
 ```ts
 type Status = 'pending' | 'success' | 'error';
-```
+```markdown
 
 * Use generics for reusable logic
 
@@ -49,7 +49,7 @@ type Status = 'pending' | 'success' | 'error';
 function identity<T>(value: T): T {
   return value;
 }
-```
+```markdown
 
 ---
 
@@ -65,7 +65,7 @@ function parse(data: unknown): string {
   if (typeof data === 'string') return data;
   throw new Error('Invalid data');
 }
-```
+```markdown
 
 ---
 
@@ -73,12 +73,12 @@ function parse(data: unknown): string {
 
 * Organize by **feature**, not by type
 
-```
+```markdown
 src/
   features/
   shared/
   core/
-```
+```markdown
 
 * Keep modules small and cohesive
 
@@ -95,7 +95,7 @@ src/
 function calculateTotal(price: number, tax: number): number {
   return price * (1 + tax);
 }
-```
+```markdown
 
 ---
 
@@ -109,7 +109,7 @@ type User = {
   readonly id: number;
   name: string;
 };
-```
+```markdown
 
 ---
 
@@ -120,7 +120,7 @@ type User = {
 
 ```ts
 type Result<T> = { data: T } | { error: string };
-```
+```markdown
 
 * Never ignore errors
 
@@ -174,7 +174,7 @@ async function fetchData(): Promise<void> {
     handleError(e);
   }
 }
-```
+```markdown
 
 ---
 
@@ -199,7 +199,7 @@ Recommended tools:
  * Fetch user by ID
  */
 function fetchUser(id: number): Promise<User>;
-```
+```markdown
 
 ---
 
