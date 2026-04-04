@@ -25,9 +25,15 @@ echo "$DIFF" > "$TMP_DIFF"
 # 3. Call Ollama (commit role)
 echo "🤖 Ollama is analyzing the code and writing a commit message..."
 
-PROMPT="Review the following git diff and write a concise, meaningful commit message. 
-One line summary (max 50 chars), then a blank line, then a bulleted list of changes if necessary.
-Write ONLY the message, no extra text, no 'Short summary:' prefix."
+PROJECT_NAME=$(basename "$PWD")
+CURRENT_BRANCH=$(git branch --show-current)
+
+PROMPT="Review the following git diff for the project '$PROJECT_NAME' (branch: '$CURRENT_BRANCH') and write a concise, meaningful commit message.
+STRICT RULES:
+1. Base the message ONLY on the actual changes in the provided diff.
+2. Do NOT mention files or features that are not explicitly present in the diff.
+3. Use Conventional Commits format: type(scope): description.
+4. Output ONLY the commit message itself, no extra text or quotes."
 
 MESSAGE=$("$OLLAMA_SCRIPT" --role commit --prompt "$PROMPT" --context-file "$TMP_DIFF")
 
