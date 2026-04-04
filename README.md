@@ -29,6 +29,7 @@ ai-orchestrator/
 │   ├── local-commit.sh    # Fast local LLM-driven git commits
 │   ├── open-pr.sh         # Local LLM-driven Pull Request descriptions
 │   ├── analyze_hardware.sh # Auto-configures models based on your RAM/GPU
+│   ├── analyze_project.sh  # Multi-agent tiered project structure analysis
 │   └── install.sh         # Installer — configures dependencies and symlinks
 └── llm-config.json    # Centralized model roles (symlinked to ~/.claude/)
 ```markdown
@@ -120,6 +121,24 @@ To use these orchestration rules in your project (so IDE agents like Antigravity
 2. **(Optional) Multi-agent support**: You can also name it `.cursorrules` or `.clauderules` if you use those specific tools.
 
 3. **Check delegation**: Once added, your IDE agent should start using `call_ollama.sh` for heavy lifting instead of spending your cloud tokens.
+
+## Project Analysis (`analyze_project`)
+
+The system includes a sophisticated analysis tool that provides a deep understanding of any project's architecture.
+
+```bash
+# Run from your project root
+analyze_project
+```markdown
+
+### How it works (Multi-Agent Tiered Analysis)
+
+The script orchestrates multiple local models in parallel:
+- **Structure Agent (7B)**: Rapidly maps the folder hierarchy and functional blocks.
+- **Documentation Agent (14B)**: Reads and summarizes all discovered `.md` files.
+- **Logic Agent (14B)**: Analyzes entry points, core classes, and tech-stack patterns.
+
+The findings are synthesized into a **Delta Report** (`.claude/context/analysis_delta.md`). The IDE agent then reviews this report and merges relevant updates into the authoritative `project_overview.md`.
 
 ## Updating
 
