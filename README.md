@@ -5,6 +5,8 @@ Works with any project — TypeScript, Python, Flutter, Swift, C++.
 
 **Now 100% Python-free.** All orchestration is handled via pure Bash and `jq`.
 
+![ai-orchestrator pipeline](documentation/pipeline.svg)
+
 ## What's included
 
 ```markdown
