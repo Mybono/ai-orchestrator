@@ -20,12 +20,14 @@ Before any exploration, check if `.claude/context/project_overview.md` exists an
 ls .claude/context/project_overview.md .claude/context/analysis_delta.md 2>/dev/null
 ```
 
-**If `project_overview.md` EXISTS** — read it immediately. This is your authoritative map of the project architecture and constraints. 
+**If `project_overview.md` EXISTS** — read it immediately. This is your authoritative map of the project architecture and constraints.
 
-**If `analysis_delta.md` EXISTS** — read it as well. It contains findings from an automated scan (new files, patterns). 
+**If `analysis_delta.md` EXISTS** — read it as well. It contains findings from an automated scan (new files, patterns).
+
 - **Action**: Merge relevant delta findings into your mental model and prepare to update the main overview in Phase 4.
 
 **Workflow adjustments with Overview:**
+
 - Skip re-detecting language (already recorded)
 - Skip re-reading standarts file (already recorded)
 - Skip full codebase glob — verify only the files listed in the overview still exist
@@ -65,6 +67,7 @@ ls .claude/context/project_overview.md .claude/context/analysis_delta.md 2>/dev/
 After writing `task_context.md`, update `.claude/context/project_overview.md`. You are the master of this file.
 
 **Rules:**
+
 - **Incorporate Deltas**: If `analysis_delta.md` exists, merge its valid findings into the overview and then delete the delta file.
 - **Update Sections**: Update only sections that changed based on your task exploration; do NOT rewrite accurate sections.
 - **Maintain Accuracy**: Never remove information unless confirmed stale (file deleted, pattern abandoned).

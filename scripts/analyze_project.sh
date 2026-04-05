@@ -4,8 +4,6 @@ set -uo pipefail
 # Scripts directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CALL_OLLAMA="$SCRIPT_DIR/call_ollama.sh"
-CONFIG_FILE="$HOME/.claude/llm-config.json"
-
 # Colors
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
