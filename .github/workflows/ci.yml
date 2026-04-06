@@ -9,8 +9,8 @@ on:
       - main
 
 permissions:
-  contents: read
-  pull-requests: read
+  contents: write
+  pull-requests: write
 
 jobs:
   gitleaks:
@@ -45,3 +45,13 @@ jobs:
         uses: davidanson/markdownlint-cli2-action@v23
         with:
           globs: "**/*.md"
+
+  automerge:
+    runs-on: ubuntu-24.04
+    needs: [gitleaks, shellcheck, markdownlint]
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Auto-merge PR
+        run: gh pr merge --auto --squash "${{ github.event.pull_request.html_url }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
