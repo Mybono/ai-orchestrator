@@ -3,6 +3,7 @@
 All notable changes to ai-orchestrator.
 ## [unreleased]
 ### 2026-04-06
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`0726c9e`](https://github.com/Mybono/ai-orchestrator/commit/0726c9e0133678ac920aa1b7a83b2cf0f3bf536c) Update permissions and add automerge job (#8)
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`a5c1fb7`](https://github.com/Mybono/ai-orchestrator/commit/a5c1fb78f0880e70caf1586ed092b35b6e7d8ee8) Add git hooks for changelog generation and commit linting
 - ![docs](https://img.shields.io/badge/docs-0075ca?style=flat-square) [`3c93f2f`](https://github.com/Mybono/ai-orchestrator/commit/3c93f2f0244f5cd3e840e504111ac15147a83a31) Add initial changelog for ai-orchestrator release
 - ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`38e8e3b`](https://github.com/Mybono/ai-orchestrator/commit/38e8e3b3f7549b90ea63bd45db682833d8861a1a) Add --input-tokens/--output-tokens to track_savings.sh and auto-track all call_ollama.sh calls

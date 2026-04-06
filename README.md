@@ -3,66 +3,82 @@
 [![CI](https://github.com/Mybono/ai-orchestrator/actions/workflows/ci.yml/badge.svg)](https://github.com/Mybono/ai-orchestrator/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Portable AI Developer setup: agents, slash commands, IDE orchestration, and language standards.
+**README** · [Architecture](documentation/ARCHITECTURE.md) · [Agents](documentation/AGENTS.md) · [Skills & Commands](documentation/SKILLS.md)
+
+---
+
+Portable AI developer setup: Claude thinks, local Ollama executes.
 
 Works with any project — TypeScript, Python, Flutter, Swift, C++.
-
-All orchestration is handled via pure Bash and `jq`.
+No Python dependency — all orchestration is pure Bash and `jq`.
 
 ![ai-orchestrator pipeline](documentation/pipeline.svg)
 
-## What's included
-
-```
-ai-orchestrator/
-├── documentation/
-│   ├── CLAUDE.md            # Global instructions for Claude CLI
-│   └── ai_rules.md          # Orchestration rules for embedded IDE Agents
-├── agents/            # Subagents (run automatically via /implement)
-│   ├── planner.md     # Explores codebase, writes implementation plan
-│   ├── coder.md       # Generates code via local Ollama (role: coder)
-│   ├── reviewer.md    # Reviews code against standarts (role: reviewer)
-│   ├── quick-coder.md # Fast fixes (role: commit)
-│   ├── commit.md      # Stages and commits changes (role: commit)
-│   ├── doc-writer.md  # Creates/updates documentation (role: reviewer)
-│   └── test-agent.md  # Writes and runs tests (role: coder)
-├── commands/          # Slash commands
-│   ├── implement.md   # /implement — full plan → code → review pipeline
-├── skills/            # Language coding standarts
-│   ├── ...-code-standarts.md
-├── scripts/
-│   ├── call_ollama.sh     # Central LLM interface (Bash + jq + curl)
-│   ├── local-commit.sh    # Fast local LLM-driven git commits
-│   ├── open-pr.sh         # Local LLM-driven Pull Request descriptions
-│   ├── analyze_hardware.sh # Auto-configures models based on your RAM/GPU
-│   ├── analyze_project.sh  # Multi-agent tiered project structure analysis
-│   └── install.sh         # Installer — configures dependencies and symlinks
-└── llm-config.json    # Centralized model roles (symlinked to ~/.claude/)
-```
-
 ## How it works
 
-The core workflow is a pipeline triggered by `/implement`:
+`/implement` triggers the full pipeline:
 
 ```
 planner → coder → build check → reviewer(s) → verdict
 ```
 
-- **Zero Python dependency**: All agents now call `call_ollama.sh` directly, which uses `curl` and `jq` for API interaction.
-- **Role-based Config**: One source of truth for all models in `llm-config.json`.
-- **Portable**: symlinks ensure that updates to this repo apply globally to your system immediately.
+Claude writes the plan. A local Ollama model writes the code. Claude reviews the output.
+Details: [Architecture](documentation/ARCHITECTURE.md) · [Agents](documentation/AGENTS.md)
 
-## Token Savings Tracker
+## Requirements
 
-After each `/implement` run, `scripts/track_savings.sh` estimates the tokens processed by local Ollama and appends the result to `~/.claude/token_stats.json`. Savings are calculated against Claude Sonnet pricing ($3/M input, $15/M output) using a 1 token ≈ 4 chars approximation.
+- [Claude Code](https://claude.ai/code) CLI
+- [Ollama](https://ollama.com) installed and running
+- `jq` — installed automatically by `install.sh`
 
-View accumulated stats with the `/stats` command:
+## Installation
 
-| Period flag | Description |
-|-------------|-------------|
-| `day` | Current calendar day |
-| `week` | Last 7 days |
-| `month` | Last 30 days |
+```bash
+curl -sSL https://raw.githubusercontent.com/Mybono/ai-orchestrator/main/scripts/install.sh | bash
+```
+
+Or manually:
+
+```bash
+git clone https://github.com/Mybono/ai-orchestrator ~/Projects/ai-orchestrator
+cd ~/Projects/ai-orchestrator
+./scripts/install.sh
+```
+
+The installer checks dependencies, creates symlinks in `~/.claude/`, and selects models based on your hardware.
+
+## Configuration
+
+Model routing is controlled by [`llm-config.json`](llm-config.json) in the repo root:
+
+```json
+{
+  "models": {
+    "coder":     "qwen3-coder:30b-a3b-q4_K_M",
+    "reviewer":  "qwen2.5-coder:7b",
+    "commit":    "qwen2.5-coder:7b",
+    "embedding": "nomic-embed-text"
+  }
+}
+```
+
+Change a model name — takes effect immediately, no restart needed.
+See [Architecture → Model Configuration](documentation/ARCHITECTURE.md#model-configuration) for details.
+
+## Commands
+
+| Command | What it does |
+|---------|-------------|
+| [`/implement`](commands/implement.md) | Full plan → code → build → review pipeline |
+| [`/review`](commands/review.md) | Check current changes against language standards |
+| [`/stats`](commands/stats.md) | Show token savings (`day`, `week`, `month`, or all-time) |
+| [`/debug`](commands/debug.md) | Trace root cause of an error |
+
+All commands and agents: [Skills & Commands](documentation/SKILLS.md) · [Agents](documentation/AGENTS.md)
+
+## Token savings
+
+Every Ollama call is tracked. View estimated savings vs Claude Sonnet pricing:
 
 ```bash
 /stats week
@@ -73,121 +89,29 @@ View accumulated stats with the `/stats` command:
  ai-orchestrator savings
  Period: this week
  Runs: 12
- Tokens saved: ~186,000
+ Tokens saved: ~186k
  Estimated saving: $7.20
 ───────────────────────────────
 ```
 
-`scripts/stats.sh` can also be called directly from the terminal.
+## Project onboarding
 
-## Requirements
-
-- [Claude Code](https://claude.ai/code) CLI installed
-- [Ollama](https://ollama.com) installed and running
-- **`jq`** (JSON processor) — `install.sh` will attempt to install it via brew/apt.
-
-
-### 1. One-Liner Installation (Recommended)
-
-All you need is one command to check dependencies, clone the repository, and optimize models for your hardware:
+To apply orchestration rules in any project:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/Mybono/ai-orchestrator/main/scripts/install.sh | bash
+cp ~/.claude/ai_rules.md ~/Projects/your-project/ai_rules.md
 ```
 
-### 2. Manual Installation
-
-If you prefer to do it manually:
-
-```bash
-git clone https://github.com/Mybono/ai-orchestrator ~/Projects/ai-orchestrator
-cd ~/Projects/ai-orchestrator
-chmod +x scripts/install.sh
-./scripts/install.sh
-```
-
-
-### What happens during installation
-
-1. **Software Check**: Scripts detect and help install `jq` and `Ollama`.
-2. **Environment Setup**: Symlinks created in `~/.claude/`, shell aliases added.
-3. **Hardware Analysis**: System RAM/GPU analyzed to pick the best models.
-4. **Configuration**: `llm-config.json` generated and optimized for your machine.
-
-## Configuration (`llm-config.json`)
-
-The system uses roles to determine which model to use for which task. The config is stored in the project root and symlinked to `~/.claude/llm-config.json`.
-
-| Role | Default Model | Purpose |
-|------|---------------|---------|
-| `coder` | `qwen2.5-coder:14b...` | Heavy code generation (main agent) |
-| `reviewer` | `qwen2.5-coder:7b` | Code review and documentation |
-| `commit` | `qwen2.5-coder:7b` | Commit messages and tiny fixes |
-| `embedding` | `nomic-embed-text` | Semantic search and RAG |
-
-Example of `llm-config.json`:
-
-```json
-{
-  "models": {
-    "coder": "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
-    "reviewer": "qwen2.5-coder:7b",
-    "commit": "qwen2.5-coder:7b",
-    "embedding": "nomic-embed-text"
-  }
-}
-```
-
-## IDE Agent Delegation Workflow (Antigravity & Cursor)
-
-IDE agents (like Antigravity) act as the Architect but delegate heavy lifting to local models via `call_ollama.sh`:
-
-- **Coding**: Uses the `coder` role from `llm-config.json`.
-- **Review**: Uses the `reviewer` role.
-
-The delegation command:
-
-```
-# Uses the model defined for the 'coder' role in your config
-bash ~/.claude/call_ollama.sh --role coder --prompt "implement X" --context-file /tmp/context.md
-```
-
-## Project Onboarding
-
-To use these orchestration rules in your project (so IDE agents like Antigravity/Cursor can see them):
-
-1. **Copy the rules** from the system directory to your project root:
-
-   ```
-   cp ~/.claude/ai_rules.md ~/Projects/your-project/ai_rules.md
-   ```
-
-2. **(Optional) Multi-agent support**: You can also name it `.cursorrules` or `.clauderules` if you use those specific tools.
-
-3. **Check delegation**: Once added, your IDE agent should start using `call_ollama.sh` for heavy lifting instead of spending your cloud tokens.
-
-## Project Analysis 
-The system includes a sophisticated analysis tool that provides a deep understanding of any project's architecture.
-
-```
-# Run from your project root
-analyze_project
-```
-
-### How it works (Multi-Agent Tiered Analysis)
-
-The script orchestrates multiple local models in parallel:
-- **Structure Agent (7B)**: Rapidly maps the folder hierarchy and functional blocks.
-- **Documentation Agent (14B)**: Reads and summarizes all discovered `.md` files.
-- **Logic Agent (14B)**: Analyzes entry points, core classes, and tech-stack patterns.
-
-The findings are synthesized into a **Delta Report** (`.claude/context/analysis_delta.md`). The IDE agent then reviews this report and merges relevant updates into the authoritative `project_overview.md`.
+Compatible with `.cursorrules` and `.clauderules`.
 
 ## Updating
 
-```
-cd ~/Projects/ai-orchestrator
-git pull
+```bash
+cd ~/Projects/ai-orchestrator && git pull
 ```
 
-Changes apply immediately — no reinstall needed.
+Changes apply immediately via symlinks — no reinstall needed.
+
+---
+
+**README** · [Architecture](documentation/ARCHITECTURE.md) · [Agents](documentation/AGENTS.md) · [Skills & Commands](documentation/SKILLS.md) 
