@@ -14,10 +14,12 @@ We actively support the latest version of `ai-orchestrator`. If you are using an
 We take the security of this project seriously. If you believe you have found a security vulnerability, please **do not** open a public issue. Instead, please report it privately.
 
 You can report vulnerabilities by:
+
 1. Opening a private draft security advisory on GitHub (if available).
 2. Contacting the maintainer (**Artur**) directly via GitHub profile links.
 
 Please include:
+
 - A description of the vulnerability.
 - Steps to reproduce the issue.
 - Any potential impact.

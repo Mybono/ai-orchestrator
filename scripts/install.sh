@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Support for pipe-to-bash (curl -sSL ... | bash)
 if [ -z "${BASH_SOURCE[0]:-}" ] || [ "${BASH_SOURCE[0]}" == "/dev/stdin" ]; then
-    echo "🚀 Piped installation detected. Cloning ai-orchestrator..."
+    echo "Piped installation detected. Cloning ai-orchestrator..."
     INSTALL_DIR="$HOME/Projects/ai-orchestrator"
     if [ -d "$INSTALL_DIR" ]; then
         echo "  ! Directory $INSTALL_DIR already exists. Updating..."
