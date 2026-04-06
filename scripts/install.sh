@@ -17,6 +17,8 @@ SYMLINK_TARGETS=(
   "scripts/analyze_hardware.sh"
   "scripts/analyze_soft.sh"
   "scripts/analyze_project.sh"
+  "scripts/track_savings.sh"
+  "scripts/stats.sh"
 )
 
 echo "Installing ai-orchestrator from: $REPO_DIR"
@@ -125,6 +127,16 @@ fi
 if [[ -f "$REPO_DIR/scripts/analyze_project.sh" ]]; then
   chmod +x "$REPO_DIR/scripts/analyze_project.sh"
   echo "  ✓ analyze_project.sh is executable"
+fi
+
+if [[ -f "$REPO_DIR/scripts/track_savings.sh" ]]; then
+  chmod +x "$REPO_DIR/scripts/track_savings.sh"
+  echo "  ✓ track_savings.sh is executable"
+fi
+
+if [[ -f "$REPO_DIR/scripts/stats.sh" ]]; then
+  chmod +x "$REPO_DIR/scripts/stats.sh"
+  echo "  ✓ stats.sh is executable"
 fi
 
 

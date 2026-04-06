@@ -48,6 +48,34 @@ planner → coder → build check → reviewer(s) → verdict
 - **Role-based Config**: One source of truth for all models in `llm-config.json`.
 - **Portable**: symlinks ensure that updates to this repo apply globally to your system immediately.
 
+## Token Savings Tracker
+
+After each `/implement` run, `scripts/track_savings.sh` estimates the tokens processed by local Ollama and appends the result to `~/.claude/token_stats.json`. Savings are calculated against Claude Sonnet pricing ($3/M input, $15/M output) using a 1 token ≈ 4 chars approximation.
+
+View accumulated stats with the `/stats` command:
+
+| Period flag | Description |
+|-------------|-------------|
+| `day` | Current calendar day |
+| `week` | Last 7 days |
+| `month` | Last 30 days |
+
+```bash
+/stats week
+```
+
+```
+───────────────────────────────
+ ai-orchestrator savings
+ Period: this week
+ Runs: 12
+ Tokens saved: ~186,000
+ Estimated saving: $7.20
+───────────────────────────────
+```
+
+`scripts/stats.sh` can also be called directly from the terminal.
+
 ## Requirements
 
 - [Claude Code](https://claude.ai/code) CLI installed

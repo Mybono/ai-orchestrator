@@ -68,6 +68,22 @@ If the reviewer returns **NEEDS CHANGES** or the build step fails:
 4. Then spawn the `reviewer` agent again
 5. Repeat at most **3 times** — if still failing after 3 rounds, stop and report the remaining issues to the user
 
+### Step 5 — Track savings
+
+After the pipeline completes successfully (reviewer returns APPROVED or no NEEDS CHANGES after fix loop):
+
+1. Collect the list of changed files from `git diff --name-only HEAD` or from what the coder reported
+2. Run:
+
+   ```bash
+   bash ~/.claude/track_savings.sh --task "<one-sentence task description>" --files "<space-separated list of changed files>"
+   ```
+
+   Use the user's original task description for `--task`.
+   Use the space-separated list of changed files for `--files`.
+
+This step is best-effort — if `track_savings.sh` is not found (not yet installed), skip silently.
+
 ## When to skip the full pipeline
 
 If the user's request is clearly a one-liner (rename, import fix, single value change) — skip planning and review, just make the edit directly.

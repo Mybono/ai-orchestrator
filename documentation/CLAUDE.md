@@ -45,6 +45,7 @@ Step 3 — reviewer ×N  │ Claude Haiku (parallel)  │ orchestrates; calls Ol
 | `/implement` | Full plan → code → build → review pipeline |
 | `/review` | Check current changes against language standarts |
 | `/commit` | Stage and commit changes (uses local LLM) |
+| `/stats [day\|week\|month]` | Show token savings summary (all time if no arg) |
 
 **Agents available on demand** (not auto-run):
 
