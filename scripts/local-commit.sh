@@ -4,11 +4,8 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OLLAMA_SCRIPT="$SCRIPT_DIR/call_ollama.sh"
 
-# If the staging area is empty, stage all changes
-if git diff --cached --quiet; then
-    echo "Staging area is empty. Staging all changes (git add -A)..."
-    git add -A
-fi
+echo "Staging all changes (git add -A)..."
+git add -A
 
 # Get the staged diff
 DIFF=$(git diff --cached)

@@ -3,6 +3,7 @@
 All notable changes to ai-orchestrator.
 ## [unreleased]
 ### 2026-04-06
+- ![docs](https://img.shields.io/badge/docs-0075ca?style=flat-square) [`3c93f2f`](https://github.com/Mybono/ai-orchestrator/commit/3c93f2f0244f5cd3e840e504111ac15147a83a31) Add initial changelog for ai-orchestrator release
 - ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`38e8e3b`](https://github.com/Mybono/ai-orchestrator/commit/38e8e3b3f7549b90ea63bd45db682833d8861a1a) Add --input-tokens/--output-tokens to track_savings.sh and auto-track all call_ollama.sh calls
 - ![docs](https://img.shields.io/badge/docs-0075ca?style=flat-square) [`5b690be`](https://github.com/Mybono/ai-orchestrator/commit/5b690beb9e396656a0bcc4f08bfcf06fd4e3651b) Update vulnerability reporting instructions
 - ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`56c231d`](https://github.com/Mybono/ai-orchestrator/commit/56c231dbd5b0ce2f81d5b8b87cea6473e5e13323) Add security policy and enhance one-liner installation script
