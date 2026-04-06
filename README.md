@@ -3,7 +3,7 @@
 Portable AI Developer setup: agents, slash commands, IDE orchestration, and language standarts.  
 Works with any project — TypeScript, Python, Flutter, Swift, C++.
 
-**Now 100% Python-free.** All orchestration is handled via pure Bash and `jq`.
+All orchestration is handled via pure Bash and `jq`.
 
 ![ai-orchestrator pipeline](documentation/pipeline.svg)
 
