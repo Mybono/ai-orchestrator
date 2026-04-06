@@ -97,4 +97,3 @@ If Ollama is not running, start it: `ollama serve &` then wait 3 seconds.
   - **Indentation (MD007)**: List markers must not have extra leading whitespace (0 or 2 spaces max).
 - If the diff is too large for context, focus on the public interface changes first
 - Do not rewrite documentation that was not affected by the changes
-
