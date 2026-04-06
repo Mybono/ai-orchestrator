@@ -1,6 +1,10 @@
 # ai-orchestrator
 
-Portable AI Developer setup: agents, slash commands, IDE orchestration, and language standarts.  
+[![CI](https://github.com/Mybono/ai-orchestrator/actions/workflows/ci.yml/badge.svg)](https://github.com/Mybono/ai-orchestrator/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+Portable AI Developer setup: agents, slash commands, IDE orchestration, and language standards.
+
 Works with any project — TypeScript, Python, Flutter, Swift, C++.
 
 All orchestration is handled via pure Bash and `jq`.
@@ -82,16 +86,26 @@ View accumulated stats with the `/stats` command:
 - [Ollama](https://ollama.com) installed and running
 - **`jq`** (JSON processor) — `install.sh` will attempt to install it via brew/apt.
 
-## Installation & Setup
 
-All you need is one command to check dependencies, configure the system, and optimize models for your hardware:
+### 1. One-Liner Installation (Recommended)
 
+All you need is one command to check dependencies, clone the repository, and optimize models for your hardware:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/Mybono/ai-orchestrator/main/scripts/install.sh | bash
 ```
+
+### 2. Manual Installation
+
+If you prefer to do it manually:
+
+```bash
 git clone https://github.com/Mybono/ai-orchestrator ~/Projects/ai-orchestrator
 cd ~/Projects/ai-orchestrator
 chmod +x scripts/install.sh
 ./scripts/install.sh
 ```
+
 
 ### What happens during installation
 

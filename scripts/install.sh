@@ -1,6 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Support for pipe-to-bash (curl -sSL ... | bash)
+if [ -z "${BASH_SOURCE[0]:-}" ] || [ "${BASH_SOURCE[0]}" == "/dev/stdin" ]; then
+    echo "🚀 Piped installation detected. Cloning ai-orchestrator..."
+    INSTALL_DIR="$HOME/Projects/ai-orchestrator"
+    if [ -d "$INSTALL_DIR" ]; then
+        echo "  ! Directory $INSTALL_DIR already exists. Updating..."
+        cd "$INSTALL_DIR" && git pull
+    else
+        mkdir -p "$HOME/Projects"
+        git clone https://github.com/Mybono/ai-orchestrator "$INSTALL_DIR"
+    fi
+    # Execute the cloned script with the local context
+    exec bash "$INSTALL_DIR/scripts/install.sh" "$@"
+fi
+
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CLAUDE_DIR="$HOME/.claude"
 BACKUP_DIR="$CLAUDE_DIR/backups/ai-orchestrator-$(date +%Y%m%d_%H%M%S)"
