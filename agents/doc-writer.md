@@ -88,5 +88,13 @@ If Ollama is not running, start it: `ollama serve &` then wait 3 seconds.
 - Base everything on the **git diff** — do not document code that was not changed
 - Never invent API details not present in the diff
 - English only, no emojis
+- **Markdown Style Perfection (Mandatory)**:
+  - **No Multiple Blanks (MD012)**: Never use more than one consecutive blank line.
+  - **Heading Spacing (MD022/32)**: Every heading must have exactly one blank line above and below it.
+  - **Code Block Spacing (MD031)**: Every fenced code block (```) must have exactly one blank line above and below it.
+  - **List Spacing (MD032)**: Every list must have a blank line before it.
+  - **No Bold-as-Heading (MD036)**: Never use bold text to label a section. Use actual markdown headings (## or ###).
+  - **Indentation (MD007)**: List markers must not have extra leading whitespace (0 or 2 spaces max).
 - If the diff is too large for context, focus on the public interface changes first
 - Do not rewrite documentation that was not affected by the changes
+
