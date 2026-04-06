@@ -155,6 +155,51 @@ if [[ -f "$REPO_DIR/scripts/stats.sh" ]]; then
 fi
 
 
+# Install git hooks into the ai-orchestrator repo itself
+HOOKS_DIR="$REPO_DIR/.git/hooks"
+if [ -d "$HOOKS_DIR" ]; then
+    echo ""
+    echo "Installing git hooks..."
+
+    # pre-commit: regenerate CHANGELOG.md via git-cliff
+    cat > "$HOOKS_DIR/pre-commit" <<'HOOK'
+#!/bin/sh
+if [ -f .git/hooks/.cliff-running ]; then
+  exit 0
+fi
+if ! command -v git-cliff >/dev/null 2>&1; then
+  exit 0
+fi
+touch .git/hooks/.cliff-running
+git-cliff --config cliff.toml -o CHANGELOG.md 2>/dev/null
+git add CHANGELOG.md 2>/dev/null || true
+rm -f .git/hooks/.cliff-running
+HOOK
+    chmod +x "$HOOKS_DIR/pre-commit"
+    echo "  ✓ pre-commit hook (git-cliff changelog)"
+
+    # commit-msg: commitlint (skip if not installed locally)
+    cat > "$HOOKS_DIR/commit-msg" <<'HOOK'
+#!/bin/sh
+if ! command -v npx >/dev/null 2>&1; then
+  exit 0
+fi
+if ! npx --no-install commitlint --version >/dev/null 2>&1; then
+  exit 0
+fi
+npx --no-install commitlint --edit "$1" || {
+    echo ""
+    echo "  Correct format: <type>: <description>"
+    echo "  Example:        feat: add login screen"
+    echo "  Types:          feat, fix, docs, chore, ci, refactor, perf, style, revert"
+    echo ""
+    exit 1
+}
+HOOK
+    chmod +x "$HOOKS_DIR/commit-msg"
+    echo "  ✓ commit-msg hook (commitlint)"
+fi
+
 echo ""
 bash "$REPO_DIR/scripts/analyze_hardware.sh"
 
