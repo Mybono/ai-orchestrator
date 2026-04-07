@@ -65,7 +65,8 @@ These are not triggered automatically. Call them explicitly when needed.
 
 BLOCKING REQUIREMENT: invoke the matching agent or skill before generating any other response.
 
-- User says "commit", "сделай коммит", or "закоммить" → run the `commit` agent
+- User says "commit" or "make a commit" → run the `commit` agent
+- User says "open pr", "create a pull request", or "open a pull request" → run the `commit` agent
 - User says "implement", "напиши код", or "добавь фичу" → run the `implement` skill
 - User asks to write, create, or update documentation → run the `doc-writer` agent
 
