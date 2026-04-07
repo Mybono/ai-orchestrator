@@ -41,10 +41,29 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
-      - name: Run MarkdownLint
-        uses: davidanson/markdownlint-cli2-action@v23
         with:
-          globs: "**/*.md"
+          ref: ${{ github.head_ref || github.ref_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install markdownlint-cli2
+        run: npm install -g markdownlint-cli2
+
+      - name: Auto-fix markdown lint errors
+        run: markdownlint-cli2 --fix "**/*.md" || true
+
+      - name: Commit fixes if any
+        if: github.event_name == 'pull_request'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet; then
+            git add -A
+            git commit -m "chore: auto-fix markdown lint errors"
+            git push
+          fi
+
+      - name: Verify no remaining errors
+        run: markdownlint-cli2 "**/*.md"
 
   automerge:
     runs-on: ubuntu-24.04

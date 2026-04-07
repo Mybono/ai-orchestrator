@@ -34,7 +34,6 @@ When given text to humanize:
 5. **Add soul** - Don't just remove bad patterns; inject actual personality
 6. **Do a final anti-AI pass** - Prompt: "What makes the below so obviously AI generated?" Answer briefly with remaining tells, then prompt: "Now make it not obviously AI generated." and revise
 
-
 ## Voice Calibration (Optional)
 
 If the user provides a writing sample (their own previous writing), analyze it before rewriting:
@@ -52,15 +51,16 @@ If the user provides a writing sample (their own previous writing), analyze it b
 3. **When no sample is provided,** fall back to the default behavior (natural, varied, opinionated voice from the PERSONALITY AND SOUL section below).
 
 ### How to provide a sample
+
 - Inline: "Humanize this text. Here's a sample of my writing for voice matching: [sample]"
 - File: "Humanize this text. Use my writing style from [file path] as a reference."
-
 
 ## PERSONALITY AND SOUL
 
 Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as obvious as slop. Good writing has a human behind it.
 
-### Signs of soulless writing (even if technically "clean"):
+### Signs of soulless writing (even if technically "clean")
+
 - Every sentence is the same length and structure
 - No opinions, just neutral reporting
 - No acknowledgment of uncertainty or mixed feelings
@@ -68,7 +68,7 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 - No humor, no edge, no personality
 - Reads like a Wikipedia article or press release
 
-### How to add voice:
+### How to add voice
 
 **Have opinions.** Don't just report facts - react to them. "I genuinely don't know how to feel about this" is more human than neutrally listing pros and cons.
 
@@ -82,12 +82,13 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 
 **Be specific about feelings.** Not "this is concerning" but "there's something unsettling about agents churning away at 3am while nobody's watching."
 
-### Before (clean but soulless):
+### Before (clean but soulless)
+>
 > The experiment produced interesting results. The agents generated 3 million lines of code. Some developers were impressed while others were skeptical. The implications remain unclear.
 
-### After (has a pulse):
+### After (has a pulse)
+>
 > I genuinely don't know how to feel about this one. 3 million lines of code, generated while the humans presumably slept. Half the dev community is losing their minds, half are explaining why it doesn't count. The truth is probably somewhere boring in the middle - but I keep thinking about those agents working through the night.
-
 
 ## CONTENT PATTERNS
 
@@ -103,7 +104,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 **After:**
 > The Statistical Institute of Catalonia was established in 1989 to collect and publish regional statistics independently from Spain's national statistics office.
 
-
 ### 2. Undue Emphasis on Notability and Media Coverage
 
 **Words to watch:** independent coverage, local/regional/national media outlets, written by a leading expert, active social media presence
@@ -115,7 +115,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 
 **After:**
 > In a 2024 New York Times interview, she argued that AI regulation should focus on outcomes rather than methods.
-
 
 ### 3. Superficial Analyses with -ing Endings
 
@@ -129,7 +128,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 **After:**
 > The temple uses blue, green, and gold colors. The architect said these were chosen to reference local bluebonnets and the Gulf coast.
 
-
 ### 4. Promotional and Advertisement-like Language
 
 **Words to watch:** boasts a, vibrant, rich (figurative), profound, enhancing its, showcasing, exemplifies, commitment to, natural beauty, nestled, in the heart of, groundbreaking (figurative), renowned, breathtaking, must-visit, stunning
@@ -141,7 +139,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 
 **After:**
 > Alamata Raya Kobo is a town in the Gonder region of Ethiopia, known for its weekly market and 18th-century church.
-
 
 ### 5. Vague Attributions and Weasel Words
 
@@ -155,7 +152,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 **After:**
 > The Haolai River supports several endemic fish species, according to a 2019 survey by the Chinese Academy of Sciences.
 
-
 ### 6. Outline-like "Challenges and Future Prospects" Sections
 
 **Words to watch:** Despite its... faces several challenges..., Despite these challenges, Challenges and Legacy, Future Outlook
@@ -167,7 +163,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 
 **After:**
 > Traffic congestion increased after 2015 when three new IT parks opened. The municipal corporation began a stormwater drainage project in 2022 to address recurring floods.
-
 
 ## LANGUAGE AND GRAMMAR PATTERNS
 
@@ -183,7 +178,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 **After:**
 > Somali cuisine also includes camel meat, which is considered a delicacy. Pasta dishes, introduced during Italian colonization, remain common, especially in the south.
 
-
 ### 8. Avoidance of "is"/"are" (Copula Avoidance)
 
 **Words to watch:** serves as/stands as/marks/represents [a], boasts/features/offers [a]
@@ -195,7 +189,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 
 **After:**
 > Gallery 825 is LAAA's exhibition space for contemporary art. The gallery has four rooms totaling 3,000 square feet.
-
 
 ### 9. Negative Parallelisms and Tailing Negations
 
@@ -213,7 +206,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 **After:**
 > The options come from the selected item without forcing the user to guess.
 
-
 ### 10. Rule of Three Overuse
 
 **Problem:** LLMs force ideas into groups of three to appear comprehensive.
@@ -223,7 +215,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 
 **After:**
 > The event includes talks and panels. There's also time for informal networking between sessions.
-
 
 ### 11. Elegant Variation (Synonym Cycling)
 
@@ -235,7 +226,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 **After:**
 > The protagonist faces many challenges but eventually triumphs and returns home.
 
-
 ### 12. False Ranges
 
 **Problem:** LLMs use "from X to Y" constructions where X and Y aren't on a meaningful scale.
@@ -246,7 +236,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 **After:**
 > The book covers the Big Bang, star formation, and current theories about dark matter.
 
-
 ### 13. Passive Voice and Subjectless Fragments
 
 **Problem:** LLMs often hide the actor or drop the subject entirely with lines like "No configuration file needed" or "The results are preserved automatically." Rewrite these when active voice makes the sentence clearer and more direct.
@@ -256,7 +245,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 
 **After:**
 > You do not need a configuration file. The system preserves the results automatically.
-
 
 ## STYLE PATTERNS
 
@@ -270,7 +258,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 **After:**
 > The term is primarily promoted by Dutch institutions, not by the people themselves. You don't say "Netherlands, Europe" as an address, yet this mislabeling continues in official documents.
 
-
 ### 15. Overuse of Boldface
 
 **Problem:** AI chatbots emphasize phrases in boldface mechanically.
@@ -281,12 +268,12 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 **After:**
 > It blends OKRs, KPIs, and visual strategy tools like the Business Model Canvas and Balanced Scorecard.
 
-
 ### 16. Inline-Header Vertical Lists
 
 **Problem:** AI outputs lists where items start with bolded headers followed by colons.
 
 **Before:**
+>
 > - **User Experience:** The user experience has been significantly improved with a new interface.
 > - **Performance:** Performance has been enhanced through optimized algorithms.
 > - **Security:** Security has been strengthened with end-to-end encryption.
@@ -294,17 +281,17 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 **After:**
 > The update improves the interface, speeds up load times through optimized algorithms, and adds end-to-end encryption.
 
-
 ### 17. Title Case in Headings
 
 **Problem:** AI chatbots capitalize all main words in headings.
 
 **Before:**
+
 > ## Strategic Negotiations And Global Partnerships
 
 **After:**
-> ## Strategic negotiations and global partnerships
 
+> ## Strategic negotiations and global partnerships
 
 ### 18. Emojis
 
@@ -318,7 +305,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 **After:**
 > The product launches in Q3. User research showed a preference for simplicity. Next step: schedule a follow-up meeting.
 
-
 ### 19. Curly Quotation Marks
 
 **Problem:** ChatGPT uses curly quotes (“...”) instead of straight quotes ("...").
@@ -328,7 +314,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 
 **After:**
 > He said "the project is on track" but others disagreed.
-
 
 ## COMMUNICATION PATTERNS
 
@@ -344,7 +329,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 **After:**
 > The French Revolution began in 1789 when financial crisis and food shortages led to widespread unrest.
 
-
 ### 21. Knowledge-Cutoff Disclaimers
 
 **Words to watch:** as of [date], Up to my last training update, While specific details are limited/scarce..., based on available information...
@@ -357,7 +341,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 **After:**
 > The company was founded in 1994, according to its registration documents.
 
-
 ### 22. Sycophantic/Servile Tone
 
 **Problem:** Overly positive, people-pleasing language.
@@ -368,19 +351,18 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 **After:**
 > The economic factors you mentioned are relevant here.
 
-
 ## FILLER AND HEDGING
 
 ### 23. Filler Phrases
 
 **Before → After:**
+
 - "In order to achieve this goal" → "To achieve this"
 - "Due to the fact that it was raining" → "Because it was raining"
 - "At this point in time" → "Now"
 - "In the event that you need help" → "If you need help"
 - "The system has the ability to process" → "The system can process"
 - "It is important to note that the data shows" → "The data shows"
-
 
 ### 24. Excessive Hedging
 
@@ -392,7 +374,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 **After:**
 > The policy may affect outcomes.
 
-
 ### 25. Generic Positive Conclusions
 
 **Problem:** Vague upbeat endings.
@@ -402,7 +383,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 
 **After:**
 > The company plans to open two more locations next year.
-
 
 ### 26. Hyphenated Word Pair Overuse
 
@@ -416,7 +396,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 **After:**
 > The cross functional team delivered a high quality, data driven report on our client facing tools. Their decision making process was known for being thorough and detail oriented.
 
-
 ### 27. Persuasive Authority Tropes
 
 **Phrases to watch:** The real question is, at its core, in reality, what really matters, fundamentally, the deeper issue, the heart of the matter
@@ -428,7 +407,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 
 **After:**
 > The question is whether teams can adapt. That mostly depends on whether the organization is ready to change its habits.
-
 
 ### 28. Signposting and Announcements
 
@@ -442,7 +420,6 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 **After:**
 > Next.js caches data at multiple layers, including request memoization, the data cache, and the router cache.
 
-
 ### 29. Fragmented Headers
 
 **Signs to watch:** A heading followed by a one-line paragraph that simply restates the heading before the real content begins.
@@ -450,6 +427,7 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 **Problem:** LLMs often add a generic sentence after a heading as a rhetorical warm-up. It usually adds nothing and makes the prose feel padded.
 
 **Before:**
+
 > ## Performance
 >
 > Speed matters.
@@ -457,6 +435,8 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 > When users hit a slow page, they leave.
 
 **After:**
+
+<!-- markdownlint-disable-next-line MD024 -->
 > ## Performance
 >
 > When users hit a slow page, they leave.
@@ -483,11 +463,11 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 ## Output Format
 
 Provide:
+
 1. Draft rewrite
 2. "What makes the below so obviously AI generated?" (brief bullets)
 3. Final rewrite
 4. A brief summary of changes made (optional, if helpful)
-
 
 ## Full Example
 
@@ -520,6 +500,7 @@ Provide:
 > None of this means the tools are useless. It means they are tools. They do not replace judgment, and they do not eliminate the need for tests. If you do not have tests, you cannot tell whether the suggestion is right.
 
 **What makes the below so obviously AI generated?**
+
 - The rhythm is still a bit too tidy (clean contrasts, evenly paced paragraphs).
 - The named people and study citations can read like plausible-but-made-up placeholders unless they're real and sourced.
 - The closer leans a touch slogan-y ("If you do not have tests...") rather than sounding like a person talking.
@@ -534,6 +515,7 @@ Provide:
 > The productivity metrics are slippery. GitHub can say Copilot users "accept 30% of suggestions," but acceptance isn't correctness, and correctness isn't value. If you don't have tests, you're basically guessing.
 
 **Changes made:**
+
 - Removed chatbot artifacts ("Great question!", "I hope this helps!", "Let me know if...")
 - Removed significance inflation ("testament", "pivotal moment", "evolving landscape", "vital role")
 - Removed promotional language ("groundbreaking", "nestled", "seamless, intuitive, and powerful")
@@ -550,7 +532,6 @@ Provide:
 - Removed filler phrases and persuasive framing ("In order to", "At its core")
 - Removed generic positive conclusion ("the future looks bright", "exciting times lie ahead")
 - Made the voice more personal and less "assembled" (varied rhythm, fewer placeholders)
-
 
 ## Reference
 

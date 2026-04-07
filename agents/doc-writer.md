@@ -99,15 +99,15 @@ sleep 3
 touch /tmp/.doc_writer_active
 ```
 
-   - Updating an existing file: use Edit for targeted section updates
-   - Creating a new file: use Write
+- Updating an existing file: use Edit for targeted section updates
+- Creating a new file: use Write
 
 ```bash
 rm -f /tmp/.doc_writer_active
 ```
 
-4. Run `markdownlint-cli2 "<file>"` and fix any errors before reporting done
-5. Report which files were updated or created, and what changed
+1. Run `markdownlint-cli2 "<file>"` and fix any errors before reporting done
+2. Report which files were updated or created, and what changed
 
 ## Critical Rules
 

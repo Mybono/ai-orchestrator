@@ -22,15 +22,16 @@ Handle small, targeted code changes fast using the lightest local model. Any gen
 ## How to Generate Code
 
 # Build a focused prompt into a temporary file to avoid shell argument length limits
+
 TMP_PROMPT=$(mktemp)
 cat <<EOF > "$TMP_PROMPT"
 <focused prompt for a single function or snippet>
 EOF
 
 # Call Ollama via role using the prompt file
+
 bash ~/.claude/call_ollama.sh --role commit --prompt-file "$TMP_PROMPT"
 rm -f "$TMP_PROMPT"
-
 
 If Ollama is not running: `ollama serve > /dev/null 2>&1 & sleep 3`
 

@@ -5,7 +5,7 @@ We're glad you're here. This project is built on a few core beliefs that keep it
 ## Project philosophy
 
 - **Pure Bash**: Everything core happens in Bash, `jq`, and `curl`. We don't use Python for orchestration. If it can be done with a shell script, it should be.
-- **Portability**: The system must run on any macOS or Linux machine without a complex setup. 
+- **Portability**: The system must run on any macOS or Linux machine without a complex setup.
 - **Local-first**: LLM calls stay local. We delegate coding and reviews to Ollama to save tokens and keep data on your machine.
 
 ## How to get things done
@@ -46,7 +46,7 @@ Before you open a PR on GitHub, draft the description with our generator:
 
 ## A note on style
 
-- Keep scripts modular. 
+- Keep scripts modular.
 - Use `jq` for JSON — no external dependencies.
 - Match the standards in the `skills/` directory for whatever language you're touching.
 
