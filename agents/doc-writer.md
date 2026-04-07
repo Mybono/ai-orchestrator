@@ -53,9 +53,12 @@ Read relevant `.md` files and any inline docstrings in the changed source files.
 Build a focused prompt from the diff and existing docs, then call Ollama:
 
 ```bash
-PROMPT="You are a technical writer. Update or create documentation based on the code changes below.
+PROMPT="You are a technical writer that writes like a human, not an AI. Update or create documentation based on the code changes below.
 
-## Documentation standarts
+## Writing Style (Mandatory)
+$(cat ~/.claude/skills/humanizer.md)
+
+## Documentation standards
 $(cat ~/.claude/skills/doc-standarts.md)
 
 ## Existing README
@@ -76,7 +79,7 @@ If Ollama is not running, start it: `ollama serve &` then wait 3 seconds.
 
 ### Phase 4 — Apply Changes
 
-1. Review the Ollama output against the standarts — remove emojis, filler phrases, invented details
+1. Review the Ollama output against the standards — remove emojis, filler phrases, invented details
 2. Verify every function name, parameter, and example matches the actual diff
 3. Apply changes:
    - **Updating existing file**: use Edit for targeted section updates
@@ -87,16 +90,22 @@ If Ollama is not running, start it: `ollama serve &` then wait 3 seconds.
 
 - Base everything on the **git diff** — do not document code that was not changed
 - Never invent API details not present in the diff
-- English only, no emojis
-- **Markdown rules (enforced by markdownlint-cli2)**:
-  - **MD012** No multiple consecutive blank lines — max 1.
-  - **MD022/MD032** Headings and lists must have exactly one blank line above and below.
-  - **MD031** Fenced code blocks must have one blank line above and below.
-  - **MD036** Never use bold text as a section heading — use `##` or `###`.
-  - **MD040** Every fenced code block must declare a language: ` ```bash `, ` ```json `, ` ```text `, etc. Never use a bare ` ``` `.
-  - **MD047** Every file must end with a single newline character.
-  - **MD007** List item indentation: 0 or 2 spaces only.
-  - Rules disabled in this project (safe to ignore): MD013 (line length), MD033 (inline HTML), MD041 (first heading), MD060.
+- **Human-Like Writing (Mandatory)**: 
+  - Follow all principles in `skills/humanizer.md`.
+  - Use a natural, varied rhythm. Avoid "AI-isms" like *testament*, *pivotal*, *vibrant*, *delve*, *unlocking*, *tapestry*.
+  - No marketing fluff, no sycophantic tone.
+- **English only, NO EMOJIS anywhere.**
+- **Markdown Perfection (Mandatory)**:
+  - **No Multiple Blanks (MD012)**: Never use more than one consecutive blank line.
+  - **Heading Spacing (MD022/32)**: Every heading must have exactly one blank line above and below it.
+  - **Code Block Spacing (MD031)**: Every fenced code block (```) must have exactly one blank line above and below it.
+  - **List Spacing (MD032)**: Every list must have a blank line before it.
+  - **No Bold-as-Heading (MD036)**: Never use bold text as a section heading — use `##` or `###`.
+  - **Language Declaration (MD040)**: Every fenced code block must declare a language: ` ```bash `, ` ```json `, ` ```text `, etc. Never use a bare ` ``` `.
+  - **Trailing Newline (MD047)**: Every file must end with exactly one single newline character.
+  - **Indentation (MD007)**: List markers must not have extra leading whitespace (0 or 2 spaces max).
+  - Rules to ignore: MD013 (line length), MD033 (inline HTML), MD041 (first heading), MD060.
+
 - After writing any `.md` file, run `markdownlint-cli2 "<file>"` to verify — fix any errors before reporting done.
 - If the diff is too large for context, focus on the public interface changes first
 - Do not rewrite documentation that was not affected by the changes
