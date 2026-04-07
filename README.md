@@ -9,8 +9,8 @@
 
 Portable AI developer setup: Claude thinks, local Ollama executes.
 
-Works with any project — TypeScript, Python, Flutter, Swift, C++.
-No Python dependency — all orchestration is pure Bash and `jq`.
+Works with any project: TypeScript, Python, Flutter, Swift, C++.
+All orchestration is pure Bash and `jq`, with no Python required.
 
 ![ai-orchestrator pipeline](documentation/pipeline.svg)
 
@@ -29,7 +29,7 @@ Details: [Architecture](documentation/ARCHITECTURE.md) · [Agents](documentation
 
 - [Claude Code](https://claude.ai/code) CLI
 - [Ollama](https://ollama.com) installed and running
-- `jq` — installed automatically by `install.sh`
+- `jq` (`install.sh` installs it automatically)
 
 ## Installation
 
@@ -45,7 +45,7 @@ cd ~/Projects/ai-orchestrator
 ./scripts/install.sh
 ```
 
-The installer checks dependencies, creates symlinks in `~/.claude/`, and selects models based on your hardware.
+The installer checks for Ollama and `jq`, creates symlinks in `~/.claude/`, and writes `llm-config.json` with models sized for your available RAM.
 
 ## Configuration
 
@@ -62,7 +62,7 @@ Model routing is controlled by [`llm-config.json`](llm-config.json) in the repo 
 }
 ```
 
-Change a model name — takes effect immediately, no restart needed.
+Changing a model name takes effect immediately without restarting anything.
 See [Architecture → Model Configuration](documentation/ARCHITECTURE.md#model-configuration) for details.
 
 ## Commands
@@ -78,7 +78,7 @@ All commands and agents: [Skills & Commands](documentation/SKILLS.md) · [Agents
 
 ## Token savings
 
-Every Ollama call is tracked. View estimated savings vs Claude Sonnet pricing:
+The orchestrator tracks every Ollama call. View estimated savings vs Claude Sonnet pricing:
 
 ```bash
 /stats week
@@ -110,7 +110,7 @@ Compatible with `.cursorrules` and `.clauderules`.
 cd ~/Projects/ai-orchestrator && git pull
 ```
 
-Changes apply immediately via symlinks — no reinstall needed.
+Changes apply immediately via symlinks, so you do not need to reinstall.
 
 ---
 

@@ -1,61 +1,77 @@
-# AI Guide — Global
+# AI Guide — Project-specific reference
 
-## Code Writing Workflow — Save Claude Tokens
+This file is read by Claude Code when working in this repo. It covers the orchestration pipeline, LLM roles, slash commands, and trigger rules. General principles (humanizer, doc standards, zero deps, English only) live in `~/.claude/CLAUDE.md` and are not repeated here.
 
-**For any non-trivial coding task, always follow this pipeline:**
+## Coding workflow
 
-```markdown
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  /implement                                                                 │
-│                                                                             │
-│                                       ┌─ reviewer (file A) ─┐              │
-│  planner ──► coder ──► build/type ────┤─ reviewer (file B) ─├──► verdict  │
-│                        check          └─ reviewer (file C) ─┘   fix loop  │
-└─────────────────────────────────────────────────────────────────────────────┘
+For any non-trivial coding task, follow this pipeline:
 
-Step 1 — planner      │ Claude Sonnet (inherit)  │ detects language, reads standarts,
-                      │                          │ explores codebase, writes context file
-Step 2 — coder        │ Claude Haiku             │ orchestrates; calls Ollama (role: coder)
-Step 2.5 — build      │ Claude Haiku             │ tsc --noEmit (TS), etc.
-Step 3 — reviewer ×N  │ Claude Haiku (parallel)  │ orchestrates; calls Ollama (role: reviewer)
-```markdown
+```text
+/implement
 
-**LLM Configuration (`llm-config.json`):**
+                                   ┌─ reviewer (file A) ─┐
+planner ──► coder ──► build/type ──┤─ reviewer (file B) ─├──► verdict / fix loop
+                      check        └─ reviewer (file C) ─┘
+```
 
-| Role | Responsibility | Default Model |
-|------|----------------|---------------|
-| `coder` | Main code generation | `qwen2.5-coder:14b...` |
-| `reviewer` | Code review and documentation | `qwen2.5-coder:7b` |
-| `commit` | Commit messages and minor fixes | `qwen2.5-coder:1.5b` |
-| `embedding` | Semantic search and RAG | `nomic-embed-text` |
+| Step | Runner | LLM role | What it does |
+|------|--------|----------|--------------|
+| 1 — planner | Claude Sonnet (inherit) | — | Detects language, reads standards, explores codebase, writes context file |
+| 2 — coder | Claude Haiku | `coder` | Orchestrates; calls Ollama |
+| 2.5 — build | Claude Haiku | — | `tsc --noEmit` (TS) or equivalent |
+| 3 — reviewer ×N | Claude Haiku (parallel) | `reviewer` | Orchestrates; calls Ollama |
 
-**Language standarts** (auto-detected by planner and reviewer):
+## LLM roles
 
-- TypeScript → `.claude/skills/ts-code-standarts.md`
-- Python → `.claude/skills/python-code-standarts.md`
-- Flutter/Dart → `.claude/skills/fluter-code-standarts.md`
-- Swift → `.claude/skills/swift-code-standarts.md`
-- C++ → `.claude/skills/c-code-standarts.md`
-- Documentation → `.claude/skills/doc-standarts.md`
+Roles are defined in `llm-config.json` at the project root or in `~/.claude/llm-config.json`.
+
+| Role | Default model | Responsibility |
+|------|--------------|----------------|
+| `coder` | `hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS` | Main code generation |
+| `reviewer` | `qwen2.5-coder:7b` | Code review and documentation |
+| `commit` | `qwen2.5-coder:7b` | Commit messages and minor fixes |
+| `embedding` | `nomic-embed-text` | Semantic search and RAG |
+
+## Language standards
+
+The planner and reviewer auto-detect the language from the changed files and load the matching standard:
+
+| Language | Standard file |
+|----------|---------------|
+| TypeScript | [skills/ts-code-standarts.md](../skills/ts-code-standarts.md) |
+| Python | [skills/python-code-standarts.md](../skills/python-code-standarts.md) |
+| Flutter/Dart | [skills/flutter-code-standarts.md](../skills/flutter-code-standarts.md) |
+| Swift | [skills/swift-code-standarts.md](../skills/swift-code-standarts.md) |
+| C++ | [skills/c-code-standarts.md](../skills/c-code-standarts.md) |
+| Documentation | [skills/doc-standarts.md](../skills/doc-standarts.md) |
 
 ## Commands
 
-| Command | When |
-|---------|------|
+| Command | When to use |
+|---------|-------------|
 | `/implement` | Full plan → code → build → review pipeline |
-| `/review` | Check current changes against language standarts |
-| `/commit` | Stage and commit changes (uses local LLM) |
-| `/stats [day\|week\|month]` | Show token savings summary (all time if no arg) |
+| `/review` | Check current changes against language standards |
+| `/commit` | Stage and commit changes using the local LLM |
+| `/stats [day\|week\|month]` | Token savings summary (all time if no argument) |
 
-**Agents available on demand** (not auto-run):
+## Agents available on demand
 
-- `test-agent` — write and run tests (uses `coder` role)
-- `doc-writer` — update documentation (uses `reviewer` role)
+These are not triggered automatically. Call them explicitly when needed.
 
-**Trigger rules** — BLOCKING REQUIREMENT: invoke the agent/skill BEFORE generating any other response:
+- `test-agent` — write and run tests (uses the `coder` role)
+- `doc-writer` — update documentation (uses the `reviewer` role)
 
-- User says "commit", "сделай коммит", "закоммить" → run `commit` agent
-- User says "implement", "напиши код", "добавь фичу" → run `implement` skill
-- User asks to write, create, or update documentation → run `doc-writer` agent
+## Trigger rules
 
-**NEVER edit core orchestration scripts directly** — only use `doc-writer` for markdown. Use `coder` for `.sh` scripts.
+BLOCKING REQUIREMENT: invoke the matching agent or skill before generating any other response.
+
+- User says "commit", "сделай коммит", or "закоммить" → run the `commit` agent
+- User says "implement", "напиши код", or "добавь фичу" → run the `implement` skill
+- User asks to write, create, or update documentation → run the `doc-writer` agent
+
+## Core constraints
+
+- NEVER edit core orchestration scripts directly — use the `coder` agent for `.sh` files.
+- NEVER use `doc-writer` for shell scripts or `coder` for markdown files.
+- NEVER add Python dependencies to the core logic.
+- ALWAYS use `jq` for JSON processing.

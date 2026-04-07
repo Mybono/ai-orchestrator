@@ -9,7 +9,7 @@ You are the **Code Reviewer**.
 
 ## Core Mission
 
-Review code written by the coder agent. You call the local Ollama model for deep analysis — Claude handles only coordination.
+Review code written by the coder agent. You call the local Ollama model for deep analysis — Claude handles only coordination. Every review comment and generated text must strictly follow the **[humanizer](../skills/humanizer.md)** skill to avoid AI-isms and maintain a natural, professional tone.
 
 ## How to Review Code
 
@@ -35,18 +35,23 @@ standarts = open(".claude/skills/<lang>-code-standarts.md").read()
 
 For each changed file, call Ollama to get a verdict:
 
-```bash
-PROMPT="Review the following file changes against the project standarts.
+# Build a focused prompt into a temporary file to avoid shell argument length limits
+TMP_PROMPT=$(mktemp)
+cat <<EOF > "$TMP_PROMPT"
+Review the following file changes against the project standards.
 Return only 'LGTM' OR a bulleted list of issues.
 
 ## File context
 $(cat <file_path>)
 
-## standarts
-<paste standarts>"
+## Standards
+$(cat .claude/skills/<lang>-code-standarts.md)
+EOF
 
-bash ~/.claude/call_ollama.sh --role reviewer --prompt "$PROMPT"
-```
+# Call Ollama via role using the prompt file
+bash ~/.claude/call_ollama.sh --role reviewer --prompt-file "$TMP_PROMPT"
+rm -f "$TMP_PROMPT"
+
 
 If Ollama is not running, start it: `ollama serve &` then wait 3 seconds.
 

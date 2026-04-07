@@ -4,6 +4,7 @@
 ROLE=""
 MODEL_OVERRIDE=""
 PROMPT=""
+PROMPT_FILE=""
 CONTEXT_FILE=""
 # Find config: project-level first (walk up from $PWD), then global
 _DIR="$PWD"
@@ -22,11 +23,17 @@ while [[ "$#" -gt 0 ]]; do
         --role) ROLE="$2"; shift ;;
         --model) MODEL_OVERRIDE="$2"; shift ;;
         --prompt) PROMPT="$2"; shift ;;
+        --prompt-file) PROMPT_FILE="$2"; shift ;;
         --context-file) CONTEXT_FILE="$2"; shift ;;
         *) echo "Unknown parameter: $1"; exit 1 ;;
     esac
     shift
 done
+
+# Resolve prompt from file if provided
+if [ -n "$PROMPT_FILE" ] && [ -f "$PROMPT_FILE" ]; then
+    PROMPT=$(cat "$PROMPT_FILE")
+fi
 
 # Resolve model
 SELECTED_MODEL="$MODEL_OVERRIDE"
@@ -47,7 +54,7 @@ if [ -z "$SELECTED_MODEL" ] || [ "$SELECTED_MODEL" == "null" ]; then
 fi
 
 if [ -z "$PROMPT" ]; then
-    echo "Usage: $0 [--role <role> | --model <model>] --prompt <prompt> [--context-file <file>]"
+    echo "Usage: $0 [--role <role> | --model <model>] [--prompt <prompt> | --prompt-file <file>] [--context-file <file>]"
     exit 1
 fi
 
