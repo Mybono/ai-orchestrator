@@ -71,6 +71,6 @@ jobs:
     if: github.event_name == 'pull_request'
     steps:
       - name: Auto-merge PR
-        run: gh pr merge --auto --squash "${{ github.event.pull_request.html_url }}"
+        run: gh pr merge --squash "${{ github.event.pull_request.html_url }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
