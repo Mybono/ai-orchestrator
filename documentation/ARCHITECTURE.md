@@ -50,7 +50,7 @@ If `llm-config.json` is missing or the role is not found, the script falls back 
 
 | Role | Fallback model |
 |------|----------------|
-| `coder` | `qwen2.5-coder:14b-instruct-q4_K_M` |
+| `coder` | `hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS` |
 | `reviewer` | `qwen2.5-coder:7b` |
 | `commit` | `qwen2.5-coder:7b` |
 | (any other) | `qwen2.5-coder:7b` |
@@ -62,7 +62,7 @@ If `llm-config.json` is missing or the role is not found, the script falls back 
 ```json
 {
   "models": {
-    "coder": "qwen3-coder:30b-a3b-q4_K_M",
+    "coder": "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
     "reviewer": "qwen2.5-coder:7b",
     "commit": "qwen2.5-coder:7b",
     "embedding": "nomic-embed-text"

@@ -46,7 +46,7 @@ fi
 # Fallback defaults if still empty
 if [ -z "$SELECTED_MODEL" ] || [ "$SELECTED_MODEL" == "null" ]; then
     case $ROLE in
-        coder) SELECTED_MODEL="qwen2.5-coder:14b-instruct-q4_K_M" ;;
+        coder) SELECTED_MODEL="hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS" ;;
         reviewer) SELECTED_MODEL="qwen2.5-coder:7b" ;;
         commit) SELECTED_MODEL="qwen2.5-coder:7b" ;;
         *) SELECTED_MODEL="qwen2.5-coder:7b" ;;
