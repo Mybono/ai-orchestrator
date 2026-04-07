@@ -17,6 +17,7 @@ Language detection happens by checking indicator files in the project root:
 | [swift-code-standarts.md](../skills/swift-code-standarts.md) | Swift | `Package.swift` or `*.xcodeproj` |
 | [c-code-standarts.md](../skills/c-code-standarts.md) | C++ | `CMakeLists.txt` or `*.cpp` files |
 | [doc-standarts.md](../skills/doc-standarts.md) | Documentation | always available |
+| [humanizer.md](../skills/humanizer.md) | Writing style — removes AI patterns | always available |
 
 The planner reads the skill file once during Phase 1 and embeds the most relevant rules into `task_context.md`. The reviewer reads it directly before each review.
 

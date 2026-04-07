@@ -46,14 +46,14 @@ EOF
 # Call Ollama via role using the prompt file
 bash ~/.claude/call_ollama.sh --role coder --prompt-file "$TMP_PROMPT"
 rm -f "$TMP_PROMPT"
-markdown
+```
 
 If Ollama is not running, start it first:
 
 ```bash
 ollama serve > /dev/null 2>&1 &
 sleep 3
-```markdown
+```
 
 Use Ollama for:
 

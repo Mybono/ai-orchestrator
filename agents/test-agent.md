@@ -58,7 +58,7 @@ EOF
 # Call Ollama via role using the prompt file
 bash ~/.claude/call_ollama.sh --role coder --prompt-file "$TMP_PROMPT"
 rm -f "$TMP_PROMPT"
-markdown
+```
 
 If Ollama is not running: `ollama serve > /dev/null 2>&1 & sleep 3`
 
@@ -91,7 +91,7 @@ flutter test <test_file_path>
 
 # Swift
 swift test --filter <TestSuiteName>
-```markdown
+```
 
 ## Step 7 — Fix loop (one round only)
 
@@ -120,7 +120,7 @@ EOF
 # Call Ollama via role using the prompt file
 bash ~/.claude/call_ollama.sh --role coder --prompt-file "$TMP_PROMPT"
 rm -f "$TMP_PROMPT"
-markdown
+```
 
 1. Apply fix and run again
 2. If still failing — stop and report. Do NOT loop further.

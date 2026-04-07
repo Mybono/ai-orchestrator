@@ -40,7 +40,7 @@ ls .claude/context/project_overview.md .claude/context/analysis_delta.md 2>/dev/
 1. **Understand the task** — clarify what needs to be built or fixed
 2. **Detect project language** — check for indicator files in the project root and read the matching standarts file:
    - `tsconfig.json` → TypeScript → read `.claude/skills/ts-code-standarts.md`
-   - `pubspec.yaml` → Flutter/Dart → read `.claude/skills/fluter-code-standarts.md`
+   - `pubspec.yaml` → Flutter/Dart → read `.claude/skills/flutter-code-standarts.md`
    - `Package.swift` or `*.xcodeproj` → Swift → read `.claude/skills/swift-code-standarts.md`
    - `CMakeLists.txt` or `*.cpp` files → C++ → read `.claude/skills/c-code-standarts.md`
    - `pyproject.toml` or `requirements.txt` → Python → read `.claude/skills/python-code-standarts.md`

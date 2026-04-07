@@ -33,7 +33,7 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 | `commands/stats.md` | `/stats` slash command — runs `stats.sh` with optional period arg (day/week/month) |
 | `skills/ts-code-standarts.md` | TypeScript coding standarts (indicator: `tsconfig.json`) |
 | `skills/python-code-standarts.md` | Python coding standarts (indicator: `pyproject.toml` or `requirements.txt`) |
-| `skills/fluter-code-standarts.md` | Flutter/Dart coding standarts (indicator: `pubspec.yaml`) |
+| `skills/flutter-code-standarts.md` | Flutter/Dart coding standarts (indicator: `pubspec.yaml`) |
 | `skills/swift-code-standarts.md` | Swift coding standarts (indicator: `Package.swift` or `*.xcodeproj`) |
 | `skills/c-code-standarts.md` | C++ coding standarts (indicator: `CMakeLists.txt` or `*.cpp`) |
 | `skills/doc-standarts.md` | Documentation writing standarts (used by doc-writer agent) |

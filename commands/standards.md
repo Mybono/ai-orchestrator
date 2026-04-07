@@ -5,7 +5,7 @@ Show the coding standarts for this project. Use these rules when writing, review
 Detect the project language from indicator files in the current working directory:
 
 - `tsconfig.json` → TypeScript → read `.claude/skills/ts-code-standarts.md`
-- `pubspec.yaml` → Flutter/Dart → read `.claude/skills/fluter-code-standarts.md`
+- `pubspec.yaml` → Flutter/Dart → read `.claude/skills/flutter-code-standarts.md`
 - `Package.swift` or `*.xcodeproj` → Swift → read `.claude/skills/swift-code-standarts.md`
 - `CMakeLists.txt` or `*.cpp` files → C++ → read `.claude/skills/c-code-standarts.md`
 - `pyproject.toml` or `requirements.txt` → Python → read `.claude/skills/python-code-standarts.md`
