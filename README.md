@@ -25,6 +25,14 @@ planner → coder → build check → reviewer(s) → verdict
 Claude writes the plan. A local Ollama model writes the code. Claude reviews the output.
 Details: [Architecture](documentation/ARCHITECTURE.md) · [Agents](documentation/AGENTS.md)
 
+In your AI chat (Claude, Antigravity, Cursor), send `/implement`, then in the next message describe what to build:
+
+```text
+Add a rate limiter to the API endpoints
+```
+
+That's it. The pipeline runs automatically.
+
 ## Requirements
 
 - [Claude Code](https://claude.ai/code) CLI
@@ -75,6 +83,16 @@ See [Architecture → Model Configuration](documentation/ARCHITECTURE.md#model-c
 | [`/debug`](commands/debug.md) | Trace root cause of an error |
 
 All commands and agents: [Skills & Commands](documentation/SKILLS.md) · [Agents](documentation/AGENTS.md)
+
+## Scripts
+
+`install.sh` adds shell aliases for these commands automatically:
+
+```bash
+local-commit              # stage all changes, generate a commit message via Ollama, confirm and commit
+open-pr                   # generate a PR title and description via Ollama, optionally create it via gh
+stats [day|week|month]    # show token savings summary
+```
 
 ## Token savings
 
