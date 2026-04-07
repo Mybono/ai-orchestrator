@@ -17,6 +17,7 @@ Language detection happens by checking indicator files in the project root:
 | [swift-code-standarts.md](../skills/swift-code-standarts.md) | Swift | `Package.swift` or `*.xcodeproj` |
 | [c-code-standarts.md](../skills/c-code-standarts.md) | C++ | `CMakeLists.txt` or `*.cpp` files |
 | [doc-standarts.md](../skills/doc-standarts.md) | Documentation | always available |
+| [humanizer.md](../skills/humanizer.md) | Writing style — removes AI patterns | always available |
 
 The planner reads the skill file once during Phase 1 and embeds the most relevant rules into `task_context.md`. The reviewer reads it directly before each review.
 
@@ -30,6 +31,7 @@ Commands are markdown files in `commands/` (symlinked to `~/.claude/commands/`).
 |---------|------|--------------|
 | `/implement` | `implement.md` | Runs the full planner → coder → build check → reviewer pipeline |
 | `/review` | `review.md` | Reviews current changes against the detected project language standards |
+| `/commit` | `commit.md` | Stages changes and generates a commit message via Ollama |
 | `/stats [day\|week\|month]` | `stats.md` | Shows token savings summary; calls `~/.claude/stats.sh` |
 | `/debug` | `debug.md` | Reads an error, traces the data flow, states root cause, proposes a minimal fix |
 | `/standards` | `standards.md` | Detects project language and displays the matching coding standards |

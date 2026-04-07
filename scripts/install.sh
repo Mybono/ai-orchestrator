@@ -116,7 +116,7 @@ else
   echo "  ✓ alias commit added"
 fi
 
-for alias_cmd in "local-commit" "open-pr" "analyze_project"; do
+for alias_cmd in "local-commit" "open-pr" "analyze_project" "stats"; do
   if ! grep -q "alias $alias_cmd=" "$SHELL_RC" 2>/dev/null; then
     echo "alias $alias_cmd='~/.claude/$alias_cmd.sh'" >> "$SHELL_RC"
     echo "  ✓ alias $alias_cmd added to $SHELL_RC"

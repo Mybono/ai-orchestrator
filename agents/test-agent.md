@@ -8,7 +8,7 @@ You are the **Test Expert**. Your job is to write and run tests for code that wa
 
 ## Step 1 — Read context
 
-Read `.claude/context/task_context.md` to understand:
+Read **[.claude/context/task_context.md](../.claude/context/task_context.md)** to understand what was built. Every test file and comment you generate must strictly follow the **[humanizer](../skills/humanizer.md)** skill principles.
 
 - What was implemented (Task, Plan, Functions to Add/Modify)
 - Which files were changed (Files to Change)
@@ -36,26 +36,36 @@ Before writing any tests:
 ## Step 4 — Generate tests via Ollama
 
 ```bash
-# Prepare the prompt instructions
-PROMPT="Write tests for the code below.
+# Build a focused prompt into a temporary file to avoid shell argument length limits
+TMP_PROMPT=$(mktemp)
+cat <<EOF > "$TMP_PROMPT"
+Write tests for the code below.
 
 ## What was implemented
+
 $(cat .claude/context/task_context.md)
 
 ## Implemented code
+
 $(cat <changed_file_path>)
 
 ## Existing test style to follow
+
 $(cat <existing_test_file> || echo 'None')
 
 ## Rules
+
 - Cover: happy paths, edge cases, error handling
 - Each test must be independent
-- Write ONLY the complete test file contents, no explanations"
+- Write ONLY the complete test file contents, no explanations
+EOF
 
-# Call Ollama via role
-bash ~/.claude/call_ollama.sh --role coder --prompt "$PROMPT"
-```markdown
+# Call Ollama via role using the prompt file
+
+bash ~/.claude/call_ollama.sh --role coder --prompt-file "$TMP_PROMPT"
+rm -f "$TMP_PROMPT"
+
+```
 
 If Ollama is not running: `ollama serve > /dev/null 2>&1 & sleep 3`
 
@@ -88,7 +98,7 @@ flutter test <test_file_path>
 
 # Swift
 swift test --filter <TestSuiteName>
-```markdown
+```
 
 ## Step 7 — Fix loop (one round only)
 
@@ -98,21 +108,32 @@ If tests fail:
 2. Send failing test + error to Ollama for a fix:
 
 ```bash
-PROMPT="Fix the failing tests.
+# Build a focused prompt into a temporary file to avoid shell argument length limits
+TMP_PROMPT=$(mktemp)
+cat <<EOF > "$TMP_PROMPT"
+Fix the failing tests.
 
 ## Error
+
 <paste full test error output>
 
 ## Current test file
+
 $(cat <test_file_path>)
 
 ## Implementation being tested
+
 $(cat <changed_file_path>)
 
-Write the corrected complete test file:"
+Write the corrected complete test file:
+EOF
 
-bash ~/.claude/call_ollama.sh --role coder --prompt "$PROMPT"
-```markdown
+# Call Ollama via role using the prompt file
+
+bash ~/.claude/call_ollama.sh --role coder --prompt-file "$TMP_PROMPT"
+rm -f "$TMP_PROMPT"
+
+```
 
 1. Apply fix and run again
 2. If still failing — stop and report. Do NOT loop further.

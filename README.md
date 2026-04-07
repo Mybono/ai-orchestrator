@@ -9,8 +9,8 @@
 
 Portable AI developer setup: Claude thinks, local Ollama executes.
 
-Works with any project — TypeScript, Python, Flutter, Swift, C++.
-No Python dependency — all orchestration is pure Bash and `jq`.
+Works with any project: TypeScript, Python, Flutter, Swift, C++.
+All orchestration is pure Bash and `jq`, with no Python required.
 
 ![ai-orchestrator pipeline](documentation/pipeline.svg)
 
@@ -25,11 +25,19 @@ planner → coder → build check → reviewer(s) → verdict
 Claude writes the plan. A local Ollama model writes the code. Claude reviews the output.
 Details: [Architecture](documentation/ARCHITECTURE.md) · [Agents](documentation/AGENTS.md)
 
+In your AI chat (Claude, Antigravity, Cursor), send `/implement`, then in the next message describe what to build:
+
+```text
+Add a rate limiter to the API endpoints
+```
+
+That's it. The pipeline runs automatically.
+
 ## Requirements
 
 - [Claude Code](https://claude.ai/code) CLI
 - [Ollama](https://ollama.com) installed and running
-- `jq` — installed automatically by `install.sh`
+- `jq` (`install.sh` installs it automatically)
 
 ## Installation
 
@@ -45,7 +53,7 @@ cd ~/Projects/ai-orchestrator
 ./scripts/install.sh
 ```
 
-The installer checks dependencies, creates symlinks in `~/.claude/`, and selects models based on your hardware.
+The installer checks for Ollama and `jq`, creates symlinks in `~/.claude/`, and writes `llm-config.json` with models sized for your available RAM.
 
 ## Configuration
 
@@ -54,7 +62,7 @@ Model routing is controlled by [`llm-config.json`](llm-config.json) in the repo 
 ```json
 {
   "models": {
-    "coder":     "qwen3-coder:30b-a3b-q4_K_M",
+    "coder":     "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
     "reviewer":  "qwen2.5-coder:7b",
     "commit":    "qwen2.5-coder:7b",
     "embedding": "nomic-embed-text"
@@ -62,7 +70,7 @@ Model routing is controlled by [`llm-config.json`](llm-config.json) in the repo 
 }
 ```
 
-Change a model name — takes effect immediately, no restart needed.
+Changing a model name takes effect immediately without restarting anything.
 See [Architecture → Model Configuration](documentation/ARCHITECTURE.md#model-configuration) for details.
 
 ## Commands
@@ -76,9 +84,19 @@ See [Architecture → Model Configuration](documentation/ARCHITECTURE.md#model-c
 
 All commands and agents: [Skills & Commands](documentation/SKILLS.md) · [Agents](documentation/AGENTS.md)
 
+## Scripts
+
+`install.sh` adds shell aliases for these commands automatically:
+
+```bash
+local-commit              # stage all changes, generate a commit message via Ollama, confirm and commit
+open-pr                   # generate a PR title and description via Ollama, optionally create it via gh
+stats [day|week|month]    # show token savings summary
+```
+
 ## Token savings
 
-Every Ollama call is tracked. View estimated savings vs Claude Sonnet pricing:
+The orchestrator tracks every Ollama call. View estimated savings vs Claude Sonnet pricing:
 
 ```bash
 /stats week
@@ -110,7 +128,7 @@ Compatible with `.cursorrules` and `.clauderules`.
 cd ~/Projects/ai-orchestrator && git pull
 ```
 
-Changes apply immediately via symlinks — no reinstall needed.
+Changes apply immediately via symlinks, so you do not need to reinstall.
 
 ---
 

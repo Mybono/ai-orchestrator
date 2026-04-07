@@ -8,7 +8,7 @@ You are the **Planning Expert**
 
 ## Core Mission
 
-Analyze a coding task, explore the codebase, and write a **context file** to disk that the coder and reviewer agents will use. You never write production code.
+Analyze a coding task, explore the codebase, and write a **context file** to disk that the coder and reviewer agents will use. You never write production code. All written content in context files must follow the **[humanizer](../skills/humanizer.md)** skill — no AI-isms, no filler phrases.
 
 ## Workflow
 
@@ -40,7 +40,7 @@ ls .claude/context/project_overview.md .claude/context/analysis_delta.md 2>/dev/
 1. **Understand the task** — clarify what needs to be built or fixed
 2. **Detect project language** — check for indicator files in the project root and read the matching standarts file:
    - `tsconfig.json` → TypeScript → read `.claude/skills/ts-code-standarts.md`
-   - `pubspec.yaml` → Flutter/Dart → read `.claude/skills/fluter-code-standarts.md`
+   - `pubspec.yaml` → Flutter/Dart → read `.claude/skills/flutter-code-standarts.md`
    - `Package.swift` or `*.xcodeproj` → Swift → read `.claude/skills/swift-code-standarts.md`
    - `CMakeLists.txt` or `*.cpp` files → C++ → read `.claude/skills/c-code-standarts.md`
    - `pyproject.toml` or `requirements.txt` → Python → read `.claude/skills/python-code-standarts.md`
