@@ -4,6 +4,9 @@ We're glad you're here. This project is built on a few core beliefs that keep it
 
 ## Project philosophy
 
+
+
+
 - **Pure Bash**: Everything core happens in Bash, `jq`, and `curl`. We don't use Python for orchestration. If it can be done with a shell script, it should be.
 - **Portability**: The system must run on any macOS or Linux machine without a complex setup.
 - **Local-first**: LLM calls stay local. We delegate coding and reviews to Ollama to save tokens and keep data on your machine.

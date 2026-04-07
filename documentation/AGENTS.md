@@ -4,6 +4,9 @@
 
 # Agents
 
+
+
+
 Agents are markdown files in `agents/`. Each file defines the behavior of a subagent that Claude Code can spawn. The `/implement` command orchestrates agents automatically; agents can also be invoked on demand.
 
 ## Planner
