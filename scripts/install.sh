@@ -34,6 +34,7 @@ SYMLINK_TARGETS=(
   "scripts/analyze_project.sh"
   "scripts/track_savings.sh"
   "scripts/stats.sh"
+  "scripts/check-update.sh"
 )
 
 echo "Installing ai-orchestrator from: $REPO_DIR"
@@ -235,3 +236,4 @@ echo ""
 echo "Setup complete! To use orchestrator rules in your project, copy ~/.claude/ai_rules.md to your project root."
 echo "Example: cp ~/.claude/ai_rules.md ~/Projects/my-app/ai_rules.md"
 echo ""
+bash "$REPO_DIR/scripts/check-update.sh"

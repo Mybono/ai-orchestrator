@@ -76,3 +76,8 @@ SUMMARY=$(jq -r \
     " "$STATS_FILE")
 
 echo "$SUMMARY"
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -f "$SCRIPT_DIR/check-update.sh" ]; then
+    bash "$SCRIPT_DIR/check-update.sh"
+fi
