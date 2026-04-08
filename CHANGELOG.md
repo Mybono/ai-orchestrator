@@ -2,6 +2,54 @@
 
 All notable changes to ai-orchestrator.
 ## [unreleased]
+### 2026-04-08
+- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`e423463`](https://github.com/Mybono/ai-orchestrator/commit/e4234634f50f8b2fb981bf55e5c118cda00af11e) Auto-fix markdown lint errors
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`cb03846`](https://github.com/Mybono/ai-orchestrator/commit/cb038461ed460de9cce5c329fdfbd6f3fb146978) Add specialized plugin detection and documentation updates
+- ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`a0ed7ed`](https://github.com/Mybono/ai-orchestrator/commit/a0ed7ed47109bdd28e9faad5870a09bf8279f5b5) Add new plugins for API design, Docker optimization, Kubernetes management, and security guidance
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`4a1c597`](https://github.com/Mybono/ai-orchestrator/commit/4a1c5979b43d3f7daf61af3d3577562074b33bd5) Split and modularize commit-related commands
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`23de03c`](https://github.com/Mybono/ai-orchestrator/commit/23de03c123eac4ad759b1b29702ba4c5af0d563e) Update git debug command documentation and implementation
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`eaa255d`](https://github.com/Mybono/ai-orchestrator/commit/eaa255df53c777796f906d6f78363d3424ce7f19) Update solution proposals format
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`31ea2ba`](https://github.com/Mybono/ai-orchestrator/commit/31ea2ba1f633aab4b1e37491e3282240db1de1c4) Update chain-of-thought and few-shot examples for clarity
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`622f85c`](https://github.com/Mybono/ai-orchestrator/commit/622f85caa049e9e23884b917ef8c09aed11e1cdc) Update git hooks for secrets management and dependency auditing
+- ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`2ef2ad6`](https://github.com/Mybono/ai-orchestrator/commit/2ef2ad6445f7f9bec8b59b05cbe4bfa7cb5dcce8) Add new skills for real-time communication and microservices architecture
+- ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`d809117`](https://github.com/Mybono/ai-orchestrator/commit/d80911714052abc2d1aa508cd23229b4485a178a) Add git-advanced skill for complex Git operations
+- ![docs](https://img.shields.io/badge/docs-0075ca?style=flat-square) [`5e415d5`](https://github.com/Mybono/ai-orchestrator/commit/5e415d5ac58894400dfedc29163d625129467e31) Add DevOps agent documentation and update agent roles
+- ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`2f80b0f`](https://github.com/Mybono/ai-orchestrator/commit/2f80b0fc366bc9fccc8064fbbb57a81e26bf3c19) Add AWS cloud patterns documentation and code examples
+- ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`a31172e`](https://github.com/Mybono/ai-orchestrator/commit/a31172eb5cea5b334359fd617c6c620fdc3d4f69) Add GitHub Actions workflow for CI/CD pipeline
+- ![docs](https://img.shields.io/badge/docs-0075ca?style=flat-square) [`d301c37`](https://github.com/Mybono/ai-orchestrator/commit/d301c3753dbf3cd88742c82b1027b4651d7c50f3) Add first principles documentation and examples for software engineering decisions
+- ![docs](https://img.shields.io/badge/docs-0075ca?style=flat-square) [`1dd6e67`](https://github.com/Mybono/ai-orchestrator/commit/1dd6e6772f6b52582235699bf6facb65404aaeea) Add historical background and principles from Toyota Production System
+- ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`d9aca59`](https://github.com/Mybono/ai-orchestrator/commit/d9aca598cbec73a36fb77f589cfb3b5d3051f465) Add Python testing reference and update git branching instructions
+- ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`1fb1502`](https://github.com/Mybono/ai-orchestrator/commit/1fb1502015884afa7002e94a4b0a91b5bceb113c) Add TypeScript references and toolchain configuration
+### 2026-04-06
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`1b3fc92`](https://github.com/Mybono/ai-orchestrator/commit/1b3fc9251a1ad1054ed6976f7ad8b36eb06a9bd7) Remove commitlint configuration (#11)
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`e8a6ceb`](https://github.com/Mybono/ai-orchestrator/commit/e8a6ceb9f98c3c7d00637f9a782596d8d5392956) Update vulnerability reporting instructions (#10)
+- ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`cae461c`](https://github.com/Mybono/ai-orchestrator/commit/cae461c1d49da6086ed61c05bce71c8e1044c08b) Add documentation and scripts for Claude Code integration (#9)
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`0726c9e`](https://github.com/Mybono/ai-orchestrator/commit/0726c9e0133678ac920aa1b7a83b2cf0f3bf536c) Update permissions and add automerge job (#8)
+- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`a5c1fb7`](https://github.com/Mybono/ai-orchestrator/commit/a5c1fb78f0880e70caf1586ed092b35b6e7d8ee8) Add git hooks for changelog generation and commit linting
+- ![docs](https://img.shields.io/badge/docs-0075ca?style=flat-square) [`3c93f2f`](https://github.com/Mybono/ai-orchestrator/commit/3c93f2f0244f5cd3e840e504111ac15147a83a31) Add initial changelog for ai-orchestrator release
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`38e8e3b`](https://github.com/Mybono/ai-orchestrator/commit/38e8e3b3f7549b90ea63bd45db682833d8861a1a) Add --input-tokens/--output-tokens to track_savings.sh and auto-track all call_ollama.sh calls
+- ![docs](https://img.shields.io/badge/docs-0075ca?style=flat-square) [`5b690be`](https://github.com/Mybono/ai-orchestrator/commit/5b690beb9e396656a0bcc4f08bfcf06fd4e3651b) Update vulnerability reporting instructions
+- ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`56c231d`](https://github.com/Mybono/ai-orchestrator/commit/56c231dbd5b0ce2f81d5b8b87cea6473e5e13323) Add security policy and enhance one-liner installation script
+- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`66c3048`](https://github.com/Mybono/ai-orchestrator/commit/66c3048899435b501001f42c549abc1ecf4cd210) Remove trailing newline
+- ![docs](https://img.shields.io/badge/docs-0075ca?style=flat-square) [`95722a2`](https://github.com/Mybono/ai-orchestrator/commit/95722a2348b6807b7c06032c7751716194d0faf5) Refine issue templates and pull request template for clarity and structure
+- ![docs](https://img.shields.io/badge/docs-0075ca?style=flat-square) [`adb8749`](https://github.com/Mybono/ai-orchestrator/commit/adb8749d3d6ceb2ec2cc9924820389d7b2d0f173) Update GitHub issue templates and PR template for clarity and structure
+- ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`25346af`](https://github.com/Mybono/ai-orchestrator/commit/25346afa240e293b3b0a47cf9f050787a691fba7) Add issue templates for bug reports and feature requests
+- ![docs](https://img.shields.io/badge/docs-0075ca?style=flat-square) [`da3245f`](https://github.com/Mybono/ai-orchestrator/commit/da3245f7e4649d35faa3a146ccf4845b64b2cb6e) Add CONTRIBUTING.md for project guidelines
+- ![docs](https://img.shields.io/badge/docs-0075ca?style=flat-square) [`849ab1c`](https://github.com/Mybono/ai-orchestrator/commit/849ab1c967959cd24f251d5e9c0ec785d8f13df5) Add MIT license file
+- ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`2c0c871`](https://github.com/Mybono/ai-orchestrator/commit/2c0c87129af8719ad1236e6a26b7f51efd746c3d) Add token savings tracker script and documentation
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`a3ad9e4`](https://github.com/Mybono/ai-orchestrator/commit/a3ad9e462fb32c74235dcd149891bd033c12b5e1) Add token statistics tracking and reporting
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`aeb0843`](https://github.com/Mybono/ai-orchestrator/commit/aeb08432263481acb839e81bbc27d97702288359) Remove unnecessary asterisk from Python-free claim
+### 2026-04-05
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`1bc220a`](https://github.com/Mybono/ai-orchestrator/commit/1bc220a92e423df48fff10b9b65eac91e0c3043a) Update project overview and analysis delta handling
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`9c21fde`](https://github.com/Mybono/ai-orchestrator/commit/9c21fde10dcbd57f60a139553e23f5bf84af6393) Update SVG diagram and improve visual flow
+### 2026-04-04
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`2573187`](https://github.com/Mybono/ai-orchestrator/commit/2573187e51a689d1a9ab99b7fad3123f65c135c9) Update project analysis script and structure summary
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`6f2e057`](https://github.com/Mybono/ai-orchestrator/commit/6f2e057ad40272c73c54862685a2f29e5ce21e78) Refine project structure and documentation analysis
+- ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`1c5834a`](https://github.com/Mybono/ai-orchestrator/commit/1c5834a54a770ead78074706e27ca07965ae384b) Add project analysis script
+- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`a115f0d`](https://github.com/Mybono/ai-orchestrator/commit/a115f0d3d138903b1be617ec370cd1bc54e79dac) Change file mode for analyze_project.sh to executable
+- ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`71c969c`](https://github.com/Mybono/ai-orchestrator/commit/71c969c4f5bb9e61e8edd36368df68e1b62499f6) Add project analysis script and integrate into installation process
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`c743129`](https://github.com/Mybono/ai-orchestrator/commit/c743129cf2ef5d94adaaff6a0af72d4666a66ad7) Update script for better commit message generation
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`3fc750c`](https://github.com/Mybono/ai-orchestrator/commit/3fc750c503bcbdc64c4658af1d6b73f68a0ab7d2) Update prompt for commit message generation
 ### 2026-04-03
 - ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`4a105cd`](https://github.com/Mybono/ai-orchestrator/commit/4a105cd8d4703a8947c4e4e72c465b09ac9b3c76) Add hardware analysis script and model recommendation logic
 - ![fix](https://img.shields.io/badge/fix-d73a4a?style=flat-square) [`e0134eb`](https://github.com/Mybono/ai-orchestrator/commit/e0134eb64549d1b58c7e7c7fe6715572951b8237) Add optional GitHub CLI requirement for automated Pull Request creation
