@@ -28,6 +28,7 @@ function createUser(req: Request) {
 ```
 
 Rules:
+
 - Validate type, length, format, and range on every input
 - Use allowlists over denylists (accept known good, reject everything else)
 - Validate file uploads: check MIME type, file extension, and magic bytes
@@ -95,7 +96,7 @@ For APIs with token-based auth (Bearer tokens), CSRF is not needed since the tok
 
 ## Content Security Policy
 
-```
+```http
 Content-Security-Policy:
   default-src 'self';
   script-src 'self' 'nonce-{random}';
@@ -112,7 +113,7 @@ Start strict, relax as needed. Use `nonce` for inline scripts instead of `unsafe
 
 ## Security Headers
 
-```
+```http
 Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 X-Content-Type-Options: nosniff
 X-Frame-Options: DENY

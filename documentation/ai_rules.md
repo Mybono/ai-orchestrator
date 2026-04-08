@@ -47,6 +47,12 @@ Before performing any generation, review, or planning task, the IDE Agent MUST:
 9. If the task involves distributed systems, ALWAYS load `skills/microservices-design/SKILL.md`.
 10. If the task involves Kubernetes, Helm, or cluster management, ALWAYS load `skills/kubernetes-operations/SKILL.md`.
 11. If the task involves real-time features (WebSockets, SSE), ALWAYS load `skills/websocket-realtime/SKILL.md`.
+12. For ALL tasks involving user input, data storage, or external communication, ALWAYS load `skills/security-hardening/SKILL.md`.
+13. If the task involves Dockerfiles or docker-compose, ALWAYS load `skills/docker-best-practices/SKILL.md`.
+14. If the task involves creating or modifying API endpoints, ALWAYS load `skills/api-design-patterns/SKILL.md`.
+15. If the task involves web performance, slow loads, or caching, ALWAYS load `skills/performance-optimization/SKILL.md`.
+16. If the task involves LLM APIs, RAG, or AI agents, ALWAYS load `skills/llm-integration/SKILL.md`.
+17. For any task that requires writing or optimizing prompts for other agents or local models, ALWAYS load `skills/prompt-engineering/SKILL.md`.
 
 This step is MANDATORY to ensure consistency across all models and agents in the pipeline.
 

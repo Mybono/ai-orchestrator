@@ -58,6 +58,13 @@ The planner and reviewer auto-detect the language from the changed files and loa
 | Kubernetes Ops | [skills/kubernetes-operations/SKILL.md](../skills/kubernetes-operations/SKILL.md) |
 | Microservices | [skills/microservices-design/SKILL.md](../skills/microservices-design/SKILL.md) |
 | WebSockets / Real-time | [skills/websocket-realtime/SKILL.md](../skills/websocket-realtime/SKILL.md) |
+| Security Hardening | [skills/security-hardening/SKILL.md](../skills/security-hardening/SKILL.md) |
+| API Design | [skills/api-design-patterns/SKILL.md](../skills/api-design-patterns/SKILL.md) |
+| Auth Patterns | [skills/authentication-patterns/SKILL.md](../skills/authentication-patterns/SKILL.md) |
+| Docker Best Practices | [skills/docker-best-practices/SKILL.md](../skills/docker-best-practices/SKILL.md) |
+| LLM Integration | [skills/llm-integration/SKILL.md](../skills/llm-integration/SKILL.md) |
+| Performance | [skills/performance-optimization/SKILL.md](../skills/performance-optimization/SKILL.md) |
+| Prompt Engineering | [skills/prompt-engineering/SKILL.md](../skills/prompt-engineering/SKILL.md) |
 
 ## Commands
 
@@ -91,6 +98,10 @@ BLOCKING REQUIREMENT: invoke the matching agent or skill before generating any o
 - User asks to "setup CI/CD", "deploy to AWS/cloud", or "write MCP server" → run the `devops` agent
 - User asks about "microservices", "event-driven", "saga pattern", or "k8s/helm" → run the `architect` or `devops` agent
 - User says "websocket", "socket.io", or "real-time" → run the `architect` agent
+- User asks about "API design", "REST standards", or "OpenAPI/Swagger" → run the `architect` or `reviewer` agent
+- User asks to "optimize performance", "fix web vitals", or "analyze bundle" → run the `architect` or `reviewer` agent
+- User asks about "Docker optimization", "Dockerfile security", or "Compose best practices" → run the `devops` agent
+- User asks to "integrate LLM", "build RAG", "improve prompst", or "setup function calling" → run the `architect` agent
 
 ## Core constraints
 

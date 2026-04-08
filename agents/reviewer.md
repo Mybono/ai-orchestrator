@@ -58,7 +58,9 @@ If Ollama is not running, start it: `ollama serve &` then wait 3 seconds.
 ## Workflow
 
 1. **Read** all files changed by the coder agent
-2. **Reverse dependency check** — for each changed file, find who depends on it:
+2. **Design & Performance Review**: Use `skills/api-design-patterns/SKILL.md` to ensure RESTful standards and `skills/performance-optimization/SKILL.md` to flag N+1 queries, unoptimized assets, or heavy computations.
+3. **Vulnerability Audit**: Use `skills/security-hardening/SKILL.md` to check for security flaws (SQLi, XSS, CSRF, hardcoded secrets).
+4. **Reverse dependency check** — for each changed file, find who depends on it:
    - Run `grep -r "from <module> import\|import <module>" src/` for each changed module
    - For every caller found: check if the changed signatures/fields/return types are still compatible
    - If a caller breaks → add a CRITICAL issue with the file path and what specifically breaks

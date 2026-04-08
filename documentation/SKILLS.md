@@ -30,6 +30,13 @@ Language detection happens by checking indicator files in the project root:
 | [kubernetes-operations/SKILL.md](../skills/kubernetes-operations/SKILL.md) | K8s Operations | available for k8s tasks |
 | [microservices-design/SKILL.md](../skills/microservices-design/SKILL.md) | Microservices | available for design tasks |
 | [websocket-realtime/SKILL.md](../skills/websocket-realtime/SKILL.md) | Real-time / WebSockets | available for server tasks |
+| [security-hardening/SKILL.md](../skills/security-hardening/SKILL.md) | Security Hardening | available for all tasks |
+| [api-design-patterns/SKILL.md](../skills/api-design-patterns/SKILL.md) | API Design | available for design tasks |
+| [authentication-patterns/SKILL.md](../skills/authentication-patterns/SKILL.md) | Auth Patterns | available for security tasks |
+| [docker-best-practices/SKILL.md](../skills/docker-best-practices/SKILL.md) | Docker Best Practices | available for infra tasks |
+| [llm-integration/SKILL.md](../skills/llm-integration/SKILL.md) | LLM Integration | available for AI tasks |
+| [performance-optimization/SKILL.md](../skills/performance-optimization/SKILL.md) | Performance | available for all tasks |
+| [prompt-engineering/SKILL.md](../skills/prompt-engineering/SKILL.md) | Prompt Engineering | available for local LLM tasks |
 
 The planner reads the skill file once during Phase 1 and embeds the most relevant rules into `task_context.md`. The reviewer reads it directly before each review.
 
