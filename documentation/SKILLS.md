@@ -20,6 +20,7 @@ Language detection happens by checking indicator files in the project root:
 | [doc-standarts.md](../skills/doc-standarts.md) | Documentation | always available |
 | [humanizer.md](../skills/humanizer.md) | Writing style — removes AI patterns | always available |
 | [code-review/SKILL.md](../skills/code-review/SKILL.md) | Code Review | always available |
+| [root-cause-analysis/SKILL.md](../skills/root-cause-analysis/SKILL.md) | Root Cause Analysis | available on error/crash |
 
 The planner reads the skill file once during Phase 1 and embeds the most relevant rules into `task_context.md`. The reviewer reads it directly before each review.
 

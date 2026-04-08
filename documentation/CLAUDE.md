@@ -30,6 +30,7 @@ Roles are defined in `llm-config.json` at the project root or in `~/.claude/llm-
 | `coder` | `hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS` | Main code generation |
 | `reviewer` | `qwen2.5-coder:7b` | Code review and documentation |
 | `commit` | `qwen2.5-coder:7b` | Commit messages and minor fixes |
+| `debugger` | `qwen2.5-coder:7b` | Root Cause Analysis and bug fixing |
 | `embedding` | `nomic-embed-text` | Semantic search and RAG |
 
 ## Language standards
@@ -46,6 +47,7 @@ The planner and reviewer auto-detect the language from the changed files and loa
 | Bash/Shell | [skills/bash-code-standarts.md](../skills/bash-code-standarts.md) |
 | Documentation | [skills/doc-standarts.md](../skills/doc-standarts.md) |
 | Code Review | [skills/code-review/SKILL.md](../skills/code-review/SKILL.md) |
+| Root Cause Analysis | [skills/root-cause-analysis/SKILL.md](../skills/root-cause-analysis/SKILL.md) |
 
 ## Commands
 
@@ -62,6 +64,7 @@ These are not triggered automatically. Call them explicitly when needed.
 
 - `test-agent` — write and run tests (uses the `coder` role)
 - `doc-writer` — update documentation (uses the `reviewer` role)
+- `debugger` — systematic root cause analysis (uses the `debugger` role)
 
 ## Trigger rules
 
@@ -71,6 +74,7 @@ BLOCKING REQUIREMENT: invoke the matching agent or skill before generating any o
 - User says "open pr", "create a pull request", or "open a pull request" → run the `commit` agent
 - User says "implement", "напиши код", or "добавь фичу" → run the `implement` skill
 - User asks to write, create, or update documentation → run the `doc-writer` agent
+- User shares an error log, stack trace, or asks "why did this happen" → run the `debugger` agent
 
 ## Core constraints
 

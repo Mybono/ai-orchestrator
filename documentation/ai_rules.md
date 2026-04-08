@@ -40,5 +40,14 @@ Before performing any generation, review, or planning task, the IDE Agent MUST:
 2. Locate the corresponding skill file in the `skills/` directory.
 3. Read the skill file and incorporate its rules into the system prompt or generation context.
 4. If no specific language skill matches, apply `skills/doc-standarts.md` for text or `skills/humanizer.md` for conversational output.
+5. If the task involves a bug, crash, or unexpected behavior, ALWAYS load `skills/root-cause-analysis/SKILL.md`.
 
 This step is MANDATORY to ensure consistency across all models and agents in the pipeline.
+
+### 6. Debugging & Root Cause Analysis (RCA)
+
+When the user shares an error, stack trace, or bug report:
+1. **Never guess**: Stop and load the `skills/root-cause-analysis/SKILL.md`.
+2. **Delegate to Debugger**: If the context (logs/code) is large, delegate the analysis to the local `debugger` role using `call_ollama.sh`.
+3. **5-Whys Analysis**: All bug reports MUST include a structured 5-Whys chain identifying the fundamental cause.
+4. **Fix Strategy**: Provide both an immediate fix (hotfix) and a systemic countermeasure (preventive fix).

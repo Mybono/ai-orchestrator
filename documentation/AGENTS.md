@@ -114,3 +114,14 @@ Framework detection:
 | `Package.swift` | Swift | XCTest | `swift test` |
 | `CMakeLists.txt` | C++ | GoogleTest / Catch2 | `ctest` |
 | `pyproject.toml` | Python | pytest | `python -m pytest -v` |
+| `*.sh` | Bash | Shunit2 | `shunit2` |
+
+## debugger
+
+Analyzes errors, stack traces, and logs to find the fundamental cause of a failure. Proposes a hotfix and a systemic countermeasure.
+
+- **Triggered by**: user sharing an error log, stack trace, or asking "why did this happen"
+- **Claude model**: Sonnet (inherited)
+- **Ollama role**: `debugger` (qwen2.5-coder:7b)
+
+The agent ALWAYS loads `skills/root-cause-analysis/SKILL.md` before starting the analysis. It gathers the logs and relevant source code, conducts a systematic 5-Whys analysis, and outputs a structured Root Cause Analysis report.
