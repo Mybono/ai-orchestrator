@@ -188,7 +188,7 @@ Consult the corresponding detailed guide based on the language being reviewed:
 | **TypeScript** | [TypeScript Guide](reference/typescript.md) | Type safety, async/await, immutability |
 | **Python** | [Python Guide](reference/python.md) | Mutable default arguments, exception handling, class attributes |
 | **Java** | [Java Guide](reference/java.md) | Java 17/21 features, Spring Boot 3, virtual threads, Stream/Optional |
-| **Go** | [Go Guide](reference/go.md) | Error handling, goroutine/channel, context, interface design |
+| **Go** | [Go Guide](/reference/go.md) | Error handling, goroutine/channel, context, interface design |
 | **C** | [C Guide](reference/c.md) | Pointers/buffers, memory safety, UB, error handling |
 | **C++** | [C++ Guide](reference/cpp.md) | RAII, lifetimes, Rule of 0/3/5, exception safety |
 | **CSS/Less/Sass** | [CSS Guide](reference/css-less-sass.md) | Variable conventions, !important, performance, responsive design, compatibility |

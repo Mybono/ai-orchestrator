@@ -1,6 +1,10 @@
+[README](../README.md) · [Architecture](ARCHITECTURE.md) · [Agents](AGENTS.md) · [Skills & Commands](SKILLS.md) · [Plugins](PLUGINS.md) · **CLAUDE**
+
+---
+
 # AI Orchestrator — Professional Guide
 
-This file is read by Claude Code when working in this repo. It covers the orchestration pipeline, LLM roles, slash commands, and trigger rules. The project is structured as a collection of **Modular Claude Code Plugins** located in the [plugins/](../plugins/) directory.
+This file is read by Claude Code when working in this repo. It covers the orchestration pipeline, LLM roles, slash commands, and trigger rules. The project is structured as a collection of **Modular Claude Code Plugins** located in the [plugins/](../plugins/) directory. For the full plugin list with descriptions and trigger keywords, see [Plugins](PLUGINS.md).
 
 ## Orchestrator Roles
 
@@ -110,3 +114,7 @@ BLOCKING: Invoke the matching agent/skill before responding.
 - **Zero dependencies**: Never add Python/Node dependencies to the core orchestrator.
 - **JSON handling**: ALWAYS use `jq` for JSON processing in shell scripts.
 - **Separation**: Never use `doc-writer` for code or `coder` for markdown.
+
+---
+
+[README](../README.md) · [Architecture](ARCHITECTURE.md) · [Agents](AGENTS.md) · [Skills & Commands](SKILLS.md) · [Plugins](PLUGINS.md) · **CLAUDE**

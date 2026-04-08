@@ -3,7 +3,7 @@
 [![CI](https://github.com/Mybono/ai-orchestrator/actions/workflows/ci.yml/badge.svg)](https://github.com/Mybono/ai-orchestrator/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**README** · [Architecture](documentation/ARCHITECTURE.md) · [Agents](documentation/AGENTS.md) · [Skills & Commands](documentation/SKILLS.md)
+**README** · [Architecture](documentation/ARCHITECTURE.md) · [Agents](documentation/AGENTS.md) · [Skills & Commands](documentation/SKILLS.md) · [Plugins](documentation/PLUGINS.md)
 
 ---
 
@@ -82,7 +82,21 @@ See [Architecture → Model Configuration](documentation/ARCHITECTURE.md#model-c
 | [`/stats`](commands/stats.md) | Show token savings (`day`, `week`, `month`, or all-time) |
 | [`/debug`](commands/debug.md) | Trace root cause of an error |
 
-All commands and agents: [Skills & Commands](documentation/SKILLS.md) · [Agents](documentation/AGENTS.md)
+All commands and agents: [Skills & Commands](documentation/SKILLS.md) · [Agents](documentation/AGENTS.md) · [Plugins](documentation/PLUGINS.md)
+
+## Plugins
+
+Domain-specific extensions that add slash commands to the orchestrator. Each plugin in `plugins/` handles a specific area — accessibility, database work, Docker, Kubernetes, testing, security, and more.
+
+| Plugin | What it adds |
+|--------|-------------|
+| `qa-tools` | Generate tests, analyze failures, fix PR comments |
+| `security-guidance` | Security audit and vulnerability fixes |
+| `api-architect` | REST API design and OpenAPI spec generation |
+| `database-tools` | Schema design, query optimization, ERD generation |
+| `release-manager` | Version bumps, releases, changelog updates |
+
+Full list with trigger keywords and paired agents: [Plugins](documentation/PLUGINS.md)
 
 ## Scripts
 
@@ -132,4 +146,4 @@ Changes apply immediately via symlinks, so you do not need to reinstall.
 
 ---
 
-**README** · [Architecture](documentation/ARCHITECTURE.md) · [Agents](documentation/AGENTS.md) · [Skills & Commands](documentation/SKILLS.md) 
+**README** · [Architecture](documentation/ARCHITECTURE.md) · [Agents](documentation/AGENTS.md) · [Skills & Commands](documentation/SKILLS.md) · [Plugins](documentation/PLUGINS.md)
