@@ -35,10 +35,6 @@ fi
 echo "✅ Version bumped successfully to $NEW_VERSION!"
 echo ""
 
-# Commit and tag
+# Commit
 git -C "$ROOT_DIR" add -A
 git -C "$ROOT_DIR" commit -m "chore: bump version to $NEW_VERSION"
-git -C "$ROOT_DIR" tag "v$NEW_VERSION"
-
-echo "Next step — push the release:"
-echo "  git push origin main --tags"
