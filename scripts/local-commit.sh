@@ -55,13 +55,15 @@ echo -e "\033[1;32m$MESSAGE\033[0m\n"
 # Prompt the user for confirmation
 read -rp "Commit with this message? (y/N) " confirm
 if [[ "$confirm" =~ ^[Yy]$ ]]; then
-    # Update CHANGELOG if git-cliff is available
+    git commit -m "$MESSAGE"
+
+    # Update CHANGELOG if git-cliff is available and amend the commit
     if command -v git-cliff >/dev/null 2>&1; then
         git-cliff --config cliff.toml -o CHANGELOG.md 2>/dev/null
         git add CHANGELOG.md 2>/dev/null || true
+        git commit --amend --no-edit 2>/dev/null || true
     fi
 
-    git commit -m "$MESSAGE"
     echo "✅ Committed successfully!"
 else
     echo "🚫 Commit cancelled."
