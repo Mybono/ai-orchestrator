@@ -175,7 +175,7 @@ public class UserService {
 // ❌ Hard-coded configuration values
 @Service
 public class PaymentService {
-    private String apiKey = "sk_live_12345";
+    private String apiKey = "sk_live_placeholder_for_example_purposes";
 }
 
 // ❌ Scattering @Value annotations throughout the code

@@ -1,0 +1,6 @@
+# Gitleaks ignore file
+# Format: [fingerprint]
+# See: https://github.com/gitleaks/gitleaks?tab=readme-ov-file#gitleaksignore
+
+# False positive in Java code review guide (negative example)
+cf1fd7adc6ccab162f89ac39137a251525d03989:skills/code-review/references/java.md:generic-api-key:178
