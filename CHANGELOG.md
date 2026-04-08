@@ -3,7 +3,8 @@
 All notable changes to ai-orchestrator.
 ## [unreleased]
 ### 2026-04-08
-- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`e01aa4e`](https://github.com/Mybono/ai-orchestrator/commit/e01aa4e4a2e90c5a06581bceda7592f972c02aad) Streamline commit process with git-cliff integration
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`0495d11`](https://github.com/Mybono/ai-orchestrator/commit/0495d11a9c75c8c3763a7b72469fb3130774d537) Conditionally update CHANGELOG based on git-cliff and config availability
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`5117d0d`](https://github.com/Mybono/ai-orchestrator/commit/5117d0d9515d5e3c2748b2f482868b47ee30b822) Streamline commit process with git-cliff integration
 - ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`a1b5e20`](https://github.com/Mybono/ai-orchestrator/commit/a1b5e2031737bef913eb01e9e8f0e35f211799db) Update local-commit.sh to include CHANGELOG updates if git-cliff is available
 - ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`224d5f7`](https://github.com/Mybono/ai-orchestrator/commit/224d5f76b7d78bb1ce496cf8ef4d87b64223fc0d) Add semantic versioning and release automation tools
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`e423463`](https://github.com/Mybono/ai-orchestrator/commit/e4234634f50f8b2fb981bf55e5c118cda00af11e) Auto-fix markdown lint errors

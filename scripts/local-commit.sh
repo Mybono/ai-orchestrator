@@ -57,8 +57,8 @@ read -rp "Commit with this message? (y/N) " confirm
 if [[ "$confirm" =~ ^[Yy]$ ]]; then
     git commit -m "$MESSAGE"
 
-    # Update CHANGELOG if git-cliff is available and amend the commit
-    if command -v git-cliff >/dev/null 2>&1; then
+    # Update CHANGELOG if git-cliff and config are available
+    if command -v git-cliff >/dev/null 2>&1 && [ -f cliff.toml ]; then
         git-cliff --config cliff.toml -o CHANGELOG.md 2>/dev/null
         git add CHANGELOG.md 2>/dev/null || true
         git commit --amend --no-edit 2>/dev/null || true
