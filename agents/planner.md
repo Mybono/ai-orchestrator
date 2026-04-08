@@ -50,6 +50,10 @@ ls .claude/context/project_overview.md .claude/context/analysis_delta.md 2>/dev/
    - "Docker", "image", "container" → load `plugins/docker-helper/commands/*.md`
    - "k8s", "pod", "manifest" → load `plugins/k8s-helper/commands/*.md`
    - "vulnerability", "security", "audit" → load `plugins/security-guidance/commands/*.md`
+   - "unit test", "mock", "logic" → load `agents/unit-tester.md`, `plugins/qa-tools/`
+   - "api test", "integration", "schema" → load `agents/api-tester.md`, `plugins/qa-tools/`
+   - "ui test", "e2e", "browser" → load `agents/ui-tester.md`
+   - "fix comments", "analyze failures" → load `agents/qa-orchestrator.md`, `plugins/qa-tools/`
 5. **Read every relevant file in full** — do not summarize, read completely
 6. **Find patterns** — locate 1-3 existing functions/classes similar to what needs to be built; read them in full as style examples
 

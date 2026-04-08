@@ -91,7 +91,11 @@ BLOCKING: Invoke the matching agent/skill before responding.
 - **Git/PR**: "commit", "push", "open pr" → [commit](../agents/commit.md), [committer](../plugins/committer/)
 - **Security Check**: "audit", "vulnerability", "CVE", "auth check", "security" → [reviewer](../agents/reviewer.md), [security-guidance](../plugins/security-guidance/)
 - **Docs**: "update readme", "write docs" → [doc-writer](../agents/doc-writer.md)
-- **Testing**: "write tests", "run coverage", "generate tests" → [test-agent](../agents/test-agent.md), [testing-assistant](../plugins/testing-assistant/)
+- **Testing**:
+  - Unit: "logic", "unit test", "mock" → [unit-tester](../agents/unit-tester.md), [qa-tools](../plugins/qa-tools/)
+  - API: "integration", "api test", "schema", "seed" → [api-tester](../agents/api-tester.md), [qa-tools](../plugins/qa-tools/)
+  - UI: "e2e", "ui test", "playwright", "browser" → [ui-tester](../agents/ui-tester.md)
+  - Strategy: "analyze failures", "fix comments", "qa report" → [qa-orchestrator](../agents/qa-orchestrator.md), [qa-tools](../plugins/qa-tools/)
 
 ---
 
