@@ -1,6 +1,10 @@
 # Changelog
 
 All notable changes to ai-orchestrator.
+## [unreleased]
+### 2026-04-08
+- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`37c0bc8`](https://github.com/Mybono/ai-orchestrator/commit/37c0bc8ebb577ac2abfc35180afea2b4316bd737) Bump version to 1.0.3
+
 ## v1.0.2 — 2026-04-08
 ### 2026-04-08
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`c6d6f29`](https://github.com/Mybono/ai-orchestrator/commit/c6d6f290f97845c936b6fd5fb146f6ee81e4b5d9) Bump version to 1.0.2
