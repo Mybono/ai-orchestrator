@@ -85,12 +85,13 @@ Loaded manually or via triggers for specific task domains.
 
 BLOCKING: Invoke the matching agent/skill before responding.
 
-- **Infrastructure**: "setup CI/CD", "deploy", "k8s", "docker" → [devops](../agents/devops.md)
-- **High Level**: "refactor", "approach?", "microservices" → [architect](../agents/architect.md)
-- **Troubleshoot**: "error log", "why?", "fix this" → [debugger](../agents/debugger.md)
-- **Git/PR**: "commit", "push", "open pr" → [commit](../agents/commit.md)
+- **Infrastructure**: "setup CI/CD", "deploy", "k8s", "docker", "cluster", "image" → [devops](../agents/devops.md), [docker-helper](../plugins/docker-helper/), [k8s-helper](../plugins/k8s-helper/)
+- **High Level**: "refactor", "approach?", "microservices", "API", "OpenAPI", "endpoints" → [architect](../agents/architect.md), [api-architect](../plugins/api-architect/)
+- **Troubleshoot**: "error log", "why?", "fix this", "pod failed", "crash" → [debugger](../agents/debugger.md), [k8s-helper](../plugins/k8s-helper/)
+- **Git/PR**: "commit", "push", "open pr" → [commit](../agents/commit.md), [committer](../plugins/committer/)
+- **Security Check**: "audit", "vulnerability", "CVE", "auth check", "security" → [reviewer](../agents/reviewer.md), [security-guidance](../plugins/security-guidance/)
 - **Docs**: "update readme", "write docs" → [doc-writer](../agents/doc-writer.md)
-- **Testing**: "write tests", "run coverage" → [test-agent](../agents/test-agent.md)
+- **Testing**: "write tests", "run coverage", "generate tests" → [test-agent](../agents/test-agent.md), [testing-assistant](../plugins/testing-assistant/)
 
 ---
 

@@ -45,8 +45,13 @@ ls .claude/context/project_overview.md .claude/context/analysis_delta.md 2>/dev/
    - `CMakeLists.txt` or `*.cpp` files → C++ → read `.claude/skills/c-code-standarts.md`
    - `pyproject.toml` or `requirements.txt` → Python → read `.claude/skills/python-code-standarts.md`
 3. **Explore the codebase** — find relevant files using Glob and Grep
-4. **Read every relevant file in full** — do not summarize, read completely
-5. **Find patterns** — locate 1-3 existing functions/classes similar to what needs to be built; read them in full as style examples
+4. **Detect specialized plugins** — analyze the task for domains:
+   - "API", "endpoint", "OpenAPI" → load `plugins/api-architect/commands/*.md`
+   - "Docker", "image", "container" → load `plugins/docker-helper/commands/*.md`
+   - "k8s", "pod", "manifest" → load `plugins/k8s-helper/commands/*.md`
+   - "vulnerability", "security", "audit" → load `plugins/security-guidance/commands/*.md`
+5. **Read every relevant file in full** — do not summarize, read completely
+6. **Find patterns** — locate 1-3 existing functions/classes similar to what needs to be built; read them in full as style examples
 
 ### Phase 2 — Write draft
 
@@ -115,6 +120,9 @@ Write exactly this structure to `.claude/context/task_context.md`:
 
 ## Key standarts for This Task
 <paste the 3-5 most relevant rules from the language standarts file that directly apply to what needs to be built — anti-patterns, naming, typing, error handling>
+
+## Specialized Plugins & Tools
+<If a specialized domain was detected (API, Docker, K8s, Security), list the plugins and key instructions from their `commands/` directory here. This ensures the coder knows which specialized tools to use.>
 
 ## Task
 <one sentence description of what needs to be done>

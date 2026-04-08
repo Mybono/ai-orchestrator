@@ -82,3 +82,13 @@ For all infrastructure and automation tasks:
 2. **Delegate to DevOps**: Use the local `devops` role for CI/CD setup, cloud architecture, and containerization.
 3. **IaC and Security**: All infrastructure MUST be defined as code. Ensure proper IAM permissions and secret management are included in the proposal.
 4. **Resilience**: Always include health checks and deployment strategies (e.g., RollingUpdate) in Kubernetes and Cloud configurations.
+
+### 9. Hybrid Orchestration & Plugin Selection
+
+To ensure the best balance between expert automation and manual control:
+
+1. **Intent-Based Mapping**: Before responding to a request, map the user's intent to the specialized modules in the `plugins/` directory.
+2. **Automatic Loading**: If a task matches a plugin's domain (e.g., "design an API" -> `api-architect`), the IDE Agent MUST load the instructions from the relevant `plugins/<name>/commands/*.md` file even if the user didn't use a slash command.
+3. **Planner Integration**: During Phase 1 (Planning), the `planner` role MUST explicitly list which specialized plugins and skills it is activating for the task.
+4. **Manual Command Access**: Always respect manual slash command calls (e.g., `/commit-push`). If a user calls a command explicitly, follow its instructions precisely as defined in the plugin manifest.
+5. **Combined Expertise**: When a plugin is loaded, the agent MUST also load the corresponding agent instructions (e.g., Loading `docker-helper` also requires loading `agents/devops.md`).
