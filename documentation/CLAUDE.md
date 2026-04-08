@@ -31,6 +31,7 @@ Roles are defined in `llm-config.json` at the project root or in `~/.claude/llm-
 | `reviewer` | `qwen2.5-coder:7b` | Code review and documentation |
 | `commit` | `qwen2.5-coder:7b` | Commit messages and minor fixes |
 | `debugger` | `qwen2.5-coder:7b` | Root Cause Analysis and bug fixing |
+| `architect` | `hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS` | Architectural design & RCA |
 | `embedding` | `nomic-embed-text` | Semantic search and RAG |
 
 ## Language standards
@@ -48,6 +49,7 @@ The planner and reviewer auto-detect the language from the changed files and loa
 | Documentation | [skills/doc-standarts.md](../skills/doc-standarts.md) |
 | Code Review | [skills/code-review/SKILL.md](../skills/code-review/SKILL.md) |
 | Root Cause Analysis | [skills/root-cause-analysis/SKILL.md](../skills/root-cause-analysis/SKILL.md) |
+| First Principles | [skills/first-principles/SKILL.md](../skills/first-principles/SKILL.md) |
 
 ## Commands
 
@@ -65,6 +67,7 @@ These are not triggered automatically. Call them explicitly when needed.
 - `test-agent` — write and run tests (uses the `coder` role)
 - `doc-writer` — update documentation (uses the `reviewer` role)
 - `debugger` — systematic root cause analysis (uses the `debugger` role)
+- `architect` — architectural review and first principles (uses the `architect` role)
 
 ## Trigger rules
 
@@ -72,8 +75,9 @@ BLOCKING REQUIREMENT: invoke the matching agent or skill before generating any o
 
 - User says "commit" or "make a commit" → run the `commit` agent
 - User says "open pr", "create a pull request", or "open a pull request" → run the `commit` agent
-- User says "implement", "напиши код", or "добавь фичу" → run the `implement` skill
+- User says "implement", "напиши код", or "добавь фичу" → run the `architect` agent for planning, then the `implement` skill
 - User asks to write, create, or update documentation → run the `doc-writer` agent
+- User asks "could we do this better?", "is this the right approach?", or needs a refactor → run the `architect` agent
 - User shares an error log, stack trace, or asks "why did this happen" → run the `debugger` agent
 
 ## Core constraints

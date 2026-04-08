@@ -41,13 +41,24 @@ Before performing any generation, review, or planning task, the IDE Agent MUST:
 3. Read the skill file and incorporate its rules into the system prompt or generation context.
 4. If no specific language skill matches, apply `skills/doc-standarts.md` for text or `skills/humanizer.md` for conversational output.
 5. If the task involves a bug, crash, or unexpected behavior, ALWAYS load `skills/root-cause-analysis/SKILL.md`.
+6. If the task involves architectural design, tech selection, or refactoring, ALWAYS load `skills/first-principles/SKILL.md`.
 
 This step is MANDATORY to ensure consistency across all models and agents in the pipeline.
 
 ### 6. Debugging & Root Cause Analysis (RCA)
 
 When the user shares an error, stack trace, or bug report:
+
 1. **Never guess**: Stop and load the `skills/root-cause-analysis/SKILL.md`.
 2. **Delegate to Debugger**: If the context (logs/code) is large, delegate the analysis to the local `debugger` role using `call_ollama.sh`.
 3. **5-Whys Analysis**: All bug reports MUST include a structured 5-Whys chain identifying the fundamental cause.
 4. **Fix Strategy**: Provide both an immediate fix (hotfix) and a systemic countermeasure (preventive fix).
+
+### 7. Core Architecture & Refactoring
+
+For all high-level planning and design tasks:
+
+1. **First Principles First**: Load `skills/first-principles/SKILL.md` before starting the plan.
+2. **Delegate to Architect**: Use the local `architect` role for non-trivial design review or tech selection.
+3. **Challenge Analogy**: Reject solutions that rely solely on "industry standards" or "Netlfix does it". Insist on reasoning from fundamental project needs.
+4. **Minimalism**: Favor the simplest possible design that satisfies all ground truths.

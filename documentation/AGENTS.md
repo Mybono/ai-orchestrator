@@ -6,7 +6,7 @@
 
 Agents are markdown files in `agents/`. Each file defines the behavior of a subagent that Claude Code can spawn. The `/implement` command orchestrates agents automatically; agents can also be invoked on demand.
 
-## Planner
+## [Planner](../agents/planner.md)
 
 Analyzes a coding task, explores the codebase, and writes `.claude/context/task_context.md`. It never writes production code.
 
@@ -20,7 +20,7 @@ The output `task_context.md` contains: the task description, a step-by-step plan
 
 After writing `task_context.md`, the planner updates `.claude/context/project_overview.md` with any new architectural findings.
 
-## coder
+## [coder](../agents/coder.md)
 
 Reads `task_context.md` and implements the changes by calling Ollama for code generation, then applies them with Edit and Write tools.
 
@@ -36,7 +36,7 @@ bash ~/.claude/call_ollama.sh --role coder --prompt "$PROMPT"
 
 After applying changes, it runs `python3 -m py_compile` (Python) or `tsc --noEmit` (TypeScript) per changed file, and writes a summary to `.claude/context/coder_output.md`.
 
-## reviewer
+## [reviewer](../agents/reviewer.md)
 
 Reviews code diffs against project standards, runs a syntax check, and calls Ollama for logic and bug analysis. Returns `APPROVED` or `NEEDS CHANGES` with a list of issues.
 
@@ -61,7 +61,7 @@ ISSUES (if any):
 
 CRITICAL issues block merging. WARNING issues should be fixed but are not blockers. STYLE issues are optional.
 
-## quick-coder
+## [quick-coder](../agents/quick-coder.md)
 
 Handles small, targeted changes using the lightest available model. Intended for single-function fixes, import updates, renames, and constant additions.
 
@@ -73,7 +73,7 @@ If the task turns out to require more than one file or more than ~30 lines, quic
 
 No review step follows quick-coder for trivial changes.
 
-## commit
+## [commit](../agents/commit.md)
 
 Stages and commits all pending changes. Generates the commit message via Ollama.
 
@@ -83,7 +83,7 @@ Stages and commits all pending changes. Generates the commit message via Ollama.
 
 The agent never asks for confirmation. It runs `git status`, gets the diff, generates a conventional-commits message (prefix: `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`), then stages and commits. It never commits `venv/`, `dist/`, `*.egg-info/`, `__pycache__/`, or `.env` files.
 
-## doc-writer
+## [doc-writer](../agents/doc-writer.md)
 
 Creates or updates documentation after code changes. Reads the git diff, calls Ollama to draft content, then applies changes to markdown files.
 
@@ -93,7 +93,7 @@ Creates or updates documentation after code changes. Reads the git diff, calls O
 
 All content is derived from the git diff. The agent never invents API details or documents code that was not changed. It uses Edit for targeted updates to existing files and Write for new files.
 
-## test-agent
+## [test-agent](../agents/test-agent.md)
 
 Writes tests for code that was just implemented, runs them, and performs one fix round if they fail.
 
@@ -116,7 +116,7 @@ Framework detection:
 | `pyproject.toml` | Python | pytest | `python -m pytest -v` |
 | `*.sh` | Bash | Shunit2 | `shunit2` |
 
-## debugger
+## [debugger](../agents/debugger.md)
 
 Analyzes errors, stack traces, and logs to find the fundamental cause of a failure. Proposes a hotfix and a systemic countermeasure.
 
@@ -125,3 +125,13 @@ Analyzes errors, stack traces, and logs to find the fundamental cause of a failu
 - **Ollama role**: `debugger` (qwen2.5-coder:7b)
 
 The agent ALWAYS loads `skills/root-cause-analysis/SKILL.md` before starting the analysis. It gathers the logs and relevant source code, conducts a systematic 5-Whys analysis, and outputs a structured Root Cause Analysis report.
+
+## [architect](../agents/architect.md)
+
+Evaluates designs, proposed refactors, and technology choices using fundamental truths instead of analogies.
+
+- **Triggered by**: `/implement` (Phase 1), user asking "is this the right approach?", or refactor requests
+- **Claude model**: Sonnet (inherited)
+- **Ollama role**: `architect` (qwen2.5-coder:14b)
+
+The agent ALWAYS loads `skills/first-principles/SKILL.md`. It identifies the core job to be done, challenges all current assumptions, identifies ground truths, and builds up the recommended solution from those fundamentals. It is the primary agent for "Phase 1: Planning".
