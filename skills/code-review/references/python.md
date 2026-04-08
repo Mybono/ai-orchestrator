@@ -1023,6 +1023,7 @@ def handle_response(response: dict):
 ## Review Checklist
 
 ### Type Safety
+
 - [ ] Functions have type annotations (parameters and return values)
 - [ ] Use `Optional` to explicitly indicate nullable values
 - [ ] Generic types are used correctly
@@ -1030,6 +1031,7 @@ def handle_response(response: dict):
 - [ ] Avoid using `Any`; add a comment when necessary
 
 ### Async Code
+
 - [ ] async/await are used correctly and paired
 - [ ] No blocking calls inside async code
 - [ ] `CancelledError` is handled correctly
@@ -1037,18 +1039,21 @@ def handle_response(response: dict):
 - [ ] Resources are properly cleaned up (async context manager)
 
 ### Exception Handling
+
 - [ ] Catch specific exception types, no bare `except:`
 - [ ] Exception chaining uses `from` to preserve the cause
 - [ ] Custom exceptions inherit from an appropriate base class
 - [ ] Exception messages are meaningful and aid debugging
 
 ### Data Structures
+
 - [ ] No mutable default arguments (list, dict, set)
 - [ ] Class attributes are not mutable objects
 - [ ] The correct data structure is chosen (set vs list for lookups)
 - [ ] Generators are used instead of lists for large datasets
 
 ### Testing
+
 - [ ] Test coverage meets the target (recommended >= 80%)
 - [ ] Test names clearly describe the scenario
 - [ ] Edge cases are covered by tests
@@ -1056,6 +1061,7 @@ def handle_response(response: dict):
 - [ ] Async code has corresponding async tests
 
 ### Code Style
+
 - [ ] Follows PEP 8 style guidelines
 - [ ] Functions and classes have docstrings
 - [ ] Import order is correct (standard library, third-party, local)
@@ -1063,6 +1069,7 @@ def handle_response(response: dict):
 - [ ] Modern Python features are used (f-strings, walrus operator, etc.)
 
 ### Performance
+
 - [ ] Avoid creating objects repeatedly inside loops
 - [ ] Use join for string concatenation
 - [ ] Use caching appropriately (@lru_cache)

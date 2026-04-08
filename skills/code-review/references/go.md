@@ -5,6 +5,7 @@ Code review checklist based on the official Go guidelines, Effective Go, and com
 ## Quick Review Checklist
 
 ### Required Checks
+
 - [ ] Errors are handled correctly (not ignored, include context)
 - [ ] Goroutines have an exit mechanism (prevent leaks)
 - [ ] Context is properly propagated and cancelled
@@ -12,6 +13,7 @@ Code review checklist based on the official Go guidelines, Effective Go, and com
 - [ ] Code is formatted with `gofmt`
 
 ### Frequent Issues
+
 - [ ] Loop variable capture (Go < 1.22)
 - [ ] nil checks are complete
 - [ ] Maps are initialized before use

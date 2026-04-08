@@ -17,6 +17,7 @@
 ## Object Model & Memory Management
 
 ### Use Parent-Child Ownership Mechanism
+
 Qt's `QObject` hierarchy automatically manages memory. For `QObject`, prefer setting a parent object over manual `delete` or smart pointers.
 
 ```cpp
@@ -32,6 +33,7 @@ QLabel* l = new QLabel(w);      // Owned by 'w'
 ```
 
 ### Use Smart Pointers with QObject
+
 If a `QObject` has no parent, use `QScopedPointer` or `std::unique_ptr` with a custom deleter (use `deleteLater` if cross-thread). Avoid `std::shared_ptr` for `QObject` unless necessary, as it confuses the parent-child ownership system.
 
 ```cpp
@@ -46,6 +48,7 @@ if (safePtr) {
 ```
 
 ### Use `deleteLater()`
+
 For asynchronous deletion, especially in slots or event handlers, use `deleteLater()` instead of `delete` to ensure pending events in the event loop are processed.
 
 ---
@@ -53,6 +56,7 @@ For asynchronous deletion, especially in slots or event handlers, use `deleteLat
 ## Signals & Slots
 
 ### Prefer Function Pointer Syntax
+
 Use compile-time checked syntax (Qt 5+).
 
 ```cpp
@@ -64,12 +68,15 @@ connect(sender, &Sender::valueChanged, receiver, &Receiver::updateValue);
 ```
 
 ### Connection Types
+
 Be explicit or aware of connection types when crossing threads.
+
 - `Qt::AutoConnection` (Default): Direct if same thread, Queued if different thread.
 - `Qt::QueuedConnection`: Always posts event (thread-safe across threads).
 - `Qt::DirectConnection`: Immediate call (dangerous if accessing non-thread-safe data across threads).
 
 ### Avoid Loops
+
 Check logic that might cause infinite signal loops (e.g., `valueChanged` -> `setValue` -> `valueChanged`). Block signals or check for equality before setting values.
 
 ```cpp
@@ -85,6 +92,7 @@ void MyClass::setValue(int v) {
 ## Containers & Strings
 
 ### QString Efficiency
+
 - Use `QStringLiteral("...")` for compile-time string creation to avoid runtime allocation.
 - Use `QLatin1String` for comparison with ASCII literals (in Qt 5).
 - Prefer `arg()` for formatting (or `QStringBuilder`'s `%` operator).
@@ -99,6 +107,7 @@ if (str == u"test"_s) ...             // Qt 6
 ```
 
 ### Container Selection
+
 - **Qt 6**: `QList` is now the default choice (unified with `QVector`).
 - **Qt 5**: Prefer `QVector` over `QList` for contiguous memory and cache performance, unless stable references are needed.
 - Be aware of Implicit Sharing (Copy-on-Write). Passing containers by value is cheap *until* modified. Use `const &` for read-only access.
@@ -118,6 +127,7 @@ void process(const QVector<int>& list) { ... }
 ## Threads & Concurrency
 
 ### Subclassing QThread vs Worker Object
+
 Prefer the "Worker Object" pattern over subclassing `QThread` implementation details.
 
 ```cpp
@@ -135,6 +145,7 @@ thread->start();
 ```
 
 ### GUI Thread Safety
+
 **NEVER** access UI widgets (`QWidget` and subclasses) from a background thread. Use signals/slots to communicate updates to the main thread.
 
 ---
@@ -142,13 +153,17 @@ thread->start();
 ## GUI & Widgets
 
 ### Logic Separation
+
 Keep business logic out of UI classes (`MainWindow`, `Dialog`). UI classes should only handle display and user input forwarding.
 
 ### Layouts
+
 Avoid fixed sizes (`setGeometry`, `resize`). Use layouts (`QVBoxLayout`, `QGridLayout`) to handle different DPIs and window resizing gracefully.
 
 ### Blocking Event Loop
+
 Never execute long-running operations on the main thread (freezes GUI).
+
 - **Bad**: `Sleep()`, `while(busy)`, synchronous network calls.
 - **Good**: `QProcess`, `QThread`, `QtConcurrent`, or asynchronous APIs (`QNetworkAccessManager`).
 
@@ -157,6 +172,7 @@ Never execute long-running operations on the main thread (freezes GUI).
 ## Meta-Object System
 
 ### Properties & Enums
+
 Use `Q_PROPERTY` for values exposed to QML or needing introspection.
 Use `Q_ENUM` to enable string conversion for enums.
 
@@ -172,6 +188,7 @@ public:
 ```
 
 ### qobject_cast
+
 Use `qobject_cast<T*>` for QObjects instead of `dynamic_cast`. It is faster and doesn't require RTTI.
 
 ---

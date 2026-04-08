@@ -877,6 +877,7 @@ const { list, containerProps, wrapperProps } = useVirtualList(
 ## Review Checklist
 
 ### Reactivity System
+
 - [ ] `ref` used for primitives, `reactive` for objects (or `ref` for everything consistently)
 - [ ] No bare destructuring of `reactive` objects (or `toRefs` used)
 - [ ] Reactivity is preserved when passing props to composables
@@ -884,6 +885,7 @@ const { list, containerProps, wrapperProps } = useVirtualList(
 - [ ] No side effects inside `computed`
 
 ### Props & Emits
+
 - [ ] `defineProps` uses TypeScript type declarations
 - [ ] Complex default values use `withDefaults` + factory functions
 - [ ] `defineEmits` has complete type definitions
@@ -891,12 +893,14 @@ const { list, containerProps, wrapperProps } = useVirtualList(
 - [ ] Consider `defineModel` to simplify v-model (Vue 3.4+)
 
 ### Vue 3.5 New Features (where applicable)
+
 - [ ] Reactive Props Destructure used to simplify prop access
 - [ ] `useTemplateRef` used instead of the `ref` attribute approach
 - [ ] `useId` used to generate SSR-safe IDs in forms
 - [ ] `onWatcherCleanup` used for complex cleanup logic
 
 ### Watchers
+
 - [ ] `watch`/`watchEffect` have appropriate cleanup functions
 - [ ] Async watches handle race conditions
 - [ ] `flush: 'post'` used for watchers that access the DOM
@@ -904,12 +908,14 @@ const { list, containerProps, wrapperProps } = useVirtualList(
 - [ ] Consider `once: true` for one-time listeners
 
 ### Template
+
 - [ ] `v-for` uses unique and stable keys
 - [ ] `v-if` and `v-for` are not on the same element
 - [ ] Event handlers use methods rather than inline complex logic
 - [ ] Large lists use virtual scrolling
 
 ### Composables
+
 - [ ] Related logic extracted into composables
 - [ ] Composables return reactive refs (not `.value`)
 - [ ] Pure functions are not wrapped into composables unnecessarily
@@ -917,6 +923,7 @@ const { list, containerProps, wrapperProps } = useVirtualList(
 - [ ] `effectScope` used to manage complex side effects
 
 ### Performance
+
 - [ ] Large components are split into smaller ones
 - [ ] `defineAsyncComponent` used for lazy loading
 - [ ] Avoid unnecessary reactive conversions

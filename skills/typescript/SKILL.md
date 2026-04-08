@@ -6,33 +6,33 @@ description: >
   type errors, Zod validation, type narrowing, mapped/conditional types, path aliases,
   project references, JS-to-TS migration, or typed React components and hooks.
   Also trigger when the user pastes a TypeScript error they don't understand, or asks
-  how to type something specific.
+  how to type something specific
 ---
- 
+
 # Mastering TypeScript
- 
+
 > TypeScript 5.x · Node.js 22 LTS · React 19 · strict mode first
- 
+
 ---
- 
+
 ## Step 0: Understand the context first
- 
+
 Before writing or reviewing TypeScript, identify:
- 
+
 1. **Environment** — browser SPA, Node.js CLI/tooling, monorepo, CI script?
 2. **Entry point** — Vite, tsc, ts-node, tsx, esbuild?
 3. **Strict mode?** — If not, enable it. Explain why if they push back.
 4. **Framework** — React, NestJS, plain Node, none?
 5. **Existing tsconfig?** — Ask or check before proposing settings.
- 
+
 If the user pastes a tsc error, diagnose it first — skip the interview.
- 
+
 ---
- 
+
 ## The tsconfig Foundation
- 
+
 ### Strict baseline (works everywhere)
- 
+
 ```json
 {
   "compilerOptions": {
@@ -51,11 +51,11 @@ If the user pastes a tsc error, diagnose it first — skip the interview.
   }
 }
 ```
- 
+
 **What `strict: true` enables:** `strictNullChecks`, `noImplicitAny`, `strictFunctionTypes`, `strictBindCallApply`, `strictPropertyInitialization`, `useUnknownInCatchVariables`.
- 
+
 ### Monorepo / path aliases
- 
+
 ```json
 {
   "compilerOptions": {
@@ -68,11 +68,11 @@ If the user pastes a tsc error, diagnose it first — skip the interview.
   }
 }
 ```
- 
+
 ⚠️ Path aliases in tsconfig are type-only. Runtime resolution requires Vite's `resolve.alias`, webpack's `alias`, or `tsconfig-paths` for Node.
- 
+
 ### Project references (monorepo)
- 
+
 ```json
 // Root tsconfig.json
 {
@@ -92,15 +92,15 @@ If the user pastes a tsc error, diagnose it first — skip the interview.
   "references": [{ "path": "../shared" }]
 }
 ```
- 
+
 Use `tsc --build` instead of `tsc` in monorepos.
- 
+
 ---
- 
+
 ## Type System Quick Reference
- 
+
 ### Primitives and literals
- 
+
 ```typescript
 const name: string = "Alice";
 const port: number = 3000;
@@ -110,9 +110,9 @@ const active: boolean = true;
 type Status = "pending" | "approved" | "rejected";
 type Direction = "north" | "south" | "east" | "west";
 ```
- 
+
 ### Union and intersection
- 
+
 ```typescript
 // Union: one of several types
 type StringOrNumber = string | number;
@@ -131,9 +131,9 @@ function handle<T>(r: Result<T>): T | null {
 // Intersection: must satisfy all
 type Admin = User & { permissions: string[] };
 ```
- 
+
 ### The `satisfies` operator (TS 4.9+)
- 
+
 ```typescript
 // Problem with `as`: loses specific type
 const config = { port: 3000, host: "localhost" } as Record<string, unknown>;
@@ -148,9 +148,9 @@ const config = {
 config.port.toFixed(2);  // OK — TypeScript knows it's number
 config.host.toUpperCase(); // OK — TypeScript knows it's string
 ```
- 
+
 ### Type guards
- 
+
 ```typescript
 // typeof
 function format(val: string | number): string {
@@ -177,9 +177,9 @@ function assertDefined<T>(val: T | null | undefined, msg: string): asserts val i
   if (val == null) throw new Error(msg);
 }
 ```
- 
+
 ### unknown vs any
- 
+
 ```typescript
 // any: opt out of type checking entirely — avoid
 function parse(data: any) {
@@ -193,13 +193,13 @@ function parse(data: unknown) {
   }
 }
 ```
- 
+
 ---
- 
+
 ## Generics
- 
+
 ### Basic patterns
- 
+
 ```typescript
 // Generic function
 function first<T>(items: T[]): T | undefined {
@@ -223,9 +223,9 @@ type ApiResponse<T = unknown> = {
   timestamp: Date;
 };
 ```
- 
+
 ### Utility types reference
- 
+
 | Type | Purpose | Example |
 |------|---------|---------|
 | `Partial<T>` | All props optional | `Partial<User>` |
@@ -238,13 +238,13 @@ type ApiResponse<T = unknown> = {
 | `Parameters<F>` | Function params tuple | `Parameters<typeof fn>` |
 | `Awaited<T>` | Unwrap Promise | `Awaited<Promise<User>>` |
 | `NonNullable<T>` | Remove null/undefined | `NonNullable<string \| null>` |
- 
+
 ---
- 
+
 ## Advanced Types
- 
+
 ### Conditional types
- 
+
 ```typescript
 // Basic
 type IsArray<T> = T extends unknown[] ? true : false;
@@ -257,9 +257,9 @@ type ArrayElement<T> = T extends (infer E)[] ? E : never;
 type ToArray<T> = T extends unknown ? T[] : never;
 type Result = ToArray<string | number>; // string[] | number[]
 ```
- 
+
 ### Mapped types
- 
+
 ```typescript
 // Basic mapped type
 type Nullable<T> = { [K in keyof T]: T[K] | null };
@@ -274,9 +274,9 @@ type StringKeys<T> = {
   [K in keyof T]: T[K] extends string ? K : never
 }[keyof T];
 ```
- 
+
 ### Template literal types
- 
+
 ```typescript
 type EventName<T extends string> = `on${Capitalize<T>}`;
 type ClickEvent = EventName<"click">;  // "onClick"
@@ -284,9 +284,9 @@ type ClickEvent = EventName<"click">;  // "onClick"
 type CSSProperty = `${string}-${string}`;
 type Endpoint = `/api/${string}`;
 ```
- 
+
 ### Branded types (validation at the type level)
- 
+
 ```typescript
 declare const _brand: unique symbol;
 type Brand<T, B> = T & { readonly [_brand]: B };
@@ -305,13 +305,13 @@ function getUser(id: UserId): Promise<User> { ... }
 getUser("user_123");                 // Error: string not assignable to UserId
 getUser(createUserId("user_123"));   // OK
 ```
- 
+
 ---
- 
+
 ## Error Handling
- 
+
 ### Result pattern (no exceptions)
- 
+
 ```typescript
 type Ok<T>  = { success: true;  data: T };
 type Err<E> = { success: false; error: E };
@@ -338,9 +338,9 @@ if (result.success) {
   console.error(result.error.message);
 }
 ```
- 
+
 ### Typed error classes
- 
+
 ```typescript
 abstract class AppError extends Error {
   abstract readonly code: string;
@@ -372,11 +372,11 @@ function isAppError(e: unknown): e is AppError {
   return e instanceof AppError;
 }
 ```
- 
+
 ---
- 
+
 ## Validation with Zod
- 
+
 ```typescript
 import { z } from "zod";
  
@@ -414,14 +414,15 @@ const EnvSchema = z.object({
  
 export const env = EnvSchema.parse(process.env); // throws on startup if invalid
 ```
- 
+
 ---
- 
+
 ## Debugging tsc Errors
- 
+
 ### Common errors and fixes
- 
+
 **TS2322 — Type not assignable**
+
 ```typescript
 // Error: Type 'string | undefined' is not assignable to type 'string'
 function greet(name: string | undefined) {
@@ -439,8 +440,9 @@ function greet(name: string | undefined) {
   const upper = name!.toUpperCase(); // risky
 }
 ```
- 
+
 **TS2345 — Argument type mismatch**
+
 ```typescript
 // Usually means a union type wasn't narrowed
 function process(val: string | number) {
@@ -450,8 +452,9 @@ function process(val: string | number) {
   if (typeof val === "string") takesString(val); // OK
 }
 ```
- 
+
 **TS2339 — Property does not exist**
+
 ```typescript
 // Error: Property 'foo' does not exist on type '{}'
 const obj = {};
@@ -461,8 +464,9 @@ obj.foo = "bar";  // Error
 const obj: { foo?: string } = {};
 obj.foo = "bar"; // OK
 ```
- 
+
 **TS7006 — Parameter implicitly has 'any' type**
+
 ```typescript
 // Error in strict mode
 const nums = [1, 2, 3];
@@ -472,12 +476,13 @@ nums.forEach(n => { }); // OK if body is enough
 // Explicit when TypeScript can't infer
 function transform(fn: (x: number) => number) { ... }
 ```
- 
+
 **TS2769 — No overload matches**
 Usually means you called a generic function with mismatched types.
 Check each argument type individually against the function signature.
- 
+
 **TS2532 — Object is possibly undefined (with `noUncheckedIndexedAccess`)**
+
 ```typescript
 const arr = [1, 2, 3];
 const first = arr[0];         // number | undefined (with noUncheckedIndexedAccess)
@@ -488,11 +493,11 @@ const val = arr[0]?.toFixed(2);  // string | undefined
 // OR
 if (first !== undefined) { ... }
 ```
- 
+
 ---
- 
+
 ## Common Mistakes
- 
+
 | Mistake | Problem | Fix |
 |---------|---------|-----|
 | `any` everywhere | No type safety | Use `unknown` + narrow |
@@ -502,13 +507,13 @@ if (first !== undefined) { ... }
 | Not validating API/JSON data | Runtime type mismatch | Use Zod at boundaries |
 | `interface` for everything | Can't use mapped types | Use `type` for aliases & mapped types |
 | `Object.keys()` returns `string[]` | Loses key types | Use `(Object.keys(obj) as (keyof typeof obj)[])` |
- 
+
 ---
- 
+
 ## Reference Files
- 
+
 Load on demand — don't preload all:
- 
+
 - `references/react.md` — Typed components, hooks (useState/useReducer/useRef), events, Context, Zustand, Redux Toolkit
 - `references/toolchain.md` — ESLint 9 flat config, Vitest setup, Prettier, pnpm workspaces
 - `references/enterprise.md` — Project structure, barrel exports, migration JS→TS, security patterns, branded types

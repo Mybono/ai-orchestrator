@@ -5,6 +5,7 @@ Security-focused code review checklist based on OWASP Top 10 and best practices.
 ## Authentication & Authorization
 
 ### Authentication
+
 - [ ] Passwords hashed with strong algorithm (bcrypt, argon2)
 - [ ] Password complexity requirements enforced
 - [ ] Account lockout after failed attempts
@@ -14,6 +15,7 @@ Security-focused code review checklist based on OWASP Top 10 and best practices.
 - [ ] Session timeout implemented
 
 ### Authorization
+
 - [ ] Authorization checks on every request
 - [ ] Principle of least privilege applied
 - [ ] Role-based access control (RBAC) properly implemented
@@ -22,6 +24,7 @@ Security-focused code review checklist based on OWASP Top 10 and best practices.
 - [ ] API endpoints protected appropriately
 
 ### JWT Security
+
 ```typescript
 // ❌ Insecure JWT configuration
 jwt.sign(payload, 'weak-secret');
@@ -48,6 +51,7 @@ const decoded = jwt.verify(token, publicKey, {
 ## Input Validation
 
 ### SQL Injection Prevention
+
 ```python
 # ❌ Vulnerable to SQL injection
 query = f"SELECT * FROM users WHERE id = {user_id}"
@@ -60,6 +64,7 @@ User.objects.filter(id=user_id)
 ```
 
 ### XSS Prevention
+
 ```typescript
 // ❌ Vulnerable to XSS
 element.innerHTML = userInput;
@@ -76,6 +81,7 @@ return <div dangerouslySetInnerHTML={{__html: userInput}} />;  // Dangerous!
 ```
 
 ### Command Injection Prevention
+
 ```python
 # ❌ Vulnerable to command injection
 os.system(f"convert {filename} output.png")
@@ -89,6 +95,7 @@ safe_filename = shlex.quote(filename)
 ```
 
 ### Path Traversal Prevention
+
 ```typescript
 // ❌ Vulnerable to path traversal
 const filePath = `./uploads/${req.params.filename}`;
@@ -107,6 +114,7 @@ if (!filePath.startsWith(path.resolve('./uploads'))) {
 ## Data Protection
 
 ### Sensitive Data Handling
+
 - [ ] No secrets in source code
 - [ ] Secrets stored in environment variables or secret manager
 - [ ] Sensitive data encrypted at rest
@@ -116,6 +124,7 @@ if (!filePath.startsWith(path.resolve('./uploads'))) {
 - [ ] Secure data deletion when required
 
 ### Configuration Security
+
 ```yaml
 # ❌ Secrets in config files
 database:
@@ -127,6 +136,7 @@ database:
 ```
 
 ### Error Messages
+
 ```typescript
 // ❌ Leaking sensitive information
 catch (error) {
@@ -148,12 +158,14 @@ catch (error) {
 ## API Security
 
 ### Rate Limiting
+
 - [ ] Rate limiting on all public endpoints
 - [ ] Stricter limits on authentication endpoints
 - [ ] Per-user and per-IP limits
 - [ ] Graceful handling when limits exceeded
 
 ### CORS Configuration
+
 ```typescript
 // ❌ Overly permissive CORS
 app.use(cors({ origin: '*' }));
@@ -167,6 +179,7 @@ app.use(cors({
 ```
 
 ### HTTP Headers
+
 ```typescript
 // Security headers to set
 app.use(helmet({
@@ -187,6 +200,7 @@ app.use(helmet({
 ## Cryptography
 
 ### Secure Practices
+
 - [ ] Using well-established algorithms (AES-256, RSA-2048+)
 - [ ] Not implementing custom cryptography
 - [ ] Using cryptographically secure random number generation
@@ -194,6 +208,7 @@ app.use(helmet({
 - [ ] Secure key storage (HSM, KMS)
 
 ### Common Mistakes
+
 ```typescript
 // ❌ Weak random generation
 const token = Math.random().toString(36);
@@ -213,6 +228,7 @@ const hash = await bcrypt.hash(password, 12);
 ## Dependency Security
 
 ### Checklist
+
 - [ ] Dependencies from trusted sources only
 - [ ] No known vulnerabilities (npm audit, cargo audit)
 - [ ] Dependencies kept up to date
@@ -221,6 +237,7 @@ const hash = await bcrypt.hash(password, 12);
 - [ ] License compliance verified
 
 ### Audit Commands
+
 ```bash
 # Node.js
 npm audit
@@ -240,6 +257,7 @@ snyk test
 ## Logging & Monitoring
 
 ### Secure Logging
+
 - [ ] No sensitive data in logs (passwords, tokens, PII)
 - [ ] Logs protected from tampering
 - [ ] Appropriate log retention

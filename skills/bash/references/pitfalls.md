@@ -1,6 +1,7 @@
 # Bash Pitfalls Reference
 
 ## SC2086 — Unquoted variable (word splitting)
+
 ```bash
 # BAD — breaks if $file contains spaces
 cp $file $dest
@@ -10,6 +11,7 @@ cp "$file" "$dest"
 ```
 
 ## SC2046 — Unquoted command substitution
+
 ```bash
 # BAD
 for f in $(find . -name "*.sh"); do ...
@@ -20,6 +22,7 @@ done < <(find . -name "*.sh" -print0)
 ```
 
 ## SC2006 — Backtick command substitution
+
 ```bash
 # BAD — old style, doesn't nest well
 result=`command`
@@ -29,6 +32,7 @@ result=$(command)
 ```
 
 ## Pipe + set -e interaction
+
 ```bash
 # BAD — 'set -e' won't catch grep failure in pipe
 cat file | grep pattern | wc -l
@@ -42,6 +46,7 @@ grep pattern file || true   # intentional continue
 ```
 
 ## Arithmetic: don't use let or expr
+
 ```bash
 # BAD
 let count=count+1
@@ -53,6 +58,7 @@ count=$(( count + 1 ))
 ```
 
 ## Comparing numbers vs strings
+
 ```bash
 # String comparison (lexicographic)
 [[ "$a" == "$b" ]]
@@ -65,7 +71,8 @@ count=$(( count + 1 ))
 (( a < b ))
 ```
 
-## [ vs [[ 
+## [ vs [[
+
 ```bash
 # [ is POSIX, fragile with empty vars
 [ $var == "foo" ]   # breaks if $var is empty
@@ -76,6 +83,7 @@ count=$(( count + 1 ))
 ```
 
 ## Subshell variable scope
+
 ```bash
 # BAD — variable set inside pipe subshell is lost
 count=0
@@ -93,6 +101,7 @@ echo "$count"  # correct
 ```
 
 ## Default values
+
 ```bash
 # Use parameter expansion for defaults
 name="${1:-default_value}"
@@ -103,6 +112,7 @@ port="${PORT:-8080}"
 ```
 
 ## Array handling
+
 ```bash
 # BAD — string, not array
 files="a.txt b.txt c.txt"
@@ -114,6 +124,7 @@ cp "${files[@]}" /dest
 ```
 
 ## Function return values
+
 ```bash
 # Functions return exit codes (0-255), not strings
 # To return a string, use stdout:
@@ -130,6 +141,7 @@ if is_valid "$input"; then ...
 ```
 
 ## Conditional exit code check
+
 ```bash
 # This suppresses exit on failure with set -e:
 if some_command; then

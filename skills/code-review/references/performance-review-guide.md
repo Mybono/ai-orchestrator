@@ -47,6 +47,7 @@ A performance review guide covering frontend, backend, database, algorithm compl
 ```
 
 **Review points:**
+
 - [ ] Does the LCP element have `fetchpriority="high"` set?
 - [ ] Are WebP/AVIF formats used?
 - [ ] Is server-side rendering or static generation in use?
@@ -127,6 +128,7 @@ img {
 ```
 
 **CLS Review Checklist:**
+
 - [ ] Do images/videos have width/height or aspect-ratio?
 - [ ] Is `font-display: swap` used for font loading?
 - [ ] Is space reserved for dynamic content?
@@ -184,6 +186,7 @@ export function fn2() {}
 ```
 
 **Bundle Review Checklist:**
+
 - [ ] Is dynamic import() used for code splitting?
 - [ ] Are large libraries imported selectively?
 - [ ] Has bundle size been analyzed? (webpack-bundle-analyzer)
@@ -220,6 +223,7 @@ function VirtualList({ items }) {
 ```
 
 **Large data review points:**
+
 - [ ] Does a list with more than 100 items use virtual scrolling?
 - [ ] Does the table support pagination or virtualization?
 - [ ] Are there any unnecessary full re-renders?
@@ -651,34 +655,40 @@ function factorial(n) {
 ### 🔴 Must Check (blocking)
 
 **Frontend:**
+
 - [ ] Is the LCP image lazy-loaded? (it should not be)
 - [ ] Is `transition: all` used?
 - [ ] Are width/height/top/left being animated?
 - [ ] Are lists with >100 items virtualized?
 
 **Backend:**
+
 - [ ] Are there any N+1 queries?
 - [ ] Do list endpoints have pagination?
 - [ ] Is SELECT * used on large tables?
 
 **General:**
+
 - [ ] Are there O(n²) or worse nested loops?
 - [ ] Do useEffects/event listeners have cleanup?
 
 ### 🟡 Recommended Checks (important)
 
 **Frontend:**
+
 - [ ] Is code splitting used?
 - [ ] Are large libraries imported selectively?
 - [ ] Are images in WebP/AVIF format?
 - [ ] Are there any unused dependencies?
 
 **Backend:**
+
 - [ ] Are hot data endpoints cached?
 - [ ] Are WHERE columns indexed?
 - [ ] Is slow query monitoring in place?
 
 **API:**
+
 - [ ] Is response compression enabled?
 - [ ] Is rate limiting in place?
 - [ ] Are only necessary fields returned?

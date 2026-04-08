@@ -32,11 +32,13 @@ If the user pastes a broken script, skip the interview and go straight to diagno
 Apply these to every script you write or review:
 
 ### Safety header (always include)
+
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
 IFS=$'\n\t'
 ```
+
 - `set -e` — exit on error
 - `set -u` — treat unset variables as errors
 - `set -o pipefail` — catch errors in pipes
@@ -45,6 +47,7 @@ IFS=$'\n\t'
 **Exception**: Omit `set -e` only if the script intentionally continues on errors (document why).
 
 ### Variable hygiene
+
 ```bash
 # Always quote variables
 echo "$var"           # good
@@ -59,6 +62,7 @@ readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ```
 
 ### Error handling patterns
+
 ```bash
 # Trap for cleanup
 cleanup() {
@@ -81,13 +85,16 @@ require() {
 ```
 
 ### Argument parsing
+
 For simple scripts use positional args with validation:
+
 ```bash
 [[ $# -lt 1 ]] && die "Usage: $(basename "$0") <arg1> [arg2]"
 ARG1="${1:?'arg1 is required'}"
 ```
 
 For complex scripts use `getopts`:
+
 ```bash
 while getopts ":f:o:vh" opt; do
   case $opt in
@@ -103,6 +110,7 @@ shift $((OPTIND - 1))
 ```
 
 ### Logging
+
 ```bash
 log()  { echo "[$(date '+%H:%M:%S')] $*"; }
 warn() { echo "[WARN]  $*" >&2; }
@@ -137,6 +145,7 @@ echo -e "section_end:$(date +%s):build\r\e[0K"
 ```
 
 **CI script checklist:**
+
 - Never hardcode secrets — use env vars
 - Always set `set -euo pipefail`
 - Exit with explicit codes for downstream steps
@@ -179,6 +188,7 @@ tmpdir=$(mktemp -d "${TMPDIR:-/tmp}/myscript.XXXXXX")
 ```
 
 ### Retry logic (useful in CI)
+
 ```bash
 retry() {
   local max_attempts=${MAX_RETRIES:-3}
@@ -221,6 +231,7 @@ When reviewing an existing script, check in order:
 ## Phase 5: Output Format
 
 **For new scripts**: Write the complete script, then add a brief section:
+
 - What it does
 - How to run it (`chmod +x script.sh && ./script.sh <args>`)
 - Key assumptions / dependencies

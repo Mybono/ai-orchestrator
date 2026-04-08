@@ -34,6 +34,7 @@ Transform code reviews from gatekeeping to knowledge sharing through constructiv
 ### 1. The Review Mindset
 
 **Goals of Code Review:**
+
 - Catch bugs and edge cases
 - Ensure code maintainability
 - Share knowledge across team
@@ -42,6 +43,7 @@ Transform code reviews from gatekeeping to knowledge sharing through constructiv
 - Build team culture
 
 **Not the Goals:**
+
 - Show off knowledge
 - Nitpick formatting (use linters)
 - Block progress unnecessarily
@@ -50,6 +52,7 @@ Transform code reviews from gatekeeping to knowledge sharing through constructiv
 ### 2. Effective Feedback
 
 **Good Feedback is:**
+
 - Specific and actionable
 - Educational, not judgmental
 - Focused on the code, not the person
@@ -73,6 +76,7 @@ Transform code reviews from gatekeeping to knowledge sharing through constructiv
 ### 3. Review Scope
 
 **What to Review:**
+
 - Logic correctness and edge cases
 - Security vulnerabilities
 - Performance implications
@@ -83,6 +87,7 @@ Transform code reviews from gatekeeping to knowledge sharing through constructiv
 - Architectural fit
 
 **What Not to Review Manually:**
+
 - Code formatting (use Prettier, Black, etc.)
 - Import organization
 - Linting violations
@@ -93,6 +98,7 @@ Transform code reviews from gatekeeping to knowledge sharing through constructiv
 ### Phase 1: Context Gathering (2-3 minutes)
 
 Before diving into code, understand:
+
 1. Read PR description and linked issue
 2. Check PR size (>400 lines? Ask to split)
 3. Review CI/CD status (tests passing?)
@@ -113,6 +119,7 @@ Before diving into code, understand:
 ### Phase 3: Line-by-Line Review (10-20 minutes)
 
 For each file, check:
+
 - **Logic & Correctness** - Edge cases, off-by-one, null checks, race conditions
 - **Security** - Input validation, injection risks, XSS, sensitive data
 - **Performance** - N+1 queries, unnecessary loops, memory leaks

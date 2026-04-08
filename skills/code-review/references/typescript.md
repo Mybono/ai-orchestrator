@@ -509,6 +509,7 @@ await Promise.all(items.map(processItem));
 ## Review Checklist
 
 ### Type System
+
 - [ ] No use of `any` (use `unknown` + type guard instead)
 - [ ] Interfaces and type definitions are complete and meaningfully named
 - [ ] Generics are used to improve code reusability
@@ -516,16 +517,19 @@ await Promise.all(items.map(processItem));
 - [ ] Utility types are used appropriately (Partial, Pick, Omit, etc.)
 
 ### Generics
+
 - [ ] Generics have appropriate constraints (extends)
 - [ ] Generic parameters have sensible default values
 - [ ] Avoid over-generalization (KISS principle)
 
 ### Strict Mode
+
 - [ ] tsconfig.json has strict: true enabled
 - [ ] noUncheckedIndexedAccess is enabled
 - [ ] No use of @ts-ignore (use @ts-expect-error instead)
 
 ### Async Code
+
 - [ ] async functions have error handling
 - [ ] Promise rejections are handled correctly
 - [ ] No floating promises (unhandled Promises)
@@ -533,11 +537,13 @@ await Promise.all(items.map(processItem));
 - [ ] Race conditions are handled with AbortController
 
 ### Immutability
+
 - [ ] Function parameters are not mutated directly
 - [ ] Spread operator is used to create new objects/arrays
 - [ ] readonly modifier is considered where appropriate
 
 ### ESLint
+
 - [ ] @typescript-eslint/recommended is used
 - [ ] No ESLint warnings or errors
 - [ ] consistent-type-imports is used

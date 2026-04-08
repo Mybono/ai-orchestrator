@@ -264,22 +264,26 @@ clang-format -i src/*.c include/*.h
 ## Review Checklist
 
 ### Memory and UB
+
 - [ ] All buffers have explicit size parameters
 - [ ] No out-of-bounds access or pointer arithmetic past objects
 - [ ] No use after free or uninitialized reads
 - [ ] Signed overflow and shift rules are respected
 
 ### API and Design
+
 - [ ] Ownership rules are documented and consistent
 - [ ] const-correctness is applied for inputs
 - [ ] Error contracts are clear and consistent
 
 ### Concurrency
+
 - [ ] No data races on shared state
 - [ ] volatile is not used for synchronization
 - [ ] Locks are held for minimal time
 
 ### Tooling and Tests
+
 - [ ] Builds clean with warnings enabled
 - [ ] Sanitizers run on critical code paths
 - [ ] Static analysis results are addressed

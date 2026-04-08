@@ -35,6 +35,7 @@ Instead, simply run `bash ~/.claude/open-pr.sh` and return the output. This scri
 ### 5. Automatic Skill Integration
 
 Before performing any generation, review, or planning task, the IDE Agent MUST:
+
 1. Identify the primary programming language or task type (e.g., Bash, TypeScript, Documentation, Code Review).
 2. Locate the corresponding skill file in the `skills/` directory.
 3. Read the skill file and incorporate its rules into the system prompt or generation context.

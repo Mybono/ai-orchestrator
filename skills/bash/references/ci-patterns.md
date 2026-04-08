@@ -3,6 +3,7 @@
 ## GitHub Actions
 
 ### Script structure for a step
+
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
@@ -17,6 +18,7 @@ echo "::endgroup::"
 ```
 
 ### Pass data between steps
+
 ```bash
 # Set output
 echo "artifact_path=${OUTPUT_PATH}" >> "$GITHUB_OUTPUT"
@@ -27,6 +29,7 @@ echo "MY_VAR=value" >> "$GITHUB_ENV"
 ```
 
 ### Annotate errors in source
+
 ```bash
 # Will show inline annotation in PR
 echo "::error file=src/main.swift,line=42::Missing return statement"
@@ -34,6 +37,7 @@ echo "::warning file=Podfile,line=10::Deprecated pod version"
 ```
 
 ### Conditional logic based on event
+
 ```bash
 if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
   echo "Running PR checks..."
@@ -48,6 +52,7 @@ fi
 ## GitLab CI
 
 ### Script structure
+
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
@@ -66,6 +71,7 @@ section_end "build"
 ```
 
 ### Set dotenv artifact (pass vars between jobs)
+
 ```bash
 echo "VERSION=${VERSION}" > build.env
 echo "ARTIFACT_URL=${URL}" >> build.env
@@ -77,6 +83,7 @@ echo "ARTIFACT_URL=${URL}" >> build.env
 ## Bitrise
 
 ### Log formatting
+
 ```bash
 # Bitrise reads these for step summary
 echo "+-----------------------------------------------------------+"
@@ -88,12 +95,14 @@ echo "error: Something went wrong"   # surfaces in UI
 ```
 
 ### envman — set env vars for subsequent steps
+
 ```bash
 envman add --key MY_OUTPUT --value "${VALUE}"
 envman add --key BUILD_PATH --value "${BUILD_DIR}"
 ```
 
 ### Common Bitrise env vars
+
 ```bash
 BITRISE_SOURCE_DIR      # repo root
 BITRISE_DEPLOY_DIR      # artifacts output dir
@@ -104,6 +113,7 @@ BITRISE_APP_SLUG        # app identifier
 ```
 
 ### Safe artifact copy
+
 ```bash
 copy_artifact() {
   local src="$1"
@@ -122,6 +132,7 @@ copy_artifact() {
 ## Generic CI patterns
 
 ### Version bumping
+
 ```bash
 bump_version() {
   local file="$1"
@@ -134,6 +145,7 @@ bump_version() {
 ```
 
 ### Wait for service readiness
+
 ```bash
 wait_for_port() {
   local host="$1" port="$2" timeout="${3:-30}"
@@ -150,6 +162,7 @@ wait_for_port() {
 ```
 
 ### Slack notification on failure
+
 ```bash
 notify_slack() {
   local message="$1"
@@ -168,6 +181,7 @@ trap on_failure ERR
 ```
 
 ### Detect if running in CI
+
 ```bash
 in_ci() {
   [[ -n "${CI:-}" ]] || [[ -n "${CONTINUOUS_INTEGRATION:-}" ]]

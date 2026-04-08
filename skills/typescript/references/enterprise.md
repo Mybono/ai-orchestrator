@@ -45,6 +45,7 @@ import { User, UserService } from "@features/users";
 ## JS → TS Migration Strategy
 
 **Phase 1: TypeScript alongside JS (no breakage)**
+
 ```json
 {
   "compilerOptions": {
@@ -57,6 +58,7 @@ import { User, UserService } from "@features/users";
 ```
 
 **Phase 2: Rename files one at a time**
+
 ```bash
 mv src/utils/helpers.js src/utils/helpers.ts
 # Fix type errors, run tests
@@ -64,6 +66,7 @@ mv src/utils/helpers.js src/utils/helpers.ts
 ```
 
 **Phase 3: Enable strictness incrementally**
+
 ```json
 // Start here
 { "noImplicitAny": true }
@@ -79,6 +82,7 @@ mv src/utils/helpers.js src/utils/helpers.ts
 ```
 
 **JSDoc for gradual typing (before renaming)**
+
 ```javascript
 /**
  * @param {string} id

@@ -357,6 +357,7 @@ clang-format -i src/*.cpp include/*.h
 ## Review Checklist
 
 ### Safety and Lifetime
+
 - [ ] Ownership is explicit (RAII, unique_ptr by default)
 - [ ] No dangling references or views
 - [ ] Rule of 0/3/5 followed for resource-owning types
@@ -364,22 +365,26 @@ clang-format -i src/*.cpp include/*.h
 - [ ] Destructors are noexcept and do not throw
 
 ### API and Design
+
 - [ ] const-correctness is applied consistently
 - [ ] Constructors are explicit where needed
 - [ ] Override/final used for virtual functions
 - [ ] No object slicing (pass by ref or pointer)
 
 ### Concurrency
+
 - [ ] Shared data is protected (mutex or atomics)
 - [ ] Locking order is consistent
 - [ ] No blocking while holding locks
 
 ### Performance
+
 - [ ] Unnecessary allocations avoided (reserve, move)
 - [ ] Copies avoided in hot paths
 - [ ] Algorithmic complexity is reasonable
 
 ### Tooling and Tests
+
 - [ ] Builds clean with warnings enabled
 - [ ] Sanitizers run on critical code paths
 - [ ] Static analysis (clang-tidy) results are addressed

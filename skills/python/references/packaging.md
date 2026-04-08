@@ -169,26 +169,26 @@ jobs:
 .PHONY: install dev test lint typecheck clean
 
 install:
-	uv sync
+ uv sync
 
 dev:
-	uv run uvicorn myapp.main:app --reload
+ uv run uvicorn myapp.main:app --reload
 
 test:
-	uv run pytest
+ uv run pytest
 
 lint:
-	uv run ruff check . --fix
-	uv run ruff format .
+ uv run ruff check . --fix
+ uv run ruff format .
 
 typecheck:
-	uv run mypy src/
+ uv run mypy src/
 
 ci: lint typecheck test
 
 clean:
-	rm -rf dist/ .mypy_cache/ .ruff_cache/ .pytest_cache/ htmlcov/
-	find . -type d -name "__pycache__" -exec rm -rf {} +
+ rm -rf dist/ .mypy_cache/ .ruff_cache/ .pytest_cache/ htmlcov/
+ find . -type d -name "__pycache__" -exec rm -rf {} +
 ```
 
 ## .env and secrets management

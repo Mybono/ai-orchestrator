@@ -9,6 +9,7 @@ Language-specific bugs and issues to watch for during code review.
 ## Universal Issues
 
 ### Logic Errors
+
 - [ ] Off-by-one errors in loops and array access
 - [ ] Incorrect boolean logic (De Morgan's law violations)
 - [ ] Missing null/undefined checks
@@ -18,6 +19,7 @@ Language-specific bugs and issues to watch for during code review.
 - [ ] Floating point comparison issues
 
 ### Resource Management
+
 - [ ] Memory leaks (unclosed connections, listeners)
 - [ ] File handles not closed
 - [ ] Database connections not released
@@ -25,6 +27,7 @@ Language-specific bugs and issues to watch for during code review.
 - [ ] Timers/intervals not cleared
 
 ### Error Handling
+
 - [ ] Swallowed exceptions (empty catch blocks)
 - [ ] Generic exception handling hiding specific errors
 - [ ] Missing error propagation
@@ -36,6 +39,7 @@ Language-specific bugs and issues to watch for during code review.
 ## TypeScript/JavaScript
 
 ### Type Issues
+
 ```typescript
 // ❌ Using any defeats type safety
 function process(data: any) { return data.value; }
@@ -46,6 +50,7 @@ function process(data: Data) { return data.value; }
 ```
 
 ### Async/Await Pitfalls
+
 ```typescript
 // ❌ Missing await
 async function fetch() {
@@ -74,6 +79,7 @@ async function safe() {
 ### React Specific
 
 #### Hooks Rules Violations
+
 ```tsx
 // ❌ Calling Hooks conditionally — violates the Rules of Hooks
 function BadComponent({ show }) {
@@ -107,6 +113,7 @@ function GoodLoop({ items }) {
 ```
 
 #### Common useEffect Mistakes
+
 ```tsx
 // ❌ Incomplete dependency array — stale closure
 function StaleClosureExample({ userId, onSuccess }) {
@@ -189,6 +196,7 @@ function GoodEvent() {
 ```
 
 #### useMemo / useCallback Misuse
+
 ```tsx
 // ❌ Over-optimization — constants don't need memo
 function OverOptimized() {
@@ -230,6 +238,7 @@ function Parent() {
 ```
 
 #### Component Design Issues
+
 ```tsx
 // ❌ Defining components inside other components
 function Parent() {
@@ -263,6 +272,7 @@ function MutateProps({ user }) {
 ```
 
 #### Server Component Mistakes (React 19+)
+
 ```tsx
 // ❌ Using client-side APIs in a Server Component
 // app/page.tsx (Server Component by default)
@@ -294,6 +304,7 @@ export default function Layout({ children }) { ... }
 ```
 
 #### Common Testing Mistakes
+
 ```tsx
 // ❌ Using container queries
 const { container } = render(<Component />);
@@ -323,6 +334,7 @@ await screen.findByText('Hello');  // findBy waits
 ```
 
 ### React Common Mistakes Checklist
+
 - [ ] Hooks called outside the top level (in conditions/loops)
 - [ ] Incomplete `useEffect` dependency arrays
 - [ ] Missing `useEffect` cleanup functions
@@ -406,6 +418,7 @@ const handleLike = async () => {
 ```
 
 ### React 19 Forms Checklist
+
 - [ ] `useActionState` returns new state instead of `setState`
 - [ ] `useActionState` correctly uses `isPending` to disable submission
 - [ ] `useFormStatus` is called within a form child component
@@ -501,6 +514,7 @@ export default function Layout({ children }) {
 ```
 
 ### Suspense Checklist
+
 - [ ] Slow content has its own Suspense boundary
 - [ ] Each Suspense has a corresponding Error Boundary
 - [ ] `fallback` is a meaningful skeleton screen (not just a plain spinner)
@@ -635,6 +649,7 @@ if (isFetching) return <Refreshing />;  // Background refresh in progress
 ```
 
 ### TanStack Query Checklist
+
 - [ ] `queryKey` contains all parameters that affect data
 - [ ] Reasonable `staleTime` set (not the default 0)
 - [ ] `useSuspenseQuery` does not use `enabled`
@@ -644,6 +659,7 @@ if (isFetching) return <Refreshing />;  // Background refresh in progress
 - [ ] Understand `isPending` vs `isLoading` vs `isFetching`
 
 ### TypeScript/JavaScript Common Mistakes
+
 - [ ] `==` instead of `===`
 - [ ] Modifying array/object during iteration
 - [ ] `this` context lost in callbacks
@@ -656,6 +672,7 @@ if (isFetching) return <Refreshing />;  // Background refresh in progress
 ## Vue 3
 
 ### Reactivity Loss
+
 ```vue
 <script setup>
 const state = reactive({ count: 0 })
@@ -669,6 +686,7 @@ const { count } = toRefs(state)  // count.value is reactive
 ```
 
 ### Props Reactivity Transfer
+
 ```vue
 <script setup>
 const props = defineProps<{ id: string }>()
@@ -684,6 +702,7 @@ const { data } = useFetch(toRef(props, 'id'))
 ```
 
 ### Watch Cleanup
+
 ```vue
 <script setup>
 watch(id, async (newId) => {
@@ -704,6 +723,7 @@ watch(id, async (newId, _, onCleanup) => {
 ```
 
 ### Computed Side Effects
+
 ```vue
 <script setup>
 const total = computed(() => {
@@ -722,6 +742,7 @@ watch(total, () => { sideEffect.value++ })
 ```
 
 ### Template Common Errors
+
 ```vue
 <template>
   <div v-for="item in items" v-if="item.visible" :key="item.id">
@@ -737,6 +758,7 @@ watch(total, () => { sideEffect.value++ })
 ```
 
 ### Common Mistakes
+
 - [ ] Destructuring `reactive` object loses reactivity
 - [ ] Props lose reactivity when passed to composables
 - [ ] `watch` async callback without cleanup function
@@ -753,6 +775,7 @@ watch(total, () => { sideEffect.value++ })
 ## Python
 
 ### Mutable Default Arguments
+
 ```python
 # ❌ Bug: List shared across all calls
 def add_item(item, items=[]):
@@ -768,6 +791,7 @@ def add_item(item, items=None):
 ```
 
 ### Exception Handling
+
 ```python
 # ❌ Catching everything, including KeyboardInterrupt
 try:
@@ -784,6 +808,7 @@ except ValueError as e:
 ```
 
 ### Class Attributes
+
 ```python
 # ❌ Shared mutable class attribute
 class User:
@@ -796,6 +821,7 @@ class User:
 ```
 
 ### Common Mistakes
+
 - [ ] Using `is` instead of `==` for value comparison
 - [ ] Forgetting `self` parameter in methods
 - [ ] Modifying list while iterating
@@ -1141,18 +1167,21 @@ struct Good<'a> {
 ### Rust Review Checklist
 
 **Ownership and Borrowing**
+
 - [ ] `clone()` is intentional, not to bypass the borrow checker
 - [ ] Avoid storing borrows in structs (unless necessary)
 - [ ] `Rc`/`Arc` used reasonably, no hidden unnecessary shared state
 - [ ] No unnecessary `RefCell` (runtime check vs compile time)
 
 **Unsafe Code**
+
 - [ ] Every `unsafe` block has a `SAFETY` comment
 - [ ] `unsafe fn` has `# Safety` documentation
 - [ ] Safety invariants are clearly recorded
 - [ ] `unsafe` boundaries are as small as possible
 
 **Async/Concurrency**
+
 - [ ] No blocking in async context
 - [ ] No `std::sync` locks held across `.await`
 - [ ] Spawned tasks satisfy `'static` constraint
@@ -1160,18 +1189,21 @@ struct Good<'a> {
 - [ ] Lock order is consistent (avoid deadlock)
 
 **Error Handling**
+
 - [ ] Library code uses `thiserror`, app code uses `anyhow`
 - [ ] Errors have sufficient context info
 - [ ] No `unwrap`/`expect` in production code
 - [ ] `must_use` return values are correctly handled
 
 **Performance**
+
 - [ ] Avoid unnecessary `collect()`
 - [ ] Pass large data structures by reference
 - [ ] String concatenation uses `String::with_capacity` or `write!`
 - [ ] `impl Trait` preferred over `Box<dyn Trait>` (when possible)
 
 **Type System**
+
 - [ ] Use newtype pattern to increase type safety
 - [ ] Exhaustive enum matching (no `_` wildcard hiding new variants)
 - [ ] Lifecycles simplified as much as possible
@@ -1181,6 +1213,7 @@ struct Good<'a> {
 ## SQL
 
 ### Injection Vulnerabilities
+
 ```sql
 -- ❌ String concatenation (SQL injection risk)
 query = "SELECT * FROM users WHERE id = " + user_id
@@ -1191,6 +1224,7 @@ cursor.execute(query, (user_id,))
 ```
 
 ### Performance Issues
+
 - [ ] Missing indexes on filtered/joined columns
 - [ ] `SELECT *` instead of specific columns
 - [ ] N+1 query patterns
@@ -1198,6 +1232,7 @@ cursor.execute(query, (user_id,))
 - [ ] Inefficient subqueries vs `JOIN`s
 
 ### Common Mistakes
+
 - [ ] Not handling `NULL` comparisons correctly
 - [ ] Missing transactions for related operations
 - [ ] Incorrect `JOIN` types
@@ -1209,6 +1244,7 @@ cursor.execute(query, (user_id,))
 ## API Design
 
 ### REST Issues
+
 - [ ] Inconsistent resource naming
 - [ ] Wrong HTTP methods (`POST` for idempotent operations)
 - [ ] Missing pagination for list endpoints
@@ -1216,6 +1252,7 @@ cursor.execute(query, (user_id,))
 - [ ] Missing rate limiting
 
 ### Data Validation
+
 - [ ] Missing input validation
 - [ ] Incorrect data type validation
 - [ ] Missing length/range checks
@@ -1227,6 +1264,7 @@ cursor.execute(query, (user_id,))
 ## Testing
 
 ### Test Quality Issues
+
 - [ ] Testing implementation details instead of behavior
 - [ ] Missing edge case tests
 - [ ] Flaky tests (non-deterministic)

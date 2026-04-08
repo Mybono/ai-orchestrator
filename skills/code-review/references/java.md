@@ -378,29 +378,34 @@ class UserRepositoryTest {
 ## Review Checklist
 
 ### Basics & Standards
+
 - [ ] Modern Java 17/21 features used (switch expressions, records, text blocks)
 - [ ] Deprecated classes avoided (`Date`, `Calendar`, `SimpleDateFormat`)
 - [ ] Stream API or Collections methods preferred for collection operations
 - [ ] `Optional` used only as a return value, not in fields or parameters
 
 ### Spring Boot
+
 - [ ] Constructor injection used instead of `@Autowired` field injection
 - [ ] Configuration properties use `@ConfigurationProperties`
 - [ ] Controllers have a single responsibility; business logic is in the Service layer
 - [ ] Global exception handling uses `@ControllerAdvice` / `ProblemDetail`
 
 ### Database & Transactions
+
 - [ ] Read operations are marked `@Transactional(readOnly = true)`
 - [ ] N+1 queries checked (EAGER fetch or calls inside loops)
 - [ ] Entity classes do not use `@Data`; `equals`/`hashCode` are correctly implemented
 - [ ] Database indexes cover query conditions
 
 ### Concurrency & Performance
+
 - [ ] Virtual threads considered for I/O-intensive tasks
 - [ ] Thread-safe classes used correctly (`ConcurrentHashMap` vs `HashMap`)
 - [ ] Lock granularity is appropriate; I/O operations avoided inside locks
 
 ### Maintainability
+
 - [ ] Key business logic has sufficient unit tests
 - [ ] Logging is appropriate (use Slf4j, avoid `System.out`)
 - [ ] Magic values extracted into constants or enums

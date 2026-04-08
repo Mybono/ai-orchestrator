@@ -7,11 +7,13 @@ An architectural design review guide to help assess whether code architecture is
 ### S - Single Responsibility Principle (SRP)
 
 **Key review points:**
+
 - Does this class/module have only one reason to change?
 - Do all methods in the class serve the same purpose?
 - If you had to describe this class to a non-technical person, could you do it in one sentence?
 
 **Signals to look for in code review:**
+
 ```
 ⚠️ Class name contains generic words like "And", "Manager", "Handler", or "Processor"
 ⚠️ A class exceeds 200–300 lines of code
@@ -20,17 +22,20 @@ An architectural design review guide to help assess whether code architecture is
 ```
 
 **Review questions:**
+
 - "What is this class responsible for? Can it be split?"
 - "If requirement X changes, which methods need to change? What about requirement Y?"
 
 ### O - Open/Closed Principle (OCP)
 
 **Key review points:**
+
 - Does adding a new feature require modifying existing code?
 - Can new behavior be added through extension (inheritance, composition)?
 - Are there large chains of if/else or switch statements handling different types?
 
 **Signals to look for in code review:**
+
 ```
 ⚠️ switch/if-else chains handling different types
 ⚠️ Adding new functionality requires modifying core classes
@@ -38,17 +43,20 @@ An architectural design review guide to help assess whether code architecture is
 ```
 
 **Review questions:**
+
 - "If a new X type needs to be added, which files need to change?"
 - "Will this switch statement grow as new types are added?"
 
 ### L - Liskov Substitution Principle (LSP)
 
 **Key review points:**
+
 - Can a subclass fully substitute its parent class?
 - Does the subclass change the expected behavior of parent class methods?
 - Does the subclass throw exceptions not declared by the parent?
 
 **Signals to look for in code review:**
+
 ```
 ⚠️ Explicit type casting
 ⚠️ Subclass methods throw NotImplementedException
@@ -57,17 +65,20 @@ An architectural design review guide to help assess whether code architecture is
 ```
 
 **Review questions:**
+
 - "If the subclass replaces the parent class, does the calling code need to change?"
 - "Does this method's behavior in the subclass fulfill the parent class contract?"
 
 ### I - Interface Segregation Principle (ISP)
 
 **Key review points:**
+
 - Are interfaces small and focused enough?
 - Are implementing classes forced to implement methods they don't need?
 - Do clients depend on methods they don't use?
 
 **Signals to look for in code review:**
+
 ```
 ⚠️ Interface has more than 5–7 methods
 ⚠️ Implementing classes have empty methods or throw NotImplementedException
@@ -76,17 +87,20 @@ An architectural design review guide to help assess whether code architecture is
 ```
 
 **Review questions:**
+
 - "Are all methods in this interface used by every implementing class?"
 - "Can this large interface be split into smaller, specialized interfaces?"
 
 ### D - Dependency Inversion Principle (DIP)
 
 **Key review points:**
+
 - Do high-level modules depend on abstractions rather than concrete implementations?
 - Is dependency injection used instead of directly instantiating objects?
 - Are abstractions defined by high-level modules rather than low-level ones?
 
 **Signals to look for in code review:**
+
 ```
 ⚠️ High-level modules directly instantiate concrete classes from low-level modules
 ⚠️ Importing concrete implementation classes instead of interfaces/abstractions
@@ -95,6 +109,7 @@ An architectural design review guide to help assess whether code architecture is
 ```
 
 **Review questions:**
+
 - "Can the dependencies of this class be replaced with mocks during testing?"
 - "If the database/API implementation changes, how many places need to be modified?"
 
@@ -227,12 +242,14 @@ class MySQLUserRepository implements UserRepository {
 ### Review Checklist
 
 **Layer boundary checks:**
+
 - [ ] Does the Domain layer have external dependencies (database, HTTP, file system)?
 - [ ] Does the Application layer directly access the database or call external APIs?
 - [ ] Does the Controller contain business logic?
 - [ ] Are there cross-layer calls (UI calling Repository directly)?
 
 **Separation of concerns checks:**
+
 - [ ] Is business logic separated from presentation logic?
 - [ ] Is data access encapsulated in a dedicated layer?
 - [ ] Is configuration and environment-specific code centrally managed?
@@ -298,16 +315,19 @@ class MySQLUserRepository implements UserRepository {
 ### Extensibility Checklist
 
 **Feature extensibility:**
+
 - [ ] Does adding new functionality require modifying core code?
 - [ ] Are extension points provided (hooks, plugins, events)?
 - [ ] Is configuration externalized (config files, environment variables)?
 
 **Data extensibility:**
+
 - [ ] Does the data model support adding new fields?
 - [ ] Has data volume growth been considered?
 - [ ] Do queries have appropriate indexes?
 
 **Load scalability:**
+
 - [ ] Can the system scale horizontally (adding more instances)?
 - [ ] Are there stateful dependencies (sessions, local cache)?
 - [ ] Does the database connection use a connection pool?
@@ -353,6 +373,7 @@ class OrderService {
 ### Directory Organization
 
 **Organized by feature/domain (recommended):**
+
 ```
 src/
 ├── user/
@@ -370,6 +391,7 @@ src/
 ```
 
 **Organized by technical layer (not recommended):**
+
 ```
 src/
 ├── controllers/     ← Different domains mixed together

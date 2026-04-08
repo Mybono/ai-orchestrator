@@ -299,7 +299,7 @@ async fn cancel_safe(conn: &mut Connection) -> Result<()> {
 }
 ```
 
-### Cancellation Safety in select!
+### Cancellation Safety in select
 
 ```rust
 use tokio::select;
@@ -764,11 +764,13 @@ fn create_handler() -> impl Handler {
 ### Issues the Compiler Cannot Catch
 
 **Business Logic Correctness**
+
 - [ ] Boundary conditions are handled correctly
 - [ ] State machine transitions are complete
 - [ ] Race conditions in concurrent scenarios
 
 **API Design**
+
 - [ ] Public APIs are hard to misuse
 - [ ] Type signatures clearly express intent
 - [ ] Error type granularity is appropriate
