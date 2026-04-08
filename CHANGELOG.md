@@ -1,23 +1,12 @@
 # Changelog
 
 All notable changes to ai-orchestrator.
-## [unreleased]
+## v1.0.4 — 2026-04-08
 ### 2026-04-08
-- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`f81e52f`](https://github.com/Mybono/ai-orchestrator/commit/f81e52f804e5f8e7fb7ae0e717afdd73cd6d6bcf) Sync changelog after merge
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`1636d77`](https://github.com/Mybono/ai-orchestrator/commit/1636d7775ad015908f43327298b9b2695150231d) Sync changelog after merge
 
 ## v1.0.3 — 2026-04-08
 ### 2026-04-08
-- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`37c0bc8`](https://github.com/Mybono/ai-orchestrator/commit/37c0bc8ebb577ac2abfc35180afea2b4316bd737) Bump version to 1.0.3
-
-## v1.0.2 — 2026-04-08
-### 2026-04-08
-- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`c6d6f29`](https://github.com/Mybono/ai-orchestrator/commit/c6d6f290f97845c936b6fd5fb146f6ee81e4b5d9) Bump version to 1.0.2
-
-## v1.0.1 — 2026-04-08
-### 2026-04-08
-- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`e9a5366`](https://github.com/Mybono/ai-orchestrator/commit/e9a5366bf53dd5249e66d7e3c97c83111a1c360c) Bump version to 1.0.1
-- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`e657b25`](https://github.com/Mybono/ai-orchestrator/commit/e657b25c1b958e5a771ede0df47c792cc73831fe) Sync changelog after merge
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`e423463`](https://github.com/Mybono/ai-orchestrator/commit/e4234634f50f8b2fb981bf55e5c118cda00af11e) Auto-fix markdown lint errors
 - ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`cb03846`](https://github.com/Mybono/ai-orchestrator/commit/cb038461ed460de9cce5c329fdfbd6f3fb146978) Add specialized plugin detection and documentation updates
 - ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`a0ed7ed`](https://github.com/Mybono/ai-orchestrator/commit/a0ed7ed47109bdd28e9faad5870a09bf8279f5b5) Add new plugins for API design, Docker optimization, Kubernetes management, and security guidance
