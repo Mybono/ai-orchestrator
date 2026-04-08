@@ -3,4 +3,9 @@
 # See: https://github.com/gitleaks/gitleaks?tab=readme-ov-file#gitleaksignore
 
 # False positive in Java code review guide (negative example)
+
+# Finding: sk_live_12345
 cf1fd7adc6ccab162f89ac39137a251525d03989:skills/code-review/references/java.md:generic-api-key:178
+
+# Finding: REDACTED
+2f54af7dc6ccab162f89ac39137a251525d03989:skills/code-review/references/java.md:generic-api-key:178
