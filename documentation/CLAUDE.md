@@ -54,6 +54,7 @@ The planner and reviewer auto-detect the language from the changed files and loa
 | DevOps / CI-CD | [skills/devops-automation/SKILL.md](../skills/devops-automation/SKILL.md) |
 | AWS Cloud | [skills/aws-cloud-patterns/SKILL.md](../skills/aws-cloud-patterns/SKILL.md) |
 | MCP | [skills/mcp-development/SKILL.md](../skills/mcp-development/SKILL.md) |
+| Advanced Git | [skills/git-advanced/SKILL.md](../skills/git-advanced/SKILL.md) |
 
 ## Commands
 

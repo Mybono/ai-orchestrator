@@ -7,6 +7,7 @@
 
 Skills are markdown files in `skills/` (symlinked to `~/.claude/skills/`). Each file defines coding standards for one language. Agents load the relevant skill file before generating or reviewing code.
 
+
 Language detection happens by checking indicator files in the project root:
 
 | Skill file | Language | Indicator file |
@@ -26,6 +27,7 @@ Language detection happens by checking indicator files in the project root:
 | [ci-cd-pipelines/SKILL.md](../skills/ci-cd-pipelines/SKILL.md) | CI/CD Pipelines | available for automation |
 | [devops-automation/SKILL.md](../skills/devops-automation/SKILL.md) | DevOps Automation | available for automation |
 | [mcp-development/SKILL.md](../skills/mcp-development/SKILL.md) | MCP Development | available for MCP tasks |
+| [git-advanced/SKILL.md](../skills/git-advanced/SKILL.md) | Advanced Git | available for git tasks |
 
 The planner reads the skill file once during Phase 1 and embeds the most relevant rules into `task_context.md`. The reviewer reads it directly before each review.
 

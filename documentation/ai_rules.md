@@ -42,6 +42,8 @@ Before performing any generation, review, or planning task, the IDE Agent MUST:
 4. If no specific language skill matches, apply `skills/doc-standarts.md` for text or `skills/humanizer.md` for conversational output.
 5. If the task involves a bug, crash, or unexpected behavior, ALWAYS load `skills/root-cause-analysis/SKILL.md`.
 6. If the task involves architectural design, tech selection, or refactoring, ALWAYS load `skills/first-principles/SKILL.md`.
+7. If the task involves CI/CD, cloud (AWS), Docker, or MCP, ALWAYS load the relevant DevOps skills (`devops-automation`, `aws-cloud-patterns`, `ci-cd-pipelines`, `mcp-development`).
+8. If the task involves complex git operations (worktrees, bisect, rebase), ALWAYS load `skills/git-advanced/SKILL.md`.
 
 This step is MANDATORY to ensure consistency across all models and agents in the pipeline.
 
