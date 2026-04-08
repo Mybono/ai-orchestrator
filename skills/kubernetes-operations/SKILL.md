@@ -74,7 +74,7 @@ Always set resource requests and limits. Use topology spread constraints for hig
 
 ## Helm Chart Structure
 
-```
+```text
 chart/
   Chart.yaml
   values.yaml

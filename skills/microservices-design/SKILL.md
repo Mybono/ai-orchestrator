@@ -9,7 +9,7 @@ description: Microservices design patterns including service mesh, event-driven 
 
 Define services around business capabilities, not technical layers. Each service owns its data store and exposes a clear API contract.
 
-```
+```text
 order-service/       -> owns orders table, publishes OrderCreated events
 inventory-service/   -> owns inventory table, subscribes to OrderCreated
 payment-service/     -> owns payments table, handles payment processing

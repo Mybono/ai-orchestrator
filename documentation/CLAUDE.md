@@ -55,6 +55,9 @@ The planner and reviewer auto-detect the language from the changed files and loa
 | AWS Cloud | [skills/aws-cloud-patterns/SKILL.md](../skills/aws-cloud-patterns/SKILL.md) |
 | MCP | [skills/mcp-development/SKILL.md](../skills/mcp-development/SKILL.md) |
 | Advanced Git | [skills/git-advanced/SKILL.md](../skills/git-advanced/SKILL.md) |
+| Kubernetes Ops | [skills/kubernetes-operations/SKILL.md](../skills/kubernetes-operations/SKILL.md) |
+| Microservices | [skills/microservices-design/SKILL.md](../skills/microservices-design/SKILL.md) |
+| WebSockets / Real-time | [skills/websocket-realtime/SKILL.md](../skills/websocket-realtime/SKILL.md) |
 
 ## Commands
 
@@ -86,6 +89,8 @@ BLOCKING REQUIREMENT: invoke the matching agent or skill before generating any o
 - User asks "could we do this better?", "is this the right approach?", or needs a refactor → run the `architect` agent
 - User shares an error log, stack trace, or asks "why did this happen" → run the `debugger` agent
 - User asks to "setup CI/CD", "deploy to AWS/cloud", or "write MCP server" → run the `devops` agent
+- User asks about "microservices", "event-driven", "saga pattern", or "k8s/helm" → run the `architect` or `devops` agent
+- User says "websocket", "socket.io", or "real-time" → run the `architect` agent
 
 ## Core constraints
 

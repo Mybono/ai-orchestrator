@@ -27,6 +27,9 @@ Language detection happens by checking indicator files in the project root:
 | [devops-automation/SKILL.md](../skills/devops-automation/SKILL.md) | DevOps Automation | available for automation |
 | [mcp-development/SKILL.md](../skills/mcp-development/SKILL.md) | MCP Development | available for MCP tasks |
 | [git-advanced/SKILL.md](../skills/git-advanced/SKILL.md) | Advanced Git | available for git tasks |
+| [kubernetes-operations/SKILL.md](../skills/kubernetes-operations/SKILL.md) | K8s Operations | available for k8s tasks |
+| [microservices-design/SKILL.md](../skills/microservices-design/SKILL.md) | Microservices | available for design tasks |
+| [websocket-realtime/SKILL.md](../skills/websocket-realtime/SKILL.md) | Real-time / WebSockets | available for server tasks |
 
 The planner reads the skill file once during Phase 1 and embeds the most relevant rules into `task_context.md`. The reviewer reads it directly before each review.
 
