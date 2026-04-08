@@ -1,6 +1,6 @@
 # Project Overview
 
-_Last updated: 2026-04-06 by planner after task: add --input-tokens/--output-tokens to track_savings.sh and auto-track all call_ollama.sh calls_
+_Last updated: 2026-04-08 — added plugins/, new agents, and SKILL.md-format skills_
 
 ## Language(s)
 - Shell (Bash): `install.sh`, `call_ollama.sh`, `local-commit.sh`, `analyze_project.sh` — pure Bash + `jq` for orchestration — standarts: inferred from existing scripts (no dedicated standarts file)
@@ -21,6 +21,13 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 | `agents/commit.md` | Commit agent — generates commit message via `call_ollama.sh` (role: commit), stages and commits |
 | `agents/doc-writer.md` | Documentation agent — reads git diff, drafts docs via `call_ollama.sh` (role: reviewer) |
 | `agents/test-agent.md` | Test agent — generates and runs tests via `call_ollama.sh` (role: coder) |
+| `agents/architect.md` | Architect agent — system design, refactoring guidance, and long-term technical planning |
+| `agents/api-tester.md` | API test agent — contract testing, schema validation, and integration flow coverage |
+| `agents/debugger.md` | Debugger agent — root cause analysis via 5-Whys, proposes minimal permanent fixes |
+| `agents/devops.md` | DevOps agent — CI/CD pipelines, cloud infrastructure (AWS/K8s), and MCP tooling |
+| `agents/qa-orchestrator.md` | QA orchestrator — coordinates test agents, analyzes CI failures, automates PR comment fixes |
+| `agents/ui-tester.md` | UI test agent — end-to-end journeys and visual regression via Playwright and Appium |
+| `agents/unit-tester.md` | Unit test agent — logic isolation, edge case detection, and dependency mocking |
 | `scripts/call_ollama.sh` | Central LLM interface — handles prompt construction, context attachment, raw API calls via `curl`, and auto-tracks every call via `track_savings.sh` |
 | `scripts/local-commit.sh` | Local commit helper — stages changes, generates commit message via Ollama, prompts for confirmation |
 | `scripts/open-pr.sh` | PR creation helper — generates PR title/body via Ollama, optionally creates via `gh` CLI |
@@ -37,11 +44,32 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 | `skills/swift-code-standarts.md` | Swift coding standarts (indicator: `Package.swift` or `*.xcodeproj`) |
 | `skills/c-code-standarts.md` | C++ coding standarts (indicator: `CMakeLists.txt` or `*.cpp`) |
 | `skills/doc-standarts.md` | Documentation writing standarts (used by doc-writer agent) |
+| `skills/bash/SKILL.md` | Trigger-based bash scripting skill — covers CI scripts, DevOps automation, and `.sh` file tasks |
+| `skills/python/SKILL.md` | Trigger-based Python skill — covers CLI tools, APIs, async code, and packaging |
+| `skills/typescript/SKILL.md` | Trigger-based TypeScript skill — covers types, generics, tsconfig, and typed React |
+| `skills/code-review/SKILL.md` | Trigger-based code review skill — covers PR reviews, quality standards, and security audits |
+| `plugins/accessibility/` | Accessibility plugin — ARIA fixes and screen reader test commands |
+| `plugins/ai-engineering/` | AI engineering plugin — prompt analysis and optimization commands |
+| `plugins/api-architect/` | API architect plugin — API design and OpenAPI spec generation |
+| `plugins/committer/` | Committer plugin — local AI commit and push-to-remote commands |
+| `plugins/database-tools/` | Database tools plugin — schema design, ERD generation, and query optimization |
+| `plugins/debugger/` | Debugger plugin — wraps the debugger agent as a slash command |
+| `plugins/docker-helper/` | Docker helper plugin — image builds and Dockerfile optimization |
+| `plugins/documentation/` | Documentation plugin — README generation command |
+| `plugins/k8s-helper/` | Kubernetes helper plugin — pod debugging and manifest generation |
+| `plugins/orchestrator/` | Orchestrator plugin — `/implement` and `/stats` pipeline commands |
+| `plugins/python-expert/` | Python expert plugin — idiomatic refactoring and type hint commands |
+| `plugins/qa-tools/` | QA tools plugin — test generation, failure analysis, DB seeding, and Slack notification |
+| `plugins/refactor-engine/` | Refactor engine plugin — function extraction and code simplification |
+| `plugins/release-manager/` | Release manager plugin — version bump, changelog update, and release commands |
+| `plugins/reviewer/` | Reviewer plugin — code review and language standards commands |
+| `plugins/security-guidance/` | Security guidance plugin — vulnerability fixes and security audit commands |
 | `llm-config.json` | Centralized model role configuration — symlinked to `~/.claude/llm-config.json` |
 | `.claude/settings.json.template` | Template for `settings.json` — contains `PreToolUse` hook that blocks direct edits to `README.md` and `docs/` files; uses `__HOME__` placeholder replaced by `install.sh` |
 
 ## Architecture & Conventions
 
+- Plugins live in `plugins/` — each plugin is a directory with a `commands/` subdirectory containing Markdown slash commands; each command defines trigger keywords and delegates to a paired agent
 - All agents are Markdown files in `agents/` with a YAML front-matter block (`name`, `description`, `model`, `tools`)
 - All slash commands are Markdown files in `commands/` with no front-matter — they describe steps to orchestrate agents
 - Language standarts are in `skills/` and are named `<lang>-code-standarts.md` (note: "standarts" not "standards" — intentional spelling in filenames)

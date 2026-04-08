@@ -12,16 +12,29 @@ This document serves as a comprehensive index of all specialized skills availabl
 
 ## Programming Languages
 
-Standardized coding patterns and best practices for specific ecosystems.
+### Legacy standards (auto-detected)
+
+Detected automatically via indicator files in the project root. The planner reads the matching file and embeds it into `task_context.md`.
 
 | Indicator | Language | Standard File |
 |:---|:---|:---|
 | `tsconfig.json` | TypeScript | [ts-code-standarts.md](../skills/ts-code-standarts.md) |
 | `pyproject.toml` | Python | [python-code-standarts.md](../skills/python-code-standarts.md) |
-| `pubspec.yaml` | Flutter/Dart| [flutter-code-standarts.md](../skills/flutter-code-standarts.md) |
+| `pubspec.yaml` | Flutter/Dart | [flutter-code-standarts.md](../skills/flutter-code-standarts.md) |
 | `Package.swift` | Swift | [swift-code-standarts.md](../skills/swift-code-standarts.md) |
-| `CMakeLists.txt`| C++ | [c-code-standarts.md](../skills/c-code-standarts.md) |
+| `CMakeLists.txt` | C++ | [c-code-standarts.md](../skills/c-code-standarts.md) |
 | `*.sh` | Bash/Shell | [bash-code-standarts.md](../skills/bash-code-standarts.md) |
+
+### Active skills (trigger-based)
+
+These skills use the `SKILL.md` format with a YAML front matter block that includes a `description` field and optional `allowed-tools`. They are loaded on demand when a matching trigger keyword appears in the user's request — not by file detection.
+
+| Skill | Trigger conditions | Path |
+|:---|:---|:---|
+| **Bash scripting** | "make a script", "shell script", "bash error", cron jobs, `.sh` files, CI entrypoints | [bash/SKILL.md](../skills/bash/SKILL.md) |
+| **Python mastery** | "Python script", "PEP 8", "type hints", `pyproject.toml`, `pytest`, `.py` files, tracebacks | [python/SKILL.md](../skills/python/SKILL.md) |
+| **TypeScript mastery** | TypeScript errors, generics, `tsconfig`, Zod, type narrowing, JS-to-TS migration | [typescript/SKILL.md](../skills/typescript/SKILL.md) |
+| **Code review** | "PR review", "code review", "review changes", "review standards", architecture reviews | [code-review/SKILL.md](../skills/code-review/SKILL.md) |
 
 ---
 
@@ -80,4 +93,4 @@ General-purpose expertise for debugging, Git, and performance.
 
 ---
 
-[README](../README.md) · [Architecture](ARCHITECTURE.md) · [Agents](AGENTS.md) · [CLAUDE](CLAUDE.md)
+[README](../README.md) · [Architecture](ARCHITECTURE.md) · [Agents](AGENTS.md) · [CLAUDE](CLAUDE.md) · [Plugins](PLUGINS.md)
