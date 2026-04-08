@@ -163,7 +163,7 @@ Always set resource requests and limits. Always define readiness and liveness pr
 
 ## Helm Chart Structure
 
-```
+```text
 chart/
   Chart.yaml
   values.yaml
