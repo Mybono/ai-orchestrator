@@ -69,7 +69,7 @@ Copy and use this template for your code reviews.
 
 ### Blocking Issue
 
-```
+```markdown
 🔴 **[blocking]** [Title]
 
 [Description of the issue]
@@ -84,7 +84,7 @@ Copy and use this template for your code reviews.
 
 ### Important Suggestion
 
-```
+```markdown
 🟡 **[important]** [Title]
 
 [Why this is important]
@@ -96,7 +96,7 @@ Copy and use this template for your code reviews.
 
 ### Minor Suggestion
 
-```
+```markdown
 🟢 **[nit]** [Suggestion]
 
 Not blocking, but consider [improvement].
@@ -104,7 +104,7 @@ Not blocking, but consider [improvement].
 
 ### Praise
 
-```
+```markdown
 🎉 **[praise]** Great work on [specific thing]!
 
 [Why this is good]
@@ -112,7 +112,7 @@ Not blocking, but consider [improvement].
 
 ### Question
 
-```
+```markdown
 ❓ **[question]** [Your question]
 
 I'm curious about the decision to [X]. Could you explain [Y]?

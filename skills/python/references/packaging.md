@@ -223,7 +223,7 @@ class Settings(BaseSettings):
 
 ## src layout (recommended)
 
-```
+```text
 my-package/
 ├── src/
 │   └── myapp/

@@ -1,3 +1,4 @@
+---
 name: mastering-typescript
 description: >
   Write, review, debug, and improve TypeScript code across any context: React SPAs,

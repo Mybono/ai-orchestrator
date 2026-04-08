@@ -4,7 +4,7 @@
 
 ## Project Structure (feature-based)
 
-```
+```text
 src/
 ├── features/
 │   ├── users/

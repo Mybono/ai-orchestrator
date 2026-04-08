@@ -14,7 +14,7 @@ An architectural design review guide to help assess whether code architecture is
 
 **Signals to look for in code review:**
 
-```
+```text
 ⚠️ Class name contains generic words like "And", "Manager", "Handler", or "Processor"
 ⚠️ A class exceeds 200–300 lines of code
 ⚠️ The class has more than 5–7 public methods
@@ -36,7 +36,7 @@ An architectural design review guide to help assess whether code architecture is
 
 **Signals to look for in code review:**
 
-```
+```text
 ⚠️ switch/if-else chains handling different types
 ⚠️ Adding new functionality requires modifying core classes
 ⚠️ Type checks (instanceof, typeof) scattered throughout the code
@@ -57,7 +57,7 @@ An architectural design review guide to help assess whether code architecture is
 
 **Signals to look for in code review:**
 
-```
+```text
 ⚠️ Explicit type casting
 ⚠️ Subclass methods throw NotImplementedException
 ⚠️ Subclass methods have empty bodies or just return
@@ -79,7 +79,7 @@ An architectural design review guide to help assess whether code architecture is
 
 **Signals to look for in code review:**
 
-```
+```text
 ⚠️ Interface has more than 5–7 methods
 ⚠️ Implementing classes have empty methods or throw NotImplementedException
 ⚠️ Interface names are too broad (IManager, IService)
@@ -101,7 +101,7 @@ An architectural design review guide to help assess whether code architecture is
 
 **Signals to look for in code review:**
 
-```
+```text
 ⚠️ High-level modules directly instantiate concrete classes from low-level modules
 ⚠️ Importing concrete implementation classes instead of interfaces/abstractions
 ⚠️ Configuration and connection strings hardcoded in business logic
@@ -205,7 +205,7 @@ Cohesion metrics:
 
 ### Clean Architecture Layer Check
 
-```
+```text
 ┌─────────────────────────────────────┐
 │         Frameworks & Drivers        │ ← Outermost: Web, DB, UI
 ├─────────────────────────────────────┤
@@ -278,7 +278,7 @@ class MySQLUserRepository implements UserRepository {
 
 ### Overengineering Warning Signals
 
-```
+```text
 ⚠️ Patternitis (pattern overuse) signals:
 
 1. A simple if/else replaced by Strategy + Factory + Registry
@@ -374,7 +374,7 @@ class OrderService {
 
 **Organized by feature/domain (recommended):**
 
-```
+```text
 src/
 ├── user/
 │   ├── User.ts           (entity)
@@ -392,7 +392,7 @@ src/
 
 **Organized by technical layer (not recommended):**
 
-```
+```text
 src/
 ├── controllers/     ← Different domains mixed together
 │   ├── UserController.ts

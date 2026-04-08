@@ -4,7 +4,7 @@
 
 ## App structure
 
-```
+```text
 myapi/
 ├── main.py              # app factory + lifespan
 ├── config.py            # pydantic settings
