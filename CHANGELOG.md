@@ -3,6 +3,7 @@
 All notable changes to ai-orchestrator.
 ## [unreleased]
 ### 2026-04-08
+- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`f81e52f`](https://github.com/Mybono/ai-orchestrator/commit/f81e52f804e5f8e7fb7ae0e717afdd73cd6d6bcf) Sync changelog after merge
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`1636d77`](https://github.com/Mybono/ai-orchestrator/commit/1636d7775ad015908f43327298b9b2695150231d) Sync changelog after merge
 
 ## v1.0.3 — 2026-04-08

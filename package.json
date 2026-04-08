@@ -1,10 +1,6 @@
 {
   "name": "ai-orchestrator",
-<<<<<<< HEAD
-  "version": "1.0.3",
-=======
-  "version": "1.0.2",
->>>>>>> main
+  "version": "1.0.4",
   "description": "A vendor-neutral, shell-based AI orchestration framework for local LLMs.",
   "main": "scripts/install.sh",
   "bin": {

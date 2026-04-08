@@ -15,10 +15,9 @@ if [ -z "$NEW_VERSION" ]; then
     echo "Auto-bumping patch: $CURRENT → $NEW_VERSION"
 fi
 
-# 1. Bump version + commit + tag
+# 1. Bump version + commit
 bash "$SCRIPT_DIR/bump-version.sh" "$NEW_VERSION"
 
-<<<<<<< HEAD
 # 2. Push commits
 echo ""
 echo "Pushing to origin..."
@@ -72,23 +71,9 @@ gh release create "v$NEW_VERSION" \
     --notes "$NOTES"
 echo "  ✓ Release v$NEW_VERSION published"
 
-# 4. Optionally open a PR
-=======
-# 2. Push commits and tag
-echo ""
-echo "Pushing to origin..."
-git -C "$ROOT_DIR" push origin HEAD --tags
-echo "  ✓ v$NEW_VERSION pushed"
-
-# 3. Optionally open a PR
->>>>>>> main
+# 5. Optionally open a PR
 echo ""
 read -rp "Open a Pull Request? (y/N) " confirm
 if [[ "$confirm" =~ ^[Yy]$ ]]; then
     bash "$SCRIPT_DIR/open-pr.sh"
-<<<<<<< HEAD
-=======
-else
-    echo "Done. Release v$NEW_VERSION is live."
->>>>>>> main
 fi
