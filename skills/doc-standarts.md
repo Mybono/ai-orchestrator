@@ -1,4 +1,4 @@
-# Documentation Standards
+# Documentation standarts
 
 ## Language and Tone
 
@@ -43,6 +43,8 @@ Omit sections that do not apply. Do not add sections not listed above unless str
 - Code blocks: always specify the language (` ```python `, ` ```bash `, etc.)
 - Tables for structured data (config options, CLI flags, comparison)
 - Lists for steps and enumerations — use numbered lists for ordered steps, bullets otherwise
+- **Use relative paths** for all internal links to other files or directories
+- **NEVER use absolute local paths** (e.g., `file:///Users/...`) as they will break on GitHub or other machines
 - Keep lines under 100 characters where possible
 
 ## Anti-patterns — Do NOT do this

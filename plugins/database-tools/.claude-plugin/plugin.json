@@ -1,0 +1,11 @@
+{
+  "name": "database-tools",
+  "version": "1.0.0",
+  "description": "Expert tools for database design, ERD generation, and query optimization",
+  "commands": [
+    "commands/design-schema.md",
+    "commands/generate-erd.md",
+    "commands/explain-plan.md",
+    "commands/optimize-query.md"
+  ]
+}

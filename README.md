@@ -1,59 +1,51 @@
 # ai-orchestrator
 
-Portable AI Developer setup: agents, slash commands, IDE orchestration, and language standards.  
-Works with any project — TypeScript, Python, Flutter, Swift, C++.
+[![CI](https://github.com/Mybono/ai-orchestrator/actions/workflows/ci.yml/badge.svg)](https://github.com/Mybono/ai-orchestrator/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Now 100% Python-free.** All orchestration is handled via pure Bash and `jq`.
+**README** · [Architecture](documentation/ARCHITECTURE.md) · [Agents](documentation/AGENTS.md) · [Skills & Commands](documentation/SKILLS.md) · [Plugins](documentation/PLUGINS.md)
 
-## What's included
+---
 
-```markdown
-ai-orchestrator/
-├── documentation/
-│   ├── CLAUDE.md            # Global instructions for Claude CLI
-│   └── ai_rules.md          # Orchestration rules for embedded IDE Agents
-├── agents/            # Subagents (run automatically via /implement)
-│   ├── planner.md     # Explores codebase, writes implementation plan
-│   ├── coder.md       # Generates code via local Ollama (role: coder)
-│   ├── reviewer.md    # Reviews code against standards (role: reviewer)
-│   ├── quick-coder.md # Fast fixes (role: commit)
-│   ├── commit.md      # Stages and commits changes (role: commit)
-│   ├── doc-writer.md  # Creates/updates documentation (role: reviewer)
-│   └── test-agent.md  # Writes and runs tests (role: coder)
-├── commands/          # Slash commands
-│   ├── implement.md   # /implement — full plan → code → review pipeline
-├── skills/            # Language coding standards
-│   ├── ...-code-standarts.md
-├── scripts/
-│   ├── call_ollama.sh     # Central LLM interface (Bash + jq + curl)
-│   ├── local-commit.sh    # Fast local LLM-driven git commits
-│   ├── open-pr.sh         # Local LLM-driven Pull Request descriptions
-│   ├── analyze_hardware.sh # Auto-configures models based on your RAM/GPU
-│   └── install.sh         # Installer — configures dependencies and symlinks
-└── llm-config.json    # Centralized model roles (symlinked to ~/.claude/)
-```markdown
+Portable AI developer setup: Claude thinks, local Ollama executes.
+
+Works with any project: TypeScript, Python, Flutter, Swift, C++.
+All orchestration is pure Bash and `jq`, with no Python required.
+
+![ai-orchestrator pipeline](documentation/pipeline.svg)
 
 ## How it works
 
-The core workflow is a pipeline triggered by `/implement`:
+`/implement` triggers the full pipeline:
 
-```markdown
+```
 planner → coder → build check → reviewer(s) → verdict
-```markdown
+```
 
-- **Zero Python dependency**: All agents now call `call_ollama.sh` directly, which uses `curl` and `jq` for API interaction.
-- **Role-based Config**: One source of truth for all models in `llm-config.json`.
-- **Portable**: symlinks ensure that updates to this repo apply globally to your system immediately.
+Claude writes the plan. A local Ollama model writes the code. Claude reviews the output.
+Details: [Architecture](documentation/ARCHITECTURE.md) · [Agents](documentation/AGENTS.md)
+
+In your AI chat (Claude, Antigravity, Cursor), send `/implement`, then in the next message describe what to build:
+
+```text
+Add a rate limiter to the API endpoints
+```
+
+That's it. The pipeline runs automatically.
 
 ## Requirements
 
-- [Claude Code](https://claude.ai/code) CLI installed
+- [Claude Code](https://claude.ai/code) CLI
 - [Ollama](https://ollama.com) installed and running
-- **`jq`** (JSON processor) — `install.sh` will attempt to install it via brew/apt.
+- `jq` (`install.sh` installs it automatically)
 
-### 📦 Distribution & Sharing
+## Installation
 
-You can also install the orchestrator directly via your favorite package manager (Python/Pip or Node/NPM). These methods are perfect for sharing the tool across machines without manual git cloning.
+```bash
+curl -sSL https://raw.githubusercontent.com/Mybono/ai-orchestrator/main/scripts/install.sh | bash
+```
+
+Or manually:
 
 #### Option A: Install via Pip (Python)
 ```bash
@@ -73,74 +65,100 @@ Both methods will download the latest version and run the `scripts/install.sh` a
 ```bash
 git clone https://github.com/Mybono/ai-orchestrator ~/Projects/ai-orchestrator
 cd ~/Projects/ai-orchestrator
-chmod +x scripts/install.sh
 ./scripts/install.sh
 ```
 
-### What happens during installation
+The installer checks for Ollama and `jq`, creates symlinks in `~/.claude/`, and writes `llm-config.json` with models sized for your available RAM.
 
-1. **Software Check**: Scripts detect and help install `jq` and `Ollama`.
-2. **Environment Setup**: Symlinks created in `~/.claude/`, shell aliases added.
-3. **Hardware Analysis**: System RAM/GPU analyzed to pick the best models.
-4. **Configuration**: `llm-config.json` generated and optimized for your machine.
+## Configuration
 
-## Configuration (`llm-config.json`)
-
-The system uses roles to determine which model to use for which task. The config is stored in the project root and symlinked to `~/.claude/llm-config.json`.
-
-| Role | Default Model | Purpose |
-|------|---------------|---------|
-| `coder` | `qwen2.5-coder:14b...` | Heavy code generation (main agent) |
-| `reviewer` | `qwen2.5-coder:7b` | Code review and documentation |
-| `commit` | `qwen2.5-coder:1.5b` | Commit messages and tiny fixes |
-| `embedding` | `nomic-embed-text` | Semantic search and RAG |
-
-Example of `llm-config.json`:
+Model routing is controlled by [`llm-config.json`](llm-config.json) in the repo root:
 
 ```json
 {
   "models": {
-    "coder": "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
-    "reviewer": "qwen2.5-coder:7b",
-    "commit": "qwen2.5-coder:1.5b",
+    "coder":     "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
+    "reviewer":  "qwen2.5-coder:7b",
+    "commit":    "qwen2.5-coder:7b",
     "embedding": "nomic-embed-text"
   }
 }
-```markdown
+```
 
-## IDE Agent Delegation Workflow (Antigravity & Cursor)
+Changing a model name takes effect immediately without restarting anything.
+See [Architecture → Model Configuration](documentation/ARCHITECTURE.md#model-configuration) for details.
 
-IDE agents (like Antigravity) act as the Architect but delegate heavy lifting to local models via `call_ollama.sh`:
+## Commands
 
-- **Coding**: Uses the `coder` role from `llm-config.json`.
-- **Review**: Uses the `reviewer` role.
+| Command | What it does |
+|---------|-------------|
+| [`/implement`](commands/implement.md) | Full plan → code → build → review pipeline |
+| [`/review`](commands/review.md) | Check current changes against language standards |
+| [`/stats`](commands/stats.md) | Show token savings (`day`, `week`, `month`, or all-time) |
+| [`/debug`](commands/debug.md) | Trace root cause of an error |
 
-The delegation command:
+All commands and agents: [Skills & Commands](documentation/SKILLS.md) · [Agents](documentation/AGENTS.md) · [Plugins](documentation/PLUGINS.md)
+
+## Plugins
+
+Domain-specific extensions that add slash commands to the orchestrator. Each plugin in `plugins/` handles a specific area — accessibility, database work, Docker, Kubernetes, testing, security, and more.
+
+| Plugin | What it adds |
+|--------|-------------|
+| `qa-tools` | Generate tests, analyze failures, fix PR comments |
+| `security-guidance` | Security audit and vulnerability fixes |
+| `api-architect` | REST API design and OpenAPI spec generation |
+| `database-tools` | Schema design, query optimization, ERD generation |
+| `release-manager` | Version bumps, releases, changelog updates |
+
+Full list with trigger keywords and paired agents: [Plugins](documentation/PLUGINS.md)
+
+## Scripts
+
+`install.sh` adds shell aliases for these commands automatically:
 
 ```bash
-# Uses the model defined for the 'coder' role in your config
-bash ~/.claude/call_ollama.sh --role coder --prompt "implement X" --context-file /tmp/context.md
-```markdown
+local-commit              # stage all changes, generate a commit message via Ollama, confirm and commit
+open-pr                   # generate a PR title and description via Ollama, optionally create it via gh
+stats [day|week|month]    # show token savings summary
+```
 
-## Project Onboarding
+## Token savings
 
-To use these orchestration rules in your project (so IDE agents like Antigravity/Cursor can see them):
+The orchestrator tracks every Ollama call. View estimated savings vs Claude Sonnet pricing:
 
-1. **Copy the rules** from the system directory to your project root:
+```bash
+/stats week
+```
 
-   ```bash
-   cp ~/.claude/ai_rules.md ~/Projects/your-project/ai_rules.md
-   ```
+```
+───────────────────────────────
+ ai-orchestrator savings
+ Period: this week
+ Runs: 12
+ Tokens saved: ~186k
+ Estimated saving: $7.20
+───────────────────────────────
+```
 
-2. **(Optional) Multi-agent support**: You can also name it `.cursorrules` or `.clauderules` if you use those specific tools.
+## Project onboarding
 
-3. **Check delegation**: Once added, your IDE agent should start using `call_ollama.sh` for heavy lifting instead of spending your cloud tokens.
+To apply orchestration rules in any project:
+
+```bash
+cp ~/.claude/ai_rules.md ~/Projects/your-project/ai_rules.md
+```
+
+Compatible with `.cursorrules` and `.clauderules`.
 
 ## Updating
 
 ```bash
-cd ~/Projects/ai-orchestrator
-git pull
-```markdown
+cd ~/Projects/ai-orchestrator && git pull
+```
 
-Changes apply immediately — no reinstall needed.
+Changes apply immediately via symlinks, so you do not need to reinstall.
+
+---
+
+**README** · [Architecture](documentation/ARCHITECTURE.md) · [Agents](documentation/AGENTS.md) · [Skills & Commands](documentation/SKILLS.md) · [Plugins](documentation/PLUGINS.md)

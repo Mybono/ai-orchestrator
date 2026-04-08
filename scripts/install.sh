@@ -1,6 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Support for pipe-to-bash (curl -sSL ... | bash)
+if [ -z "${BASH_SOURCE[0]:-}" ] || [ "${BASH_SOURCE[0]}" == "/dev/stdin" ]; then
+    echo "Piped installation detected. Cloning ai-orchestrator..."
+    INSTALL_DIR="$HOME/Projects/ai-orchestrator"
+    if [ -d "$INSTALL_DIR" ]; then
+        echo "  ! Directory $INSTALL_DIR already exists. Updating..."
+        cd "$INSTALL_DIR" && git pull
+    else
+        mkdir -p "$HOME/Projects"
+        git clone https://github.com/Mybono/ai-orchestrator "$INSTALL_DIR"
+    fi
+    # Execute the cloned script with the local context
+    exec bash "$INSTALL_DIR/scripts/install.sh" "$@"
+fi
+
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CLAUDE_DIR="$HOME/.claude"
 BACKUP_DIR="$CLAUDE_DIR/backups/ai-orchestrator-$(date +%Y%m%d_%H%M%S)"
@@ -16,6 +31,9 @@ SYMLINK_TARGETS=(
   "scripts/open-pr.sh"
   "scripts/analyze_hardware.sh"
   "scripts/analyze_soft.sh"
+  "scripts/analyze_project.sh"
+  "scripts/track_savings.sh"
+  "scripts/stats.sh"
 )
 
 echo "Installing ai-orchestrator from: $REPO_DIR"
@@ -98,7 +116,7 @@ else
   echo "  ✓ alias commit added"
 fi
 
-for alias_cmd in "local-commit" "open-pr"; do
+for alias_cmd in "local-commit" "open-pr" "analyze_project" "stats"; do
   if ! grep -q "alias $alias_cmd=" "$SHELL_RC" 2>/dev/null; then
     echo "alias $alias_cmd='~/.claude/$alias_cmd.sh'" >> "$SHELL_RC"
     echo "  ✓ alias $alias_cmd added to $SHELL_RC"
@@ -121,9 +139,97 @@ if [[ -f "$REPO_DIR/scripts/open-pr.sh" ]]; then
   echo "  ✓ open-pr.sh is executable"
 fi
 
+if [[ -f "$REPO_DIR/scripts/analyze_project.sh" ]]; then
+  chmod +x "$REPO_DIR/scripts/analyze_project.sh"
+  echo "  ✓ analyze_project.sh is executable"
+fi
+
+if [[ -f "$REPO_DIR/scripts/track_savings.sh" ]]; then
+  chmod +x "$REPO_DIR/scripts/track_savings.sh"
+  echo "  ✓ track_savings.sh is executable"
+fi
+
+if [[ -f "$REPO_DIR/scripts/stats.sh" ]]; then
+  chmod +x "$REPO_DIR/scripts/stats.sh"
+  echo "  ✓ stats.sh is executable"
+fi
+
+
+# Install git hooks into the ai-orchestrator repo itself
+HOOKS_DIR="$REPO_DIR/.git/hooks"
+if [ -d "$HOOKS_DIR" ]; then
+    echo ""
+    echo "Installing git hooks..."
+
+    # pre-commit: regenerate CHANGELOG.md via git-cliff
+    cat > "$HOOKS_DIR/pre-commit" <<'HOOK'
+#!/bin/sh
+if [ -f .git/hooks/.cliff-running ]; then
+  exit 0
+fi
+if ! command -v git-cliff >/dev/null 2>&1; then
+  exit 0
+fi
+touch .git/hooks/.cliff-running
+git-cliff --config cliff.toml -o CHANGELOG.md 2>/dev/null
+git add CHANGELOG.md 2>/dev/null || true
+rm -f .git/hooks/.cliff-running
+HOOK
+    chmod +x "$HOOKS_DIR/pre-commit"
+    echo "  ✓ pre-commit hook (git-cliff changelog)"
+
+    # commit-msg: commitlint (skip if not installed locally, skip merge commits)
+    cat > "$HOOKS_DIR/commit-msg" <<'HOOK'
+#!/bin/sh
+# Skip merge commits — they never follow Conventional Commits format
+if [ -f .git/MERGE_HEAD ]; then
+  exit 0
+fi
+if ! command -v npx >/dev/null 2>&1; then
+  exit 0
+fi
+if ! npx --no-install commitlint --version >/dev/null 2>&1; then
+  exit 0
+fi
+npx --no-install commitlint --edit "$1" || {
+    echo ""
+    echo "  Correct format: <type>: <description>"
+    echo "  Example:        feat: add login screen"
+    echo "  Types:          feat, fix, docs, chore, ci, refactor, perf, style, revert"
+    echo ""
+    exit 1
+}
+HOOK
+    chmod +x "$HOOKS_DIR/commit-msg"
+    echo "  ✓ commit-msg hook (commitlint, skips merge commits)"
+
+    # post-merge: regenerate CHANGELOG.md after any merge (safety net)
+    cat > "$HOOKS_DIR/post-merge" <<'HOOK'
+#!/bin/sh
+# Update CHANGELOG after merge — the merge commit itself is filtered out
+# by git-cliff (filter_unconventional = true), so only real commits appear.
+if ! command -v git-cliff >/dev/null 2>&1; then
+  exit 0
+fi
+if [ ! -f cliff.toml ]; then
+  exit 0
+fi
+git-cliff --config cliff.toml -o CHANGELOG.md 2>/dev/null
+if ! git diff --quiet CHANGELOG.md 2>/dev/null; then
+  git add CHANGELOG.md
+  git commit -m "chore: sync changelog after merge" --no-verify
+fi
+HOOK
+    chmod +x "$HOOKS_DIR/post-merge"
+    echo "  ✓ post-merge hook (git-cliff changelog sync)"
+fi
 
 echo ""
 bash "$REPO_DIR/scripts/analyze_hardware.sh"
+
+echo ""
+echo "🔍 Running initial project analysis..."
+bash "$REPO_DIR/scripts/analyze_project.sh"
 
 echo ""
 echo "Setup complete! To use orchestrator rules in your project, copy ~/.claude/ai_rules.md to your project root."

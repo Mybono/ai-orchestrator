@@ -1,0 +1,42 @@
+[changelog]
+header = "# Changelog\n\nAll notable changes to ai-orchestrator.\n"
+body = """
+{% if version %}\
+## {{ version }} — {{ timestamp | date(format="%Y-%m-%d") }}
+{% else %}\
+## [unreleased]
+{% endif %}\
+{% set_global current_date = "" %}\
+{% for commit in commits | sort(attribute="committer.timestamp") | reverse -%}
+{% set commit_date = commit.committer.timestamp | date(format="%Y-%m-%d") -%}
+{% if commit_date != current_date %}\
+### {{ commit_date }}
+{% set_global current_date = commit_date %}\
+{% endif -%}
+- ![{% if commit.group == "Features" %}feat{% elif commit.group == "Bug Fixes" %}fix{% elif commit.group == "Refactor" %}refactor{% elif commit.group == "Performance" %}perf{% elif commit.group == "CI" %}ci{% elif commit.group == "Chores" %}chore{% elif commit.group == "Documentation" %}docs{% elif commit.group == "Style" %}style{% elif commit.group == "Reverts" %}revert{% else %}other{% endif %}](https://img.shields.io/badge/{% if commit.group == "Features" %}feat-0075ca{% elif commit.group == "Bug Fixes" %}fix-d73a4a{% elif commit.group == "Refactor" %}refactor-e4e669{% elif commit.group == "Performance" %}perf-d93f0b{% elif commit.group == "CI" %}ci-555555{% elif commit.group == "Chores" %}chore-cfd3d7{% elif commit.group == "Documentation" %}docs-0075ca{% elif commit.group == "Style" %}style-2ea44f{% elif commit.group == "Reverts" %}revert-b60205{% else %}other-ededed{% endif %}?style=flat-square) [`{{ commit.id | truncate(length=7, end="") }}`](https://github.com/Mybono/ai-orchestrator/commit/{{ commit.id }}) {{ commit.message | upper_first }}
+{% endfor %}\n
+"""
+trim = true
+footer = ""
+
+[git]
+conventional_commits = true
+filter_unconventional = true
+split_commits = false
+commit_parsers = [
+  { message = "^feat", group = "Features" },
+  { message = "^fix", group = "Bug Fixes" },
+  { message = "^refactor", group = "Refactor" },
+  { message = "^perf", group = "Performance" },
+  { message = "^docs", group = "Documentation" },
+  { message = "^chore", group = "Chores" },
+  { message = "^ci", group = "CI" },
+  { message = "^style", group = "Style" },
+  { message = "^revert", group = "Reverts" },
+]
+filter_commits = true
+tag_pattern = "v[0-9].*"
+skip_tags = ""
+ignore_tags = ""
+topo_order = false
+sort_commits = "newest"

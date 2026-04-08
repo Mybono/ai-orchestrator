@@ -1,0 +1,8 @@
+{
+  "name": "debugger",
+  "version": "1.0.0",
+  "description": "Systematic root cause analysis and bug fixing",
+  "commands": [
+    "commands/debug.md"
+  ]
+}

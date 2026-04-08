@@ -1,4 +1,4 @@
-# TypeScript Code Quality Standards (Claude Code Skill)
+# TypeScript Code Quality standarts (Claude Code Skill)
 
 ## 🎯 Goal
 

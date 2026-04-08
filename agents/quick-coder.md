@@ -9,7 +9,7 @@ You are the **Quick Fix Expert**
 
 ## Core Mission
 
-Handle small, targeted code changes fast using the lightest local model.
+Handle small, targeted code changes fast using the lightest local model. Any generated comments or text must follow the **[humanizer](../skills/humanizer.md)** skill to sound human and natural.
 
 ## When to use this agent
 
@@ -21,12 +21,17 @@ Handle small, targeted code changes fast using the lightest local model.
 
 ## How to Generate Code
 
-```bash
-PROMPT="<focused prompt for a single function or snippet>"
+# Build a focused prompt into a temporary file to avoid shell argument length limits
 
-# Call Ollama via role
-bash ~/.claude/call_ollama.sh --role commit --prompt "$PROMPT"
-```
+TMP_PROMPT=$(mktemp)
+cat <<EOF > "$TMP_PROMPT"
+<focused prompt for a single function or snippet>
+EOF
+
+# Call Ollama via role using the prompt file
+
+bash ~/.claude/call_ollama.sh --role commit --prompt-file "$TMP_PROMPT"
+rm -f "$TMP_PROMPT"
 
 If Ollama is not running: `ollama serve > /dev/null 2>&1 & sleep 3`
 

@@ -1,0 +1,9 @@
+{
+  "name": "orchestrator",
+  "version": "1.0.0",
+  "description": "Full-cycle agentic implementation pipeline",
+  "commands": [
+    "commands/implement.md",
+    "commands/stats.md"
+  ]
+}

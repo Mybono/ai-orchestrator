@@ -1,0 +1,9 @@
+{
+  "name": "k8s-helper",
+  "version": "1.0.0",
+  "description": "Kubernetes manifest generation and pod diagnostics",
+  "commands": [
+    "commands/debug-pod.md",
+    "commands/generate-manifest.md"
+  ]
+}

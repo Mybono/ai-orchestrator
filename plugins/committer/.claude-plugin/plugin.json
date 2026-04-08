@@ -1,0 +1,9 @@
+{
+  "name": "committer",
+  "version": "1.0.0",
+  "description": "Expert git commit automation with local LLM support",
+  "commands": [
+    "commands/commit.md",
+    "commands/commit-push.md"
+  ]
+}

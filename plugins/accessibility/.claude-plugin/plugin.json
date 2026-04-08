@@ -1,0 +1,9 @@
+{
+  "name": "accessibility",
+  "version": "1.0.0",
+  "description": "Accessibility compliance and screen reader testing tools",
+  "commands": [
+    "commands/fix-aria.md",
+    "commands/test-sr.md"
+  ]
+}

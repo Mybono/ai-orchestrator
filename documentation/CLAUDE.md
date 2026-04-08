@@ -1,60 +1,120 @@
-# AI Guide — Global
+[README](../README.md) · [Architecture](ARCHITECTURE.md) · [Agents](AGENTS.md) · [Skills & Commands](SKILLS.md) · [Plugins](PLUGINS.md) · **CLAUDE**
 
-## Code Writing Workflow — Save Claude Tokens
+---
 
-**For any non-trivial coding task, always follow this pipeline:**
+# AI Orchestrator — Professional Guide
 
-```markdown
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  /implement                                                                 │
-│                                                                             │
-│                                       ┌─ reviewer (file A) ─┐              │
-│  planner ──► coder ──► build/type ────┤─ reviewer (file B) ─├──► verdict  │
-│                        check          └─ reviewer (file C) ─┘   fix loop  │
-└─────────────────────────────────────────────────────────────────────────────┘
+This file is read by Claude Code when working in this repo. It covers the orchestration pipeline, LLM roles, slash commands, and trigger rules. The project is structured as a collection of **Modular Claude Code Plugins** located in the [plugins/](../plugins/) directory. For the full plugin list with descriptions and trigger keywords, see [Plugins](PLUGINS.md).
 
-Step 1 — planner      │ Claude Sonnet (inherit)  │ detects language, reads standards,
-                      │                          │ explores codebase, writes context file
-Step 2 — coder        │ Claude Haiku             │ orchestrates; calls Ollama (role: coder)
-Step 2.5 — build      │ Claude Haiku             │ tsc --noEmit (TS), etc.
-Step 3 — reviewer ×N  │ Claude Haiku (parallel)  │ orchestrates; calls Ollama (role: reviewer)
-```markdown
+## Orchestrator Roles
 
-**LLM Configuration (`llm-config.json`):**
+Roles are defined in [llm-config.json](../llm-config.json). Each role corresponds to a specialized agent instruction.
 
-| Role | Responsibility | Default Model |
-|------|----------------|---------------|
-| `coder` | Main code generation | `qwen2.5-coder:14b...` |
-| `reviewer` | Code review and documentation | `qwen2.5-coder:7b` |
-| `commit` | Commit messages and minor fixes | `qwen2.5-coder:1.5b` |
-| `embedding` | Semantic search and RAG | `nomic-embed-text` |
+| Role | Agent / Instruction | Responsibility |
+|:---|:---|:---|
+| **coder** | [agents/coder.md](../agents/coder.md) | Main code generation & implementation |
+| **reviewer** | [agents/reviewer.md](../agents/reviewer.md) | Code quality, standards & documentation |
+| **commit** | [agents/commit.md](../agents/commit.md) | Stage changes, PRs & commit messages |
+| **debugger** | [agents/debugger.md](../agents/debugger.md) | Root Cause Analysis (5-Whys) & bug fixing |
+| **architect** | [agents/architect.md](../agents/architect.md) | System design, refactoring & planning |
+| **devops** | [agents/devops.md](../agents/devops.md) | CI/CD, Infrastructure (AWS/K8s) & MCP |
+| **planner**| [agents/planner.md](../agents/planner.md) | Context gathering & implementation planning |
 
-**Language standards** (auto-detected by planner and reviewer):
+---
 
-- TypeScript → `.claude/skills/ts-code-standarts.md`
-- Python → `.claude/skills/python-code-standarts.md`
-- Flutter/Dart → `.claude/skills/fluter-code-standarts.md`
-- Swift → `.claude/skills/swift-code-standarts.md`
-- C++ → `.claude/skills/c-code-standarts.md`
-- Documentation → `.claude/skills/doc-standarts.md`
+## Coding Pipeline
 
-## Commands
+For non-trivial tasks, use the `/implement` command:
 
-| Command | When |
-|---------|------|
-| `/implement` | Full plan → code → build → review pipeline |
-| `/review` | Check current changes against language standards |
-| `/commit` | Stage and commit changes (uses local LLM) |
+```text
+                                       ┌─ reviewer (file A) ─┐
+planner ──► coder ──► build check ──┤─ reviewer (file B) ─├──► approved / fix loop
+                                       └─ reviewer (file C) ─┘
+```
 
-**Agents available on demand** (not auto-run):
+1. **Planner**: Detects language, reads standards, and writes `task_context.md`.
+2. **Coder**: Orchestrates the implementation via local models.
+3. **Build Check**: Runs `tsc`, `py_compile`, or equivalent to catch syntax errors.
+4. **Reviewer**: Performs parallel review of every changed file against standards.
 
-- `test-agent` — write and run tests (uses `coder` role)
-- `doc-writer` — update documentation (uses `reviewer` role)
+---
 
-**Trigger rules** — BLOCKING REQUIREMENT: invoke the agent/skill BEFORE generating any other response:
+## Skill Registry
 
-- User says "commit", "сделай коммит", "закоммить" → run `commit` agent
-- User says "implement", "напиши код", "добавь фичу" → run `implement` skill
-- User asks to write, create, or update documentation → run `doc-writer` agent
+Skills define specialized standards and expert knowledge.
 
-**NEVER edit core orchestration scripts directly** — only use `doc-writer` for markdown. Use `coder` for `.sh` scripts.
+### Core Languages & Standards
+
+Detected automatically via indicator files in the project root.
+
+| Indicator | Language | Standard File |
+|:---|:---|:---|
+| `tsconfig.json` | TypeScript | [ts-code-standarts.md](../skills/ts-code-standarts.md) |
+| `pyproject.toml` | Python | [python-code-standarts.md](../skills/python-code-standarts.md) |
+| `pubspec.yaml` | Flutter/Dart| [flutter-code-standarts.md](../skills/flutter-code-standarts.md) |
+| `Package.swift` | Swift | [swift-code-standarts.md](../skills/swift-code-standarts.md) |
+| `CMakeLists.txt`| C++ | [c-code-standarts.md](../skills/c-code-standarts.md) |
+| `*.sh` | Bash/Shell | [bash-code-standarts.md](../skills/bash-code-standarts.md) |
+| — | Documentation | [doc-standarts.md](../skills/doc-standarts.md) |
+
+### Specialized Expertise
+
+Loaded manually or via triggers for specific task domains.
+
+| Area | Skill File |
+|:---|:---|
+| **Architecture**| [microservices-design](../skills/microservices-design/SKILL.md) · [first-principles](../skills/first-principles/SKILL.md) · [api-design](../skills/api-design-patterns/SKILL.md) |
+| **Operations** | [kubernetes-ops](../skills/kubernetes-operations/SKILL.md) · [docker-best-practices](../skills/docker-best-practices/SKILL.md) · [aws-cloud](../skills/aws-cloud-patterns/SKILL.md) · [ci-cd](../skills/ci-cd-pipelines/SKILL.md) |
+| **Real-time** | [websocket-realtime](../skills/websocket-realtime/SKILL.md) |
+| **Security** | [security-hardening](../skills/security-hardening/SKILL.md) · [authentication-patterns](../skills/authentication-patterns/SKILL.md) |
+| **AI / LLM** | [llm-integration](../skills/llm-integration/SKILL.md) · [prompt-engineering](../skills/prompt-engineering/SKILL.md) |
+| **Expertise** | [root-cause-analysis](../skills/root-cause-analysis/SKILL.md) · [git-advanced](../skills/git-advanced/SKILL.md) · [performance](../skills/performance-optimization/SKILL.md) |
+
+---
+
+## Operational Rules
+
+### Slash Commands
+
+| Command | Usage |
+|:---|:---|
+| `/implement` | Full pipeline: Plan → Code → Build → Review |
+| `/review` | Audit current changes against language standards |
+| `/commit` | Generate commit message (local LLM) and stage changes |
+| `/commit-push` | Local AI commit + Git push to remote |
+| `/debug` | Systematic RCA and minimal fix proposal |
+| `/stats` | View token savings (day/week/month) |
+
+### Trigger Rules
+
+BLOCKING: Invoke the matching agent/skill before responding.
+
+- **High Level**: "refactor", "simplify", "approach?", "microservices", "API", "OpenAPI", "endpoints" → [architect](../agents/architect.md), [api-architect](../plugins/api-architect/), [refactor-engine](../plugins/refactor-engine/)
+- **Infrastructure**: "setup CI/CD", "deploy", "k8s", "docker", "release", "version bump" → [devops](../agents/devops.md), [docker-helper](../plugins/docker-helper/), [k8s-helper](../plugins/k8s-helper/), [release-manager](../plugins/release-manager/)
+- **Database**: "schema", "SQL", "slow query", "ERD" → [architect](../agents/architect.md), [database-tools](../plugins/database-tools/)
+- **AI/Prompts**: "prompt", "analyze AI", "optimize instruction" → [ai-engineering](../plugins/ai-engineering/)
+- **Specialized**:
+  - Python: "Python idioms", "PEP 8", "type hints" → [python-expert](../plugins/python-expert/)
+  - Accessibility: "ARIA", "screen reader", "a11y" → [ui-tester](../agents/ui-tester.md), [accessibility](../plugins/accessibility/)
+- **Troubleshoot**: "error log", "why?", "fix this", "pod failed", "crash" → [debugger](../agents/debugger.md), [k8s-helper](../plugins/k8s-helper/)
+- **Git/PR**: "commit", "push", "open pr" → [commit](../agents/commit.md), [committer](../plugins/committer/)
+- **Security Check**: "audit", "vulnerability", "CVE", "auth check", "security" → [reviewer](../agents/reviewer.md), [security-guidance](../plugins/security-guidance/)
+- **Docs**: "update readme", "write docs", "generate readme" → [doc-writer](../agents/doc-writer.md), [documentation](../plugins/documentation/)
+- **Testing**:
+  - Unit: "logic", "unit test", "mock" → [unit-tester](../agents/unit-tester.md), [qa-tools](../plugins/qa-tools/)
+  - API: "integration", "api test", "schema", "seed" → [api-tester](../agents/api-tester.md), [qa-tools](../plugins/qa-tools/)
+  - UI: "e2e", "ui test", "playwright", "browser" → [ui-tester](../agents/ui-tester.md)
+  - Strategy: "analyze failures", "fix comments", "qa report" → [qa-orchestrator](../agents/qa-orchestrator.md), [qa-tools](../plugins/qa-tools/)
+
+---
+
+## Core Constraints
+
+- **No direct edits**: Never edit core `.sh` scripts directly; use the `coder` agent.
+- **Zero dependencies**: Never add Python/Node dependencies to the core orchestrator.
+- **JSON handling**: ALWAYS use `jq` for JSON processing in shell scripts.
+- **Separation**: Never use `doc-writer` for code or `coder` for markdown.
+
+---
+
+[README](../README.md) · [Architecture](ARCHITECTURE.md) · [Agents](AGENTS.md) · [Skills & Commands](SKILLS.md) · [Plugins](PLUGINS.md) · **CLAUDE**

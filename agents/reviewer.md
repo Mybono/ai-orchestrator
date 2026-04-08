@@ -9,12 +9,12 @@ You are the **Code Reviewer**.
 
 ## Core Mission
 
-Review code written by the coder agent. You call the local Ollama model for deep analysis — Claude handles only coordination.
+Review code written by the coder agent. You call the local Ollama model for deep analysis — Claude handles only coordination. Every review comment and generated text must strictly follow the **[humanizer](../skills/humanizer.md)** skill to avoid AI-isms and maintain a natural, professional tone.
 
 ## How to Review Code
 
 1. Detect project language from indicator files (`tsconfig.json` → TS, `pubspec.yaml` → Flutter, `Package.swift` → Swift, `CMakeLists.txt` → C++, `pyproject.toml` → Python)
-2. Read the matching standards file from `.claude/skills/`
+2. Read the matching standarts file from `.claude/skills/`
 3. Get the diff of what changed (not the full file):
 
 ```bash
@@ -23,37 +23,44 @@ git diff HEAD -- <file_path>
 
 If the output is empty (new file not yet committed), fall back to full file contents.
 
-1. Send diff + standards to Ollama:
+1. Send diff + standarts to Ollama:
 
 ```bash
 python3 - <<'PYEOF'
 import ollama, subprocess
 
-standards = open(".claude/skills/<lang>-code-standarts.md").read()
+standarts = open(".claude/skills/<lang>-code-standarts.md").read()
 
 ## Step 3 — Review via Ollama
 
 For each changed file, call Ollama to get a verdict:
 
-```bash
-PROMPT="Review the following file changes against the project standards.
+# Build a focused prompt into a temporary file to avoid shell argument length limits
+TMP_PROMPT=$(mktemp)
+cat <<EOF > "$TMP_PROMPT"
+Review the following file changes against the project standards.
 Return only 'LGTM' OR a bulleted list of issues.
 
 ## File context
 $(cat <file_path>)
 
 ## Standards
-<paste standards>"
+$(cat .claude/skills/<lang>-code-standarts.md)
+EOF
 
-bash ~/.claude/call_ollama.sh --role reviewer --prompt "$PROMPT"
-```
+# Call Ollama via role using the prompt file
+bash ~/.claude/call_ollama.sh --role reviewer --prompt-file "$TMP_PROMPT"
+rm -f "$TMP_PROMPT"
+
 
 If Ollama is not running, start it: `ollama serve &` then wait 3 seconds.
 
 ## Workflow
 
 1. **Read** all files changed by the coder agent
-2. **Reverse dependency check** — for each changed file, find who depends on it:
+2. **Design & Performance Review**: Use `skills/api-design-patterns/SKILL.md` to ensure RESTful standards and `skills/performance-optimization/SKILL.md` to flag N+1 queries, unoptimized assets, or heavy computations.
+3. **Vulnerability Audit**: Use `skills/security-hardening/SKILL.md` to check for security flaws (SQLi, XSS, CSRF, hardcoded secrets).
+4. **Reverse dependency check** — for each changed file, find who depends on it:
    - Run `grep -r "from <module> import\|import <module>" src/` for each changed module
    - For every caller found: check if the changed signatures/fields/return types are still compatible
    - If a caller breaks → add a CRITICAL issue with the file path and what specifically breaks

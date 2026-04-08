@@ -1,4 +1,4 @@
-# C++ Code Quality Standards (Claude Code Skill)
+# C++ Code Quality standarts (Claude Code Skill)
 
 ## 🎯 Goal
 

@@ -1,0 +1,9 @@
+{
+  "name": "python-expert",
+  "version": "1.0.0",
+  "description": "Expert Python refactoring and type safety tools",
+  "commands": [
+    "commands/refactor-py.md",
+    "commands/type-hints.md"
+  ]
+}

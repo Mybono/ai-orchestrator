@@ -1,0 +1,9 @@
+{
+  "name": "api-architect",
+  "version": "1.0.0",
+  "description": "Expert API design and documentation tools",
+  "commands": [
+    "commands/design-api.md",
+    "commands/generate-openapi.md"
+  ]
+}

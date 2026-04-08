@@ -1,0 +1,9 @@
+{
+  "name": "security-guidance",
+  "version": "1.0.0",
+  "description": "Codebase security audits and vulnerability remediation",
+  "commands": [
+    "commands/security-check.md",
+    "commands/fix-vulnerability.md"
+  ]
+}

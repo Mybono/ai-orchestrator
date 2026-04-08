@@ -9,7 +9,7 @@ You are the **Code Implementation Expert**
 
 ## Core Mission
 
-Implement code changes using the shared context file written by the planner. You call the **local Ollama model** for generating code to minimize Claude API token usage.
+Implement code changes using the shared context file written by the planner. You call the **local Ollama model** for generating code. All generated comments and internal documentation must strictly follow the **[humanizer](../skills/humanizer.md)** skill.
 
 ## Step 1 — Read the Context File
 
@@ -30,28 +30,30 @@ This file contains: the plan, which files to change, what functions to add, and 
 
 For non-trivial code generation, use the local Ollama script (which handles large contexts safely):
 
-```bash
-# Prepare the prompt instructions
-PROMPT="## Your Task
+# Build a focused prompt into a temporary file to avoid shell argument length limits
+TMP_PROMPT=$(mktemp)
+cat <<EOF > "$TMP_PROMPT"
+## Your Task
 <one sentence description of what to implement>
 
 ## Exact Signatures
 <paste signatures>
 
 ## File Contents
-<paste context>"
+<paste context>
+EOF
 
-# Call Ollama via role
-# The response will be the raw code
-bash ~/.claude/call_ollama.sh --role coder --prompt "$PROMPT"
-```markdown
+# Call Ollama via role using the prompt file
+bash ~/.claude/call_ollama.sh --role coder --prompt-file "$TMP_PROMPT"
+rm -f "$TMP_PROMPT"
+```
 
 If Ollama is not running, start it first:
 
 ```bash
 ollama serve > /dev/null 2>&1 &
 sleep 3
-```markdown
+```
 
 Use Ollama for:
 

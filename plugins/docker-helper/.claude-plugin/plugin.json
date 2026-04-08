@@ -1,0 +1,9 @@
+{
+  "name": "docker-helper",
+  "version": "1.0.0",
+  "description": "Optimized Docker image builds and security audits",
+  "commands": [
+    "commands/build-image.md",
+    "commands/optimize-dockerfile.md"
+  ]
+}

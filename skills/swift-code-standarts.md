@@ -1,4 +1,4 @@
-# Swift Code Quality Standards (Claude Code Skill)
+# Swift Code Quality standarts (Claude Code Skill)
 
 ## 🎯 Goal
 

@@ -1,0 +1,9 @@
+{
+  "name": "reviewer",
+  "version": "1.0.0",
+  "description": "Rigorous code quality and standards checking",
+  "commands": [
+    "commands/review.md",
+    "commands/standards.md"
+  ]
+}

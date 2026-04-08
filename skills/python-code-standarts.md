@@ -1,4 +1,4 @@
-# Python Code Quality Standards
+# Python Code Quality standarts
 
 ## General Principles
 

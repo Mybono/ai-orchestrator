@@ -1,0 +1,12 @@
+{
+  "name": "qa-tools",
+  "version": "1.0.0",
+  "description": "Unified toolkit for automated testing, failure analysis, and PR remediation",
+  "commands": [
+    "commands/fix-comments.md",
+    "commands/generate-tests.md",
+    "commands/analyze-failures.md",
+    "commands/seed-db.md",
+    "commands/slack-notify.md"
+  ]
+}
