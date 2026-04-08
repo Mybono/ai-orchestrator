@@ -3,7 +3,8 @@
 All notable changes to ai-orchestrator.
 ## [unreleased]
 ### 2026-04-08
-- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`6abe574`](https://github.com/Mybono/ai-orchestrator/commit/6abe574d2e8b5cf54a02e7f228c48f4fb4f0cfd8) Update skill name and tool list
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`b7b970b`](https://github.com/Mybono/ai-orchestrator/commit/b7b970bc03768cb7302f1aed3fe32445df7f189e) Add new agents and skills for comprehensive project management
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`506fec4`](https://github.com/Mybono/ai-orchestrator/commit/506fec46619b85b07dd5036b8871f88a5cc20f2a) Update skill name and tool list
 - ![docs](https://img.shields.io/badge/docs-0075ca?style=flat-square) [`8af491f`](https://github.com/Mybono/ai-orchestrator/commit/8af491fa7b8a0ea3b530be612f71f5f6bdfefd18) Add plugins section and update documentation links
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`e423463`](https://github.com/Mybono/ai-orchestrator/commit/e4234634f50f8b2fb981bf55e5c118cda00af11e) Auto-fix markdown lint errors
 - ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`cb03846`](https://github.com/Mybono/ai-orchestrator/commit/cb038461ed460de9cce5c329fdfbd6f3fb146978) Add specialized plugin detection and documentation updates
