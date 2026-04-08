@@ -1,6 +1,6 @@
 {
   "name": "ai-orchestrator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A vendor-neutral, shell-based AI orchestration framework for local LLMs.",
   "main": "scripts/install.sh",
   "bin": {
@@ -18,8 +18,7 @@
     "README.md"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "echo \"💡 Run 'ai-orchestrator-install' to set up the system.\""
+    "postinstall": "echo \"Run 'ai-orchestrator-install' to set up the system.\""
   },
   "repository": {
     "type": "git",
