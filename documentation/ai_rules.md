@@ -31,3 +31,13 @@ Instead, simply run `bash ~/.claude/open-pr.sh` and return the output. This scri
 - Use Conventional Commits format STRICTLY: `type(scope): description`
 - Subject line max 72 chars, imperative mood
 - Allowed prefixes: feat, fix, docs, chore, refactor, test
+
+### 5. Automatic Skill Integration
+
+Before performing any generation, review, or planning task, the IDE Agent MUST:
+1. Identify the primary programming language or task type (e.g., Bash, TypeScript, Documentation, Code Review).
+2. Locate the corresponding skill file in the `skills/` directory.
+3. Read the skill file and incorporate its rules into the system prompt or generation context.
+4. If no specific language skill matches, apply `skills/doc-standarts.md` for text or `skills/humanizer.md` for conversational output.
+
+This step is MANDATORY to ensure consistency across all models and agents in the pipeline.

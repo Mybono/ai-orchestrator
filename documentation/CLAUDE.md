@@ -45,6 +45,7 @@ The planner and reviewer auto-detect the language from the changed files and loa
 | C++ | [skills/c-code-standarts.md](../skills/c-code-standarts.md) |
 | Bash/Shell | [skills/bash-code-standarts.md](../skills/bash-code-standarts.md) |
 | Documentation | [skills/doc-standarts.md](../skills/doc-standarts.md) |
+| Code Review | [skills/code-review/SKILL.md](../skills/code-review/SKILL.md) |
 
 ## Commands
 

@@ -16,8 +16,10 @@ Language detection happens by checking indicator files in the project root:
 | [flutter-code-standarts.md](../skills/flutter-code-standarts.md) | Flutter/Dart | `pubspec.yaml` |
 | [swift-code-standarts.md](../skills/swift-code-standarts.md) | Swift | `Package.swift` or `*.xcodeproj` |
 | [c-code-standarts.md](../skills/c-code-standarts.md) | C++ | `CMakeLists.txt` or `*.cpp` files |
+| [bash-code-standarts.md](../skills/bash-code-standarts.md) | Bash/Shell | `*.sh` files or script content |
 | [doc-standarts.md](../skills/doc-standarts.md) | Documentation | always available |
 | [humanizer.md](../skills/humanizer.md) | Writing style — removes AI patterns | always available |
+| [code-review/SKILL.md](../skills/code-review/SKILL.md) | Code Review | always available |
 
 The planner reads the skill file once during Phase 1 and embeds the most relevant rules into `task_context.md`. The reviewer reads it directly before each review.
 
