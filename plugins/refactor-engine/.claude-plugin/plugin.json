@@ -1,0 +1,9 @@
+{
+  "name": "refactor-engine",
+  "version": "1.0.0",
+  "description": "Expert code refactoring and simplification tools",
+  "commands": [
+    "commands/extract-fn.md",
+    "commands/simplify.md"
+  ]
+}

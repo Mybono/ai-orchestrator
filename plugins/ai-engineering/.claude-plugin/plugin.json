@@ -1,0 +1,9 @@
+{
+  "name": "ai-engineering",
+  "version": "1.0.0",
+  "description": "Meta-tools for AI prompt engineering and optimization",
+  "commands": [
+    "commands/analyze-prompt.md",
+    "commands/optimize-prompt.md"
+  ]
+}

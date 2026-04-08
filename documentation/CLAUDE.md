@@ -85,12 +85,17 @@ Loaded manually or via triggers for specific task domains.
 
 BLOCKING: Invoke the matching agent/skill before responding.
 
-- **Infrastructure**: "setup CI/CD", "deploy", "k8s", "docker", "cluster", "image" → [devops](../agents/devops.md), [docker-helper](../plugins/docker-helper/), [k8s-helper](../plugins/k8s-helper/)
-- **High Level**: "refactor", "approach?", "microservices", "API", "OpenAPI", "endpoints" → [architect](../agents/architect.md), [api-architect](../plugins/api-architect/)
+- **High Level**: "refactor", "simplify", "approach?", "microservices", "API", "OpenAPI", "endpoints" → [architect](../agents/architect.md), [api-architect](../plugins/api-architect/), [refactor-engine](../plugins/refactor-engine/)
+- **Infrastructure**: "setup CI/CD", "deploy", "k8s", "docker", "release", "version bump" → [devops](../agents/devops.md), [docker-helper](../plugins/docker-helper/), [k8s-helper](../plugins/k8s-helper/), [release-manager](../plugins/release-manager/)
+- **Database**: "schema", "SQL", "slow query", "ERD" → [architect](../agents/architect.md), [database-tools](../plugins/database-tools/)
+- **AI/Prompts**: "prompt", "analyze AI", "optimize instruction" → [ai-engineering](../plugins/ai-engineering/)
+- **Specialized**:
+  - Python: "Python idioms", "PEP 8", "type hints" → [python-expert](../plugins/python-expert/)
+  - Accessibility: "ARIA", "screen reader", "a11y" → [ui-tester](../agents/ui-tester.md), [accessibility](../plugins/accessibility/)
 - **Troubleshoot**: "error log", "why?", "fix this", "pod failed", "crash" → [debugger](../agents/debugger.md), [k8s-helper](../plugins/k8s-helper/)
 - **Git/PR**: "commit", "push", "open pr" → [commit](../agents/commit.md), [committer](../plugins/committer/)
 - **Security Check**: "audit", "vulnerability", "CVE", "auth check", "security" → [reviewer](../agents/reviewer.md), [security-guidance](../plugins/security-guidance/)
-- **Docs**: "update readme", "write docs" → [doc-writer](../agents/doc-writer.md)
+- **Docs**: "update readme", "write docs", "generate readme" → [doc-writer](../agents/doc-writer.md), [documentation](../plugins/documentation/)
 - **Testing**:
   - Unit: "logic", "unit test", "mock" → [unit-tester](../agents/unit-tester.md), [qa-tools](../plugins/qa-tools/)
   - API: "integration", "api test", "schema", "seed" → [api-tester](../agents/api-tester.md), [qa-tools](../plugins/qa-tools/)

@@ -1,0 +1,8 @@
+{
+  "name": "documentation",
+  "version": "1.0.0",
+  "description": "Automated documentation generation and maintenance",
+  "commands": [
+    "commands/generate-readme.md"
+  ]
+}
