@@ -12,7 +12,7 @@ This guide explains how to integrate the **AI PR Review System** into your Bitbu
     In each repository, go to **Repository settings** > **Pipelines** > **Repository variables** and add:
     * `ANTHROPIC_API_KEY`: Your Claude API key (Secured).
     * `BITBUCKET_API_TOKEN`: The access token created above (Secured).
-    * `JIRA_SERVICE_ACCOUNT`: The email address for the AI agent (e.g., ai-agent@mybono.com).
+    * `JIRA_SERVICE_ACCOUNT`: The email address for the AI agent (e.g., <ai-agent@mybono.com>).
 
 ## Setup
 
@@ -108,6 +108,7 @@ The review will appear as a comment in the PR from the user associated with the 
 You can configure your pipeline to automatically analyze failures (e.g., failing tests or builds) using the **AI Debugger**.
 
 ### Wrapper Pattern
+
 To enable this, use the following pattern in your `bitbucket-pipelines.yml`:
 
 ```yaml
@@ -118,6 +119,7 @@ To enable this, use the following pattern in your `bitbucket-pipelines.yml`:
 ```
 
 **How it works:**
-1.  `npm test 2>&1 | tee test.log`: Runs the tests, pipes both stdout and stderr to `test.log` while still showing it in the console.
-2.  `||`: If the tests fail (exit code not 0)...
-3.  `(node ...scripts/ci-debugger.js test.log && exit 1)`: The AI Debugger analyzes the log, posts a Root Cause Analysis comment to the PR, and then ensures the pipeline step still fails correctly.
+
+1. `npm test 2>&1 | tee test.log`: Runs the tests, pipes both stdout and stderr to `test.log` while still showing it in the console.
+2. `||`: If the tests fail (exit code not 0)...
+3. `(node ...scripts/ci-debugger.js test.log && exit 1)`: The AI Debugger analyzes the log, posts a Root Cause Analysis comment to the PR, and then ensures the pipeline step still fails correctly.
