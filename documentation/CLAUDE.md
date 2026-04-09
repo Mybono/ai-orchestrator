@@ -19,6 +19,10 @@ Roles are defined in [llm-config.json](../llm-config.json). Each role correspond
 | **architect** | [agents/architect.md](../agents/architect.md) | System design, refactoring & planning |
 | **devops** | [agents/devops.md](../agents/devops.md) | CI/CD, Infrastructure (AWS/K8s) & MCP |
 | **planner**| [agents/planner.md](../agents/planner.md) | Context gathering & implementation planning |
+| **context-manager** | [agents/context-manager.md](../agents/context-manager.md) | Token budget, progressive loading & context compaction |
+| **error-coordinator** | [agents/error-coordinator.md](../agents/error-coordinator.md) | Multi-agent error recovery & cascading failure prevention |
+| **performance-monitor** | [agents/performance-monitor.md](../agents/performance-monitor.md) | Token tracking, latency & workflow efficiency |
+| **security-auditor** | [agents/security-auditor.md](../agents/security-auditor.md) | OWASP Top 10, secrets detection & vulnerability audit |
 
 ---
 
@@ -98,7 +102,9 @@ BLOCKING: Invoke the matching agent/skill before responding.
   - Accessibility: "ARIA", "screen reader", "a11y" → [ui-tester](../agents/ui-tester.md), [accessibility](../plugins/accessibility/)
 - **Troubleshoot**: "error log", "why?", "fix this", "pod failed", "crash" → [debugger](../agents/debugger.md), [k8s-helper](../plugins/k8s-helper/)
 - **Git/PR**: "commit", "push", "open pr" → [commit](../agents/commit.md), [committer](../plugins/committer/)
-- **Security Check**: "audit", "vulnerability", "CVE", "auth check", "security" → [reviewer](../agents/reviewer.md), [security-guidance](../plugins/security-guidance/)
+- **Security Check**: "audit", "vulnerability", "CVE", "auth check", "security", "OWASP", "injection", "secrets" → [security-auditor](../agents/security-auditor.md), [reviewer](../agents/reviewer.md), [security-guidance](../plugins/security-guidance/)
+- **Context/Performance**: "context window", "token budget", "compaction", "optimize tokens", "token usage", "performance monitor" → [context-manager](../agents/context-manager.md), [performance-monitor](../agents/performance-monitor.md)
+- **Pipeline Errors**: "agent failed", "workflow error", "pipeline broken", "retry", "circuit breaker", "cascading" → [error-coordinator](../agents/error-coordinator.md), [debugger](../agents/debugger.md)
 - **Docs**: "update readme", "write docs", "generate readme" → [doc-writer](../agents/doc-writer.md), [documentation](../plugins/documentation/)
 - **Testing**:
   - Unit: "logic", "unit test", "mock" → [unit-tester](../agents/unit-tester.md), [qa-tools](../plugins/qa-tools/)
