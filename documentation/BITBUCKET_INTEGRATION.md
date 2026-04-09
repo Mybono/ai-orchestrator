@@ -37,9 +37,24 @@ pipelines:
       - parallel:
           - step:
               <<: *ai-review-step
-              name: "AI Hygiene Bot"
+              name: "AI Hygiene Bot (Auto-Fix)"
               env:
                 REVIEW_TYPE: "hygiene"
+                AUTO_FIX: "true" # Enable automatic fixes
+              script:
+                - git clone --branch v1.0.4 --depth 1 https://github.com/Mybono/ai-orchestrator.git .ai-orchestrator
+                - export ORCHESTRATOR_PATH=./.ai-orchestrator
+                - node .ai-orchestrator/scripts/bitbucket-review.js
+                # Setup git for auto-commit
+                - git config user.name "AI Orchestrator"
+                - git config user.email "ai-bot@mybono.com"
+                # Check for changes and push
+                - |
+                  if ! git diff --quiet; then
+                    git add .
+                    git commit -m "style: AI suggested hygiene fixes"
+                    git push origin HEAD:${BITBUCKET_BRANCH}
+                  fi
           - step:
               <<: *ai-review-step
               name: "AI Security Bot"

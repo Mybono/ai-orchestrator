@@ -4,6 +4,10 @@ inputs:
   review-type:
     description: 'Type of review: hygiene, security, or general'
     required: true
+  auto-fix:
+    description: 'Enable automatic hygiene fixes (true/false)'
+    required: false
+    default: 'false'
   language:
     description: 'Target language: typescript, python, flutter, swift, bash, or general'
     required: true
@@ -45,4 +49,5 @@ runs:
         PR_NUMBER: ${{ inputs.pr-number }}
         REPO: ${{ inputs.repo }}
         ORCHESTRATOR_PATH: ${{ inputs.orchestrator-path }}
+        AUTO_FIX: ${{ inputs.auto-fix }}
       run: node ${{ github.action_path }}/review.js

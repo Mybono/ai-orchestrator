@@ -74,7 +74,3 @@ jobs:
           repo: ${{ github.repository }}
           diff-file-path: pr.diff
           orchestrator-path: ./.ai-orchestrator
-
-    # Alternative: review.js could read the diff from a file path if we pass it.
-    # But standard GitHub Action inputs are limited.
-    # I'll update review.js to accept DIFF_FILE if PR_DIFF is empty.
