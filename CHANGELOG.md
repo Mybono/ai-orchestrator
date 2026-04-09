@@ -3,7 +3,8 @@
 All notable changes to ai-orchestrator.
 ## [unreleased]
 ### 2026-04-09
-- ![docs](https://img.shields.io/badge/docs-0075ca?style=flat-square) [`92d69ee`](https://github.com/Mybono/ai-orchestrator/commit/92d69eeedcc5e5c76cfe15b7d6beab6c617fc860) Add local use and mentorship section for Architect agent
+- ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`0891242`](https://github.com/Mybono/ai-orchestrator/commit/0891242843753e15a23af2c25af9a4a567a2e4b2) Add devops review support
+- ![docs](https://img.shields.io/badge/docs-0075ca?style=flat-square) [`105d20c`](https://github.com/Mybono/ai-orchestrator/commit/105d20cb44454fbec0665f21b8955ceb1fe2e378) Add local use and mentorship section for Architect agent
 - ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`044b74c`](https://github.com/Mybono/ai-orchestrator/commit/044b74cb6219ea08f55c9d6af05ccd622c679cd3) Update security audit and test coverage checks
 
 ## v1.0.6 — 2026-04-09

@@ -65,6 +65,18 @@ pipelines:
               name: "AI Logic Review"
               env:
                 REVIEW_TYPE: "general"
+          - step:
+              <<: *ai-review-step
+              name: "AI DevOps Bot"
+              condition:
+                changesets:
+                  includePaths:
+                    - "**/Dockerfile"
+                    - "bitbucket-pipelines.yml"
+                    - "infrastructure/**"
+                    - "terraform/**"
+              env:
+                REVIEW_TYPE: "devops"
 ```
 
 ## ⚙️ Configuration Variables

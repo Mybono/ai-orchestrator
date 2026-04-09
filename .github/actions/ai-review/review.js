@@ -29,7 +29,10 @@ async function runReview() {
   console.log(`Starting ${REVIEW_TYPE} review for ${LANGUAGE}...`);
 
   // 1. Load System Prompt from reviewer.md and plugin commands
-  const agentPath = path.join(ORCHESTRATOR_PATH, 'agents/reviewer.md');
+  let agentPath = path.join(ORCHESTRATOR_PATH, 'agents/reviewer.md');
+  if (REVIEW_TYPE === 'devops') {
+    agentPath = path.join(ORCHESTRATOR_PATH, 'agents/devops.md');
+  }
   const pluginCmdPath = path.join(ORCHESTRATOR_PATH, 'plugins/reviewer/commands/review.md');
 
   if (!fs.existsSync(agentPath)) throw new Error(`Agent file not found at ${agentPath}`);
@@ -68,6 +71,18 @@ AUTOFIX_FILES: [filename1, filename2]
   } else if (REVIEW_TYPE === 'security') {
     const securityFile = path.join(ORCHESTRATOR_PATH, 'skills/security-hardening/SKILL.md');
     standardsContext = fs.readFileSync(securityFile, 'utf-8');
+  } else if (REVIEW_TYPE === 'devops') {
+    const devopsSkills = [
+      'skills/ci-cd-pipelines/SKILL.md',
+      'skills/docker-best-practices/SKILL.md',
+      'skills/aws-cloud-patterns/SKILL.md',
+      'skills/devops-automation/SKILL.md'
+    ];
+    standardsContext = devopsSkills
+      .map(file => path.join(ORCHESTRATOR_PATH, file))
+      .filter(p => fs.existsSync(p))
+      .map(p => `### ${path.basename(path.dirname(p))}\n${fs.readFileSync(p, 'utf-8')}`)
+      .join('\n\n---\n\n');
   }
 
   // 3. Construct the message for Claude
