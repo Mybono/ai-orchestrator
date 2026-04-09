@@ -19,19 +19,29 @@ All orchestration is pure Bash and `jq`, with no Python required.
 `/implement` triggers the full pipeline:
 
 ```
-planner → coder → build check → reviewer(s) → verdict
+triage → planner → pre-review → coder → build check → reviewer(s) → verdict
 ```
+
+**Triage** detects task complexity and domain (api, docker, security, database, etc.) and loads the right plugins and agents automatically. Simple tasks skip the pipeline entirely.
 
 Claude writes the plan. A local Ollama model writes the code. Claude reviews the output.
 Details: [Architecture](documentation/ARCHITECTURE.md) · [Agents](documentation/AGENTS.md)
 
-In your AI chat (Claude, Antigravity, Cursor), send `/implement`, then in the next message describe what to build:
+In your AI chat (Claude Code), type `/implement` followed by your task:
 
 ```text
-Add a rate limiter to the API endpoints
+/implement Add JWT authentication to the REST API
 ```
 
-That's it. The pipeline runs automatically.
+```text
+/implement Optimize the Dockerfile with multi-stage build
+```
+
+```text
+/implement Refactor the user service to reduce complexity
+```
+
+That's it. The pipeline detects the domain, loads the right expertise, and runs automatically.
 
 ## Requirements
 
