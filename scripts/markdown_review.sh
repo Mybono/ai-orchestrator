@@ -92,9 +92,8 @@ for file in $STAGED_MD_FILES; do
     git add "$file"
     
     # 2. Check for remaining errors
-    LINT_ERRORS=$(npx markdownlint-cli2 "$file" 2>&1 || true)
-    
-    if echo "$LINT_ERRORS" | grep -q "error"; then
+    if ! npx markdownlint-cli2 "$file" > /dev/null 2>&1; then
+        LINT_ERRORS=$(npx markdownlint-cli2 "$file" 2>&1 || true)
         echo " Found lint errors in $file."
         
         # 3. Call Ollama to fix remaining errors
