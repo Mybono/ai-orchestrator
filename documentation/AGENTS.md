@@ -126,6 +126,8 @@ Analyzes errors, stack traces, and logs to find the fundamental cause of a failu
 
 The agent ALWAYS loads `skills/root-cause-analysis/SKILL.md` before starting the analysis. It gathers the logs and relevant source code, conducts a systematic 5-Whys analysis, and outputs a structured Root Cause Analysis report.
 
+- **CI Integration**: Can be used in pipelines to automatically analyze failed logs (via `scripts/ci-debugger.js`).
+
 ## [architect](../agents/architect.md)
 
 Evaluates designs, proposed refactors, and technology choices using fundamental truths instead of analogies.
@@ -136,7 +138,7 @@ Evaluates designs, proposed refactors, and technology choices using fundamental 
 
 The agent ALWAYS loads `skills/first-principles/SKILL.md`. It identifies the core job to be done, challenges all current assumptions, identifies ground truths, and builds up the recommended solution from those fundamentals. It is the primary agent for "Phase 1: Planning".
 
-### 🎓 Local Use & Mentorship (Onboarding)
+### Local Use & Mentorship (Onboarding)
 Developers can use the Architect agent directly in their AI IDE (Cursor, VS Code + Copilot/Cline) or Claude Code to learn project standards and architectural patterns.
 
 **How to invoke:**
