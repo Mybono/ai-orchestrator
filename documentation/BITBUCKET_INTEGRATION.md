@@ -55,17 +55,20 @@ pipelines:
 ## ⚙️ Configuration Variables
 
 The script automatically uses these built-in Bitbucket variables:
+
 * `BITBUCKET_WORKSPACE`
 * `BITBUCKET_REPO_SLUG`
 * `BITBUCKET_PULL_REQUEST_ID`
 
 Custom environment variables you can set per step:
+
 * `REVIEW_TYPE`: `hygiene`, `security`, or `general` (default).
 * `LANGUAGE`: `typescript`, `python`, `flutter`, `swift`, `bash`. If not set, the script will auto-detectbased on files like `tsconfig.json` or `pubspec.yaml`.
 
 ## 🤖 Bot Identities
 
 The review will appear as a comment in the PR from the user associated with the `BITBUCKET_APP_PASSWORD`. Each comment is clearly labeled:
+
 * **AI Hygiene Bot Review**
 * **AI Security Bot Review**
 * **AI General Review**
