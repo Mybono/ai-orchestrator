@@ -1,6 +1,11 @@
 # Changelog
 
 All notable changes to ai-orchestrator.
+## [unreleased]
+### 2026-04-09
+- ![docs](https://img.shields.io/badge/docs-0075ca?style=flat-square) [`94589f8`](https://github.com/Mybono/ai-orchestrator/commit/94589f8da6681a163b87b00e51797c54a4bda548) Add CODE_OF_CONDUCT.md
+- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`7c19e7e`](https://github.com/Mybono/ai-orchestrator/commit/7c19e7eb6b65a4736834f5ecfe1c7606b4203cb6) Sync changelog after merge
+
 ## v1.0.6 — 2026-04-09
 ### 2026-04-09
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`3ee5975`](https://github.com/Mybono/ai-orchestrator/commit/3ee5975a787e7023cb861d7a9cb53fe38ad81e27) Auto-fix markdown lint errors
