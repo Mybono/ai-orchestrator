@@ -3,7 +3,11 @@
 All notable changes to ai-orchestrator.
 ## [unreleased]
 ### 2026-04-09
+- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`3ee5975`](https://github.com/Mybono/ai-orchestrator/commit/3ee5975a787e7023cb861d7a9cb53fe38ad81e27) Auto-fix markdown lint errors
+- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`443b977`](https://github.com/Mybono/ai-orchestrator/commit/443b977c78a4c81b6334302dced0be3434f531aa) Bump version to 1.0.5
 - ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`cc30b27`](https://github.com/Mybono/ai-orchestrator/commit/cc30b27283186ba974c7b6a231c4212672f96bf4) Add support for Bitbucket review functionality
+
+## v1.0.5 — 2026-04-08
 ### 2026-04-08
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`4a2d5df`](https://github.com/Mybono/ai-orchestrator/commit/4a2d5df33e0a7fa9bedbc05ea77cd0d41a8049c0) Sync changelog after merge
 

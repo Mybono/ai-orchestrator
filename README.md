@@ -41,34 +41,21 @@ That's it. The pipeline runs automatically.
 
 ## Installation
 
+### Quick Install (curl)
+
 ```bash
 curl -sSL https://raw.githubusercontent.com/Mybono/ai-orchestrator/main/scripts/install.sh | bash
 ```
 
-Or manually:
+### Manual Installation (Git)
 
-#### Option A: Install via Pip (Python)
-```bash
-pip install .
-ai-orchestrator
-```
-
-#### Option B: Install via NPM (Node.js)
-```bash
-npm install -g .
-ai-orchestrator
-```
-
-Both methods will download the latest version and run the `scripts/install.sh` automatically to configure your local system.
-
-### Option C: Manual Installation (Git)
 ```bash
 git clone https://github.com/Mybono/ai-orchestrator ~/Projects/ai-orchestrator
 cd ~/Projects/ai-orchestrator
 ./scripts/install.sh
 ```
 
-The installer checks for Ollama and `jq`, creates symlinks in `~/.claude/`, and writes `llm-config.json` with models sized for your available RAM.
+Both methods run `scripts/install.sh` automatically to configure your local system (creating symlinks in `~/.claude/` and configuring Ollama models for your hardware).
 
 ## Configuration
 
