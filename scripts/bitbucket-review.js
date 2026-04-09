@@ -204,7 +204,7 @@ Your verdict must start with "VERDICT: APPROVED" or "VERDICT: NEEDS CHANGES".
 
   // 6. Post Comment to Bitbucket
   console.log('Review completed. Posting comment to Bitbucket...');
-  const botName = `AI ${REVIEW_TYPE.charAt(0).toUpperCase() + REVIEW_TYPE.slice(1)} Bot`;
+  const botName = `AI ${REVIEW_TYPE.charAt(0).toUpperCase() + REVIEW_TYPE.slice(1)} Agent`;
   const commentUrl = `https://api.bitbucket.org/2.0/repositories/${BITBUCKET_WORKSPACE}/${BITBUCKET_REPO_SLUG}/pullrequests/${BITBUCKET_PULL_REQUEST_ID}/comments`;
   
   const commentBody = {

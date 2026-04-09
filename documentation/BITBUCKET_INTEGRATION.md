@@ -12,6 +12,7 @@ This guide explains how to integrate the **AI PR Review System** into your Bitbu
     In each repository, go to **Repository settings** > **Pipelines** > **Repository variables** and add:
     * `ANTHROPIC_API_KEY`: Your Claude API key (Secured).
     * `BITBUCKET_API_TOKEN`: The access token created above (Secured).
+    * `JIRA_SERVICE_ACCOUNT`: The email address for the AI agent (e.g., ai-agent@mybono.com).
 
 ## Setup
 
@@ -37,7 +38,7 @@ pipelines:
       - parallel:
           - step:
               <<: *ai-review-step
-              name: "AI Hygiene Bot (Auto-Fix)"
+              name: "AI Hygiene Agent (Auto-Fix)"
               env:
                 REVIEW_TYPE: "hygiene"
                 AUTO_FIX: "true" # Enable automatic fixes
@@ -47,7 +48,7 @@ pipelines:
                 - node .ai-orchestrator/scripts/bitbucket-review.js
                 # Setup git for auto-commit
                 - git config user.name "AI Orchestrator"
-                - git config user.email "ai-bot@mybono.com"
+                - git config user.email "${JIRA_SERVICE_ACCOUNT}"
                 # Check for changes and push
                 - |
                   if ! git diff --quiet; then
@@ -57,7 +58,7 @@ pipelines:
                   fi
           - step:
               <<: *ai-review-step
-              name: "AI Security Bot"
+              name: "AI Security Agent"
               env:
                 REVIEW_TYPE: "security"
           - step:
@@ -67,7 +68,7 @@ pipelines:
                 REVIEW_TYPE: "general"
           - step:
               <<: *ai-review-step
-              name: "AI DevOps Bot"
+              name: "AI DevOps Agent"
               condition:
                 changesets:
                   includePaths:
@@ -96,10 +97,10 @@ Custom environment variables you can set per step:
 
 The review will appear as a comment in the PR from the user associated with the `BITBUCKET_APP_PASSWORD`. Each comment is clearly labeled:
 
-* **AI Hygiene Bot Review**
-* **AI Security Bot Review**
+* **AI Hygiene Agent Review**
+* **AI Security Agent Review**
 * **AI General Review**
-* **AI DevOps Bot Review**
+* **AI DevOps Agent Review**
 * **AI Root Cause Analysis** (from the Debugger)
 
 ## Self-Healing CI (Automated Debugger)

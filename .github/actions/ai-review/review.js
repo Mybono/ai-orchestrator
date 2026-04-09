@@ -172,7 +172,7 @@ Your verdict must start with "VERDICT: APPROVED" or "VERDICT: NEEDS CHANGES".
 
   // 5. Post to GitHub
   console.log('Review completed. Posting comment to GitHub...');
-  const botName = `AI ${REVIEW_TYPE.charAt(0).toUpperCase() + REVIEW_TYPE.slice(1)} Bot`;
+  const botName = `AI ${REVIEW_TYPE.charAt(0).toUpperCase() + REVIEW_TYPE.slice(1)} Agent`;
   const commentBody = `### 🤖 ${botName} Review\n\n${reviewText}`;
 
   const ghResponse = await fetch(`https://api.github.com/repos/${REPO}/issues/${PR_NUMBER}/comments`, {
