@@ -1,0 +1,80 @@
+name: Reusable AI PR Review
+
+on:
+  workflow_call:
+    inputs:
+      language:
+        description: 'Override language detection (typescript, python, flutter, swift, bash)'
+        type: string
+        required: false
+        default: 'auto'
+    secrets:
+      ANTHROPIC_API_KEY:
+        required: true
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      language: ${{ steps.set-lang.outputs.language }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: set-lang
+        run: |
+          if [ "${{ inputs.language }}" != "auto" ]; then
+            echo "language=${{ inputs.language }}" >> $GITHUB_OUTPUT
+          elif [ -f "tsconfig.json" ] || [ -f "package.json" ]; then
+            echo "language=typescript" >> $GITHUB_OUTPUT
+          elif [ -f "pyproject.toml" ] || [ -f "requirements.txt" ]; then
+            echo "language=python" >> $GITHUB_OUTPUT
+          elif [ -f "pubspec.yaml" ]; then
+            echo "language=flutter" >> $GITHUB_OUTPUT
+          elif [ -f "Package.swift" ]; then
+            echo "language=swift" >> $GITHUB_OUTPUT
+          else
+            echo "language=general" >> $GITHUB_OUTPUT
+          fi
+
+  review:
+    needs: detect
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        review-type: [hygiene, security, general]
+    steps:
+      - name: Checkout Calling Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Needed for diff
+
+      - name: Checkout AI Orchestrator
+        uses: actions/checkout@v4
+        with:
+          repository: Mybono/ai-orchestrator
+          path: .ai-orchestrator
+          ref: v1.0.4 # Pin to specific version
+
+      - name: Get PR Diff
+        id: diff
+        run: |
+          # Get the diff between the base branch and the head of the PR
+          git diff origin/${{ github.base_ref }}...HEAD > pr.diff
+          # Store diff in environment variable to pass to action
+          # We use a file to handle large diffs then read it
+          echo "diff_path=pr.diff" >> $GITHUB_OUTPUT
+
+      - name: Run AI Review
+        uses: ./.ai-orchestrator/.github/actions/ai-review
+        with:
+          review-type: ${{ matrix.review-type }}
+          language: ${{ needs.detect.outputs.language }}
+          anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          pr-number: ${{ github.event.pull_request.number }}
+          repo: ${{ github.repository }}
+          diff-file-path: pr.diff
+          orchestrator-path: ./.ai-orchestrator
+
+    # Alternative: review.js could read the diff from a file path if we pass it.
+    # But standard GitHub Action inputs are limited.
+    # I'll update review.js to accept DIFF_FILE if PR_DIFF is empty.

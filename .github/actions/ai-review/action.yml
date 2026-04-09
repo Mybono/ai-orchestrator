@@ -1,0 +1,48 @@
+name: 'AI PR Reviewer'
+description: 'Runs AI-powered PR review using standards from ai-orchestrator'
+inputs:
+  review-type:
+    description: 'Type of review: hygiene, security, or general'
+    required: true
+  language:
+    description: 'Target language: typescript, python, flutter, swift, bash, or general'
+    required: true
+  anthropic-api-key:
+    description: 'Anthropic API Key'
+    required: true
+  github-token:
+    description: 'GitHub Token for posting comments'
+    required: true
+  pr-number:
+    description: 'PR Number'
+    required: true
+  repo:
+    description: 'Repository owner/name'
+    required: true
+  pr-diff:
+    description: 'The diff to review'
+    required: false
+  diff-file-path:
+    description: 'Path to a file containing the diff'
+    required: false
+  orchestrator-path:
+    description: 'Path where ai-orchestrator is checked out'
+    required: false
+    default: './ai-orchestrator'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run Review Script
+      shell: bash
+      env:
+        ANTHROPIC_API_KEY: ${{ inputs.anthropic-api-key }}
+        PR_DIFF: ${{ inputs.pr-diff }}
+        DIFF_FILE_PATH: ${{ inputs.diff-file-path }}
+        REVIEW_TYPE: ${{ inputs.review-type }}
+        LANGUAGE: ${{ inputs.language }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        PR_NUMBER: ${{ inputs.pr-number }}
+        REPO: ${{ inputs.repo }}
+        ORCHESTRATOR_PATH: ${{ inputs.orchestrator-path }}
+      run: node ${{ github.action_path }}/review.js
