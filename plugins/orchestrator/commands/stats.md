@@ -4,7 +4,6 @@ Show token savings and pipeline performance summary for the ai-orchestrator.
 
 ```bash
 bash ~/.claude/stats.sh "$ARGUMENTS"
-```
 
 Pass a period as the argument: `day`, `week`, `month`, or leave empty for all-time totals.
 
@@ -18,7 +17,6 @@ Apply [performance-monitor](../../../agents/performance-monitor.md) to analyse t
 # Check last pipeline run artifacts
 ls -lt .claude/context/ | head -10
 wc -l .claude/context/task_context.md .claude/context/coder_output.md 2>/dev/null
-```
 
 Report:
 
@@ -30,7 +28,6 @@ Report:
 
 ```bash
 git log --oneline --since="1 week ago" | head -20
-```
 
 Identify if recent commits correlate with pipeline completions or manual fixes outside the pipeline.
 
@@ -42,7 +39,7 @@ Identify if recent commits correlate with pipeline completions or manual fixes o
 
 ## Output format
 
-```
+```text
 === Token Savings ===
 <output of stats.sh>
 
@@ -51,4 +48,3 @@ Last run: <date>
 Fix loop iterations: <n>
 Context size: <lines> lines in task_context.md
 Recommendation: <one line if any issue detected, else "Pipeline healthy">
-```
