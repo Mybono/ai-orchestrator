@@ -52,6 +52,10 @@ fi
 echo "Staging all changes (git add -A)..."
 git add -A
 
+# Proactive markdown review
+bash "$SCRIPT_DIR/markdown_review.sh"
+
+
 # Get the staged diff
 DIFF=$(git diff --cached)
 

@@ -37,4 +37,5 @@ echo ""
 
 # Commit
 git -C "$ROOT_DIR" add -A
+bash "$SCRIPT_DIR/markdown_review.sh"
 git -C "$ROOT_DIR" commit -m "chore: bump version to $NEW_VERSION"

@@ -3,6 +3,8 @@
 All notable changes to ai-orchestrator.
 ## [unreleased]
 ### 2026-04-09
+- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`634881c`](https://github.com/Mybono/ai-orchestrator/commit/634881cb0e82497c3e895bbdd356682dafb396a9) Add proactive markdown review for staged files
+- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`d320c26`](https://github.com/Mybono/ai-orchestrator/commit/d320c26b3da3d221c1582247f4c6a4b6a47b847e) Sync changelog after merge
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`24aff28`](https://github.com/Mybono/ai-orchestrator/commit/24aff28d717f270bb6b7feb02d53099f428a01f6) Auto-fix markdown lint errors
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`763e650`](https://github.com/Mybono/ai-orchestrator/commit/763e650fd153cff14be5bdd4c06bc00364515b76) Bump version to 1.0.7
 - ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`a02ea01`](https://github.com/Mybono/ai-orchestrator/commit/a02ea012777b9fad4a200a66c104f3343b0f9e52) Add support for integration tests and release management

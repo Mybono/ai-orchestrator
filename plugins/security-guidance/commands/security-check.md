@@ -40,7 +40,6 @@ gitleaks detect --source . --report-format json
 # Fallback: manual scan patterns
 grep -r "password\s*=\s*['\"]" --include="*.py" --include="*.ts" --include="*.js" .
 grep -r "api_key\s*=\|API_KEY\s*=" --include="*.env" --include="*.yaml" --include="*.json" .
-```
 
 - Check `.gitignore` excludes `.env`, `*.pem`, `*.key`, credential files.
 - Check CI/CD configs for unmasked secrets in env variables.
@@ -53,7 +52,6 @@ npm audit --json 2>/dev/null | jq '.vulnerabilities | to_entries[] | {name: .key
 
 # Python
 pip audit 2>/dev/null || safety check 2>/dev/null
-```
 
 Flag any Critical or High severity CVEs with remediation path.
 
@@ -61,12 +59,10 @@ Flag any Critical or High severity CVEs with remediation path.
 
 For each finding output:
 
-```
 [SEVERITY] Location: file:line
 Description: what the vulnerability is
 Impact: what an attacker could achieve
 Remediation: specific fix
-```
 
 Severity levels: **Critical** / **High** / **Medium** / **Low** / **Informational**
 

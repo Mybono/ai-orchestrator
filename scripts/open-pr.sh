@@ -4,6 +4,9 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OLLAMA_SCRIPT="$SCRIPT_DIR/call_ollama.sh"
 
+# Proactive markdown review
+bash "$SCRIPT_DIR/markdown_review.sh"
+
 echo "Gathering git context for Pull Request..."
 
 # Check if there are uncommitted changes
