@@ -4,14 +4,14 @@ This guide explains how to integrate the **AI PR Review System** into your Bitbu
 
 ## 🔑 Prerequisites
 
-1.  **Anthropic API Key**: A central API key for your organization.
-2.  **Bitbucket Access Token**:
-    *   Go to **Repository settings** > **Access tokens**.
-    *   Create a new token with `Pull request: Write` permissions.
-3.  **Repository Variables**:
+1. **Anthropic API Key**: A central API key for your organization.
+2. **Bitbucket Access Token**:
+    * Go to **Repository settings** > **Access tokens**.
+    * Create a new token with `Pull request: Write` permissions.
+3. **Repository Variables**:
     In each repository, go to **Repository settings** > **Pipelines** > **Repository variables** and add:
-    *   `ANTHROPIC_API_KEY`: Your Claude API key (Secured).
-    *   `BITBUCKET_API_TOKEN`: The access token created above (Secured).
+    * `ANTHROPIC_API_KEY`: Your Claude API key (Secured).
+    * `BITBUCKET_API_TOKEN`: The access token created above (Secured).
 
 ## 🚀 Setup
 
@@ -55,17 +55,17 @@ pipelines:
 ## ⚙️ Configuration Variables
 
 The script automatically uses these built-in Bitbucket variables:
-- `BITBUCKET_WORKSPACE`
-- `BITBUCKET_REPO_SLUG`
-- `BITBUCKET_PULL_REQUEST_ID`
+* `BITBUCKET_WORKSPACE`
+* `BITBUCKET_REPO_SLUG`
+* `BITBUCKET_PULL_REQUEST_ID`
 
 Custom environment variables you can set per step:
-- `REVIEW_TYPE`: `hygiene`, `security`, or `general` (default).
-- `LANGUAGE`: `typescript`, `python`, `flutter`, `swift`, `bash`. If not set, the script will auto-detectbased on files like `tsconfig.json` or `pubspec.yaml`.
+* `REVIEW_TYPE`: `hygiene`, `security`, or `general` (default).
+* `LANGUAGE`: `typescript`, `python`, `flutter`, `swift`, `bash`. If not set, the script will auto-detectbased on files like `tsconfig.json` or `pubspec.yaml`.
 
 ## 🤖 Bot Identities
 
 The review will appear as a comment in the PR from the user associated with the `BITBUCKET_APP_PASSWORD`. Each comment is clearly labeled:
-- **AI Hygiene Bot Review**
-- **AI Security Bot Review**
-- **AI General Review**
+* **AI Hygiene Bot Review**
+* **AI Security Bot Review**
+* **AI General Review**
