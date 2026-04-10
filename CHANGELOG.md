@@ -3,7 +3,7 @@
 All notable changes to ai-orchestrator.
 ## [unreleased]
 ### 2026-04-10
-- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`5fb843c`](https://github.com/Mybono/ai-orchestrator/commit/5fb843c5ef2e99af004c67123f2e16e0761743a3) Update git diff handling for context
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`1a7d870`](https://github.com/Mybono/ai-orchestrator/commit/1a7d8700bcc34d281261d0938616288902f8e866) Update git diff handling for context
 - ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`9c2e899`](https://github.com/Mybono/ai-orchestrator/commit/9c2e89972feddb75ddaddf43dcf580a69912c5f3) Update agent-to-agent communication and task flow
 - ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`49a93fb`](https://github.com/Mybono/ai-orchestrator/commit/49a93fb4a8b0d4e6167542e6a01dcad06dcdb1e4) Update workflow for pre-review and coder steps
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`e7e9914`](https://github.com/Mybono/ai-orchestrator/commit/e7e9914f7a8407de26cb85b8bf106321715a5814) Sync changelog after merge
