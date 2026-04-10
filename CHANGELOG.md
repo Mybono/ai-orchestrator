@@ -1,10 +1,8 @@
 # Changelog
 
 All notable changes to ai-orchestrator.
-## [unreleased]
+## v1.0.14 — 2026-04-10
 ### 2026-04-10
-- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`b0fbb52`](https://github.com/Mybono/ai-orchestrator/commit/b0fbb52c7a4664b38c3aff9f0e73d9c77d9973ff) Automatically add PR labels based on commit prefixes
-- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`6d561ab`](https://github.com/Mybono/ai-orchestrator/commit/6d561abca6599783657c4f38ac2d55bde0388f6d) Update token tracking with real counts and fallback
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`325e1bc`](https://github.com/Mybono/ai-orchestrator/commit/325e1bc35c7c25fc7c5114d5b42f1159293c027c) Sync changelog after merge
 
 ## v1.0.13 — 2026-04-10
