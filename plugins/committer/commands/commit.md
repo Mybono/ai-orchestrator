@@ -8,6 +8,16 @@ As a Git expert, follow these rules for the commit message:
 2. **Constraint**: Message MUST BE EXACTLY ONE LINE and MAX 72 CHARACTERS.
 3. **Content**: FOCUS ONLY on the provided diff. Do NOT include a body, list of files, or any technical details.
 4. **Output**: Output ONLY the message itself. No explanations, no quotes, no markdown backticks.
+5. **Visuals**: STRICTLY NO EMOJIS.
+
+## PR Generation Prompt
+
+Generate a GitHub PR title and description based on the following git log and diff.
+Return only the content in the following format (STRICTLY NO EMOJIS anywhere):
+Title: <brief meaningful title>
+
+Description:
+<detailed description of changes>
 
 ## Steps
 

@@ -7,9 +7,9 @@
     "pre-reviewer": "qwen2.5-coder:7b",
     "debugger": "qwen2.5-coder:7b",
     "devops": "qwen2.5-coder:7b",
-    "quick-coder": "qwen3.5:0.8b",
+    "quick-coder": "qwen2.5-coder:7b",
     "commit": "qwen2.5-coder:7b",
-    "triage": "qwen2.5-coder:7b",
-    "embedding": "nomic-embed-text"
+    "triage": "llama3.1:8b",
+    "embedding": "mxbai-embed-large"
   }
 }
