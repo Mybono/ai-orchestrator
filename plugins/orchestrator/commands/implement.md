@@ -75,7 +75,20 @@ Budget: **40% critical** / **30% important** / **20% reference** / **10% reserve
 
 ### Step 1.5 — Pre-Review (Plan Approval)
 
-Before coding starts, spawn the agent with the **pre-reviewer** role (Qwen 3.5 0.8b). Pass only the path `.claude/context/task_context.md` — the agent reads it itself.
+Before coding starts, spawn the agent with the **pre-reviewer** role. Pass only the path `.claude/context/task_context.md` — the agent reads it itself.
+
+**Critical:** The pre-reviewer must read **only these sections** from `task_context.md`:
+
+- `## Plan`
+- `## Exact Signatures`
+- `## Anti-patterns — Do NOT do this`
+- `## Edge Cases to Handle`
+
+It must **not** read `## File Contents` or `## Patterns to Follow` — those are for the coder, not for architectural validation. Use `grep` to extract only the needed sections:
+
+```bash
+sed -n '/^## Plan/,/^## Files to Change/p;/^## Exact Signatures/,/^## Types Needed/p;/^## Anti-patterns/,/^## Public API/p;/^## Edge Cases/,/^## Self-critique/p' .claude/context/task_context.md
+```
 
 > [!TIP]
 > Pre-reviewer uses `qwen2.5-coder:7b` (role: `pre-reviewer` in `llm-config.json`). Architectural validation is a logical reasoning task — it reads only the plan (~100–300 lines) and catches approach errors before a single line of code is written.
@@ -184,12 +197,14 @@ Apply [error-coordinator](../../../agents/error-coordinator.md) recovery:
 
 **Fix loop steps:**
 
-1. Capture diff: `git diff` → write to `.claude/context/fix_loop.md` under `## Diff`.
-2. Collect issues: read `## Issues` from every `review_deep_*.md` that returned NEEDS CHANGES → append to `fix_loop.md` under `## Issues`.
-3. Spawn `coder` with only paths: `fix_loop.md` + `triage.md`. Coder reads both itself.
-4. Re-run Step 2.5.
-5. Re-run Step 3 (post-review).
-6. Repeat at most **3 times**.
+1. Collect problem files: read `## Verdict` from every `review_deep_*.md`. List only files with `NEEDS CHANGES` — write to `.claude/context/fix_loop.md` under `## Problem Files`.
+2. Collect issues: read `## Issues` from those same files → append to `fix_loop.md` under `## Issues`.
+3. Capture diff for problem files only: `git diff HEAD -- <problem_file_1> <problem_file_2> ...` → append to `fix_loop.md` under `## Diff`.
+4. Spawn `coder` with only paths: `fix_loop.md` + `triage.md`. Coder reads both itself.
+5. After coder completes, read `## Changed Files` from `coder_output.md`. If any file appears there that was **not** in `## Problem Files`, add it to the review queue for Step 6.
+6. Re-run Step 2.5.
+7. Re-run Step 3 (post-review) — **only for files in `## Problem Files` plus any unexpected files from step 5**.
+8. Repeat at most **3 times**.
 
 **Circuit breaker**: same error in 2 consecutive rounds → stop immediately, report to user.
 

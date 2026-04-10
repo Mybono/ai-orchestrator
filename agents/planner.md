@@ -22,16 +22,25 @@ ls .claude/context/project_overview.md .claude/context/analysis_delta.md 2>/dev/
 
 **If `project_overview.md` EXISTS** — read it immediately. This is your authoritative map of the project architecture and constraints.
 
+After reading, **check for stale entries**:
+
+```bash
+git status --short
+git diff --name-only HEAD~1 HEAD 2>/dev/null
+```
+
+For every file listed in `## Key Files` of the overview: if the file appears in either command's output, mark it **[STALE]** in your mental model. In Phase 1, re-read those files fully instead of trusting the cached description.
+
 **If `analysis_delta.md` EXISTS** — read it as well. It contains findings from an automated scan (new files, patterns).
 
 - **Action**: Merge relevant delta findings into your mental model and prepare to update the main overview in Phase 4.
 
 **Workflow adjustments with Overview:**
 
-- Skip re-detecting language (already recorded)
-- Skip re-reading standarts file (already recorded)
+- Skip re-detecting language (already recorded) — unless the language file itself is [STALE]
+- Skip re-reading standarts file (already recorded) — unless it is [STALE]
 - Skip full codebase glob — verify only the files listed in the overview still exist
-- Spot-check 1-2 key files from the overview to confirm the architecture matches
+- Re-read any [STALE] files fully in Phase 1; trust cached descriptions for the rest
 
 **If `project_overview.md` MISSING** — proceed with full Phase 1 exploration as normal.
 

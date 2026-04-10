@@ -14,7 +14,7 @@ Analyzes a coding task, explores the codebase, and writes `.claude/context/task_
 - **Claude model**: Sonnet (inherited from the calling session)
 - **Ollama**: not used directly — planner writes the context that coder and reviewer consume
 
-The planner checks for `.claude/context/project_overview.md` on every run. If it exists, the planner skips full codebase exploration and only verifies that previously recorded files still exist (fast path). Otherwise it detects the project language from indicator files, reads the matching standards file from `.claude/skills/`, explores the codebase with Glob and Grep, and reads every relevant file in full.
+The planner checks for `.claude/context/project_overview.md` on every run (Phase 0). If it exists, the planner runs `git status --short` and `git diff --name-only HEAD~1 HEAD` to detect stale entries — any file from `## Key Files` that appears in the output is marked [STALE] and re-read fully. Files not marked stale are trusted from the cache. If the overview does not exist, the planner does a full codebase exploration.
 
 The output `task_context.md` contains: the task description, a step-by-step plan, exact function signatures, copy-pasted code patterns, anti-patterns to avoid, and full contents of every file that will be changed.
 
@@ -25,58 +25,57 @@ After writing `task_context.md`, the planner updates `.claude/context/project_ov
 Validates the proposed plan before implementation begins. It looks for architectural flaws, security risks, or contradictions with the project rules.
 
 - **Triggered by**: `/implement` (Step 1.5), after the planner has written the task context
-- **Claude model**: haiku (coordination)
 - **Ollama role**: `pre-reviewer` (qwen2.5-coder:7b)
 
-This is a critical "gatekeeper" role. Using the 0.8b Thinking model, it provides a fast logical check of the architectural approach. If the plan is rejected, the pipeline returns to the Planner stage for a rewrite.
+Validates the architectural approach before any code is written. Reads only the `## Plan`, `## Exact Signatures`, `## Anti-patterns`, and `## Edge Cases` sections from `task_context.md` — not the full file contents. Writes its verdict to `.claude/context/pre_review.md`. If the plan is rejected, the pipeline returns to the Planner for a rewrite.
 
 ## [coder](../agents/coder.md)
 
 Reads `task_context.md` and implements the changes by calling Ollama for code generation, then applies them with Edit and Write tools.
 
 - **Triggered by**: `/implement`, after planner completes
-- **Claude model**: haiku
 - **Ollama role**: `coder` (model: `hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS`)
 
-The coder does not re-explore the codebase. All context comes from `task_context.md`. For non-trivial generation it calls:
+The coder does not re-explore the codebase. It reads `task_context.md` and `triage.md` directly — the orchestrator passes only file paths, not content. For non-trivial generation it calls:
 
 ```bash
-bash ~/.claude/call_ollama.sh --role coder --prompt "$PROMPT"
+bash ~/.claude/call_ollama.sh --role coder --prompt-file "$TMP_PROMPT"
 ```
 
-After applying changes, it runs `python3 -m py_compile` (Python) or `tsc --noEmit` (TypeScript) per changed file, and writes a summary to `.claude/context/coder_output.md`.
+After applying changes, it runs `python3 -m py_compile` (Python) or `tsc --noEmit` (TypeScript) per changed file, and writes a structured summary to `.claude/context/coder_output.md` with sections: `## Verdict`, `## Changed Files`, `## Skipped`, `## Issues`.
 
 ## [reviewer](../agents/reviewer.md)
 
 Reviews code diffs against project standards, runs a syntax check, and calls Ollama for logic and bug analysis. Returns `APPROVED` or `NEEDS CHANGES` with a list of issues.
 
-- **Triggered by**: `/implement`, after coder and build check; one instance per changed file, run in parallel
-- **Claude model**: haiku
-- **Ollama role**: `reviewer` (default model: `qwen2.5-coder:7b`)
+- **Triggered by**: `/implement`, after coder and build check; tiered — fast then deep, per changed file, in parallel
+- **Ollama role**: `reviewer` (qwen2.5-coder:7b) for deep review; `quick-coder` (qwen2.5-coder:7b) for fast review
 
-The reviewer reads the diff (`git diff HEAD -- <file>`), loads the language standards from `.claude/skills/`, checks reverse dependencies (callers of changed modules), runs a syntax check, and sends the diff to Ollama for analysis.
+Two-tier review per changed file:
 
-Output format:
+1. **Fast review** (`quick-coder`) — syntax, style, obvious bugs. Writes `.claude/context/review_fast_<filename>.md`.
+2. **Deep review** (`reviewer`) — logic, security, architecture. Runs only if fast review flagged issues or triage detected `security`/`api`/`complex` domains. Writes `.claude/context/review_deep_<filename>.md`.
 
-```text
-VERDICT: APPROVED | NEEDS CHANGES
+Each output file has the same structure:
 
-FILES REVIEWED: <paths>
+```markdown
+## Verdict
+APPROVED | NEEDS CHANGES
 
-ISSUES (if any):
-- [CRITICAL] <issue> — <fix>
-- [WARNING]  <issue> — <fix>
-- [STYLE]    <issue> — <fix>
+## Issues
+- `<path>:<line>` [<Rule>] <description> — Fix: <fix>
+
+## Notes
+- <optional observations>
 ```
 
-CRITICAL issues block merging. WARNING issues should be fixed but are not blockers. STYLE issues are optional.
+The fix loop reads only files with `Verdict: NEEDS CHANGES` and re-reviews only those files after the fix.
 
 ## [quick-coder](../agents/quick-coder.md)
 
 Handles small, targeted changes using the lightest available model. Intended for single-function fixes, import updates, renames, and constant additions.
 
 - **Triggered by**: user or agent request for a change under ~30 lines that does not require planning
-- **Claude model**: haiku
 - **Ollama role**: `quick-coder` (qwen2.5-coder:7b)
 
 The agent follows the **Expert Committer Rules** defined in `plugins/committer/commands/commit.md`. If the task turns out to require more than one file or more than ~30 lines, quick-coder stops and recommends using `/implement` instead. Prompts must be short because the model has a 4096-token context window.
@@ -88,7 +87,6 @@ No review step follows quick-coder for trivial changes.
 Stages and commits all pending changes. Generates the commit message via Ollama.
 
 - **Triggered by**: user says "commit", "make a commit", "save changes", or uses `/commit`
-- **Claude model**: haiku
 - **Ollama role**: `commit` (qwen2.5-coder:7b)
 
 The agent never asks for confirmation. It runs `git status`, gets the diff, generates a conventional-commits message (prefix: `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`), then stages and commits. It never commits `venv/`, `dist/`, `*.egg-info/`, `__pycache__/`, or `.env` files.

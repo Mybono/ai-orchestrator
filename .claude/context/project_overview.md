@@ -1,12 +1,12 @@
 # Project Overview
 
-_Last updated: 2026-04-08 — added plugins/, new agents, and SKILL.md-format skills_
+_Last updated: 2026-04-10 — context handoff protocol, tiered review, stale detection, triage fast path_
 
 ## Language(s)
 - Shell (Bash): `install.sh`, `call_ollama.sh`, `local-commit.sh`, `analyze_project.sh` — pure Bash + `jq` for orchestration — standarts: inferred from existing scripts (no dedicated standarts file)
 - Markdown: all agent, command, and skill files — the "code" of the system
 
-This is a **zero-dependency, Unix-native tooling repository**. All logic is handled via Bash, `jq`, and `curl` to interact with Ollama. No Python runtime is required for core operations.
+This is a **zero-dependency, Unix-native tooling repository**. All logic is handled via Bash, `jq`, and `curl` to interact with Ollama.
 
 ## Key Files
 
@@ -70,11 +70,12 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 ## Architecture & Conventions
 
 - Plugins live in `plugins/` — each plugin is a directory with a `commands/` subdirectory containing Markdown slash commands; each command defines trigger keywords and delegates to a paired agent
-- All agents are Markdown files in `agents/` with a YAML front-matter block (`name`, `description`, `model`, `tools`)
+- All agents are Markdown files in `agents/` with a YAML front-matter block (`name`, `description`, `tools`) — no `model` field; models are defined exclusively in `llm-config.json`
 - All slash commands are Markdown files in `commands/` with no front-matter — they describe steps to orchestrate agents
 - Language standarts are in `skills/` and are named `<lang>-code-standarts.md` (note: "standarts" not "standards" — intentional spelling in filenames)
-- Context files produced during a task go to `.claude/context/` — specifically `task_context.md`, `coder_output.md`, and `project_overview.md`
-- The full pipeline is: planner writes context → coder generates code → build/type check → reviewer(s) in parallel → fix loop (max 3 rounds) → track_savings.sh
+- Context files produced during a task go to `.claude/context/`: `triage.md`, `task_context.md`, `pre_review.md`, `coder_output.md`, `review_fast_<file>.md`, `review_deep_<file>.md`, `fix_loop.md`, `project_overview.md`
+- **Context Handoff Protocol**: orchestrator passes only file paths between steps — never full content; each agent reads its input files directly and writes its own structured output file
+- The full pipeline is: triage → planner → pre-review → coder → build check → tiered review (fast + deep, parallel) → fix loop (max 3 rounds, only NEEDS CHANGES files) → track_savings.sh
 - **Zero Python dependency**: All agents call `scripts/call_ollama.sh` directly, which uses `curl` and `jq` for API interaction
 - `install.sh` uses symlinks, not file copies — a `git pull` updates everything without reinstall
 - New scripts must be added to both `SYMLINK_TARGETS` array and a `chmod +x` block in `scripts/install.sh`
@@ -82,7 +83,8 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 - Arg parsing pattern: `while [[ "$#" -gt 0 ]]; do case $1 in --flag) VAR="$2"; shift ;; esac; shift; done`
 - All JSON manipulation uses `jq` — never sed/awk for JSON; `$HOME` not `~` for home dir references
 - `settings.json.template` uses `__HOME__` as a placeholder; `install.sh` substitutes it with `$HOME` via `sed`
-- The planner agent checks for `project_overview.md` first (Phase 0 fast path) and skips full exploration if it exists
+- Planner (Phase 0): reads `project_overview.md` first, runs `git status --short` + `git diff --name-only HEAD~1 HEAD` to mark stale files, re-reads [STALE] files fully in Phase 1
+- Triage (Step 0): reads `project_overview.md` for language/structure, detects only domain from task description
 - Token stats are persisted at `~/.claude/token_stats.json` with schema `{"runs": [...]}`
 - `track_savings.sh` supports two modes: (1) file-size mode using `--context-file`/`--output-file`, (2) direct mode using `--input-tokens`/`--output-tokens`; mode is auto-detected by whether both direct flags are present
 - `call_ollama.sh` auto-tracks every LLM call via `track_savings.sh` (best-effort, silent on failure); uses role name as the task label, falling back to model name if role is empty

@@ -2,6 +2,18 @@ Analyze the task description and produce a routing decision before the pipeline 
 
 Triage runs as **Step 0** of `/implement`. It writes `.claude/context/triage.md` so all downstream steps — planner, coder, reviewer — start with the right expertise pre-loaded.
 
+## Step 0 — Load Project Overview
+
+Before classifying complexity, check if `.claude/context/project_overview.md` exists:
+
+```bash
+ls .claude/context/project_overview.md 2>/dev/null
+```
+
+**If EXISTS** — read only `## Language(s)` and `## Architecture & Conventions` sections. Skip re-detecting language and project structure. Proceed directly to domain detection in Step 2.
+
+**If MISSING** — proceed normally. Triage will detect language from indicator files as part of domain analysis.
+
 ## Step 1 — Classify Complexity
 
 Read the task description and classify into one tier:
