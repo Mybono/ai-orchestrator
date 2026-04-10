@@ -3,7 +3,8 @@
 All notable changes to ai-orchestrator.
 ## [unreleased]
 ### 2026-04-10
-- ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`b917529`](https://github.com/Mybono/ai-orchestrator/commit/b91752978c6088ac4ed61dbbc09fb86337c87799) Update benchmarks and config for better performance
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`e35bbe9`](https://github.com/Mybono/ai-orchestrator/commit/e35bbe9ae6365ec917b955b44f100072ef4a583f) Improve GPU VRAM calculation and add benchmark option
+- ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`871aa21`](https://github.com/Mybono/ai-orchestrator/commit/871aa214c285fdb765447b63e842966f72ee7443) Update benchmarks and config for better performance
 - ![fix](https://img.shields.io/badge/fix-d73a4a?style=flat-square) [`89ebe75`](https://github.com/Mybono/ai-orchestrator/commit/89ebe75dcea149f196b8a85404a15a7b10b33813) Update model configurations and documentation for consistency
 ### 2026-04-09
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`6c885ac`](https://github.com/Mybono/ai-orchestrator/commit/6c885ac7d08407db15cd66d74177e463a29584c5) Sync changelog after merge

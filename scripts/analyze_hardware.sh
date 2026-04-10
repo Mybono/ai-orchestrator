@@ -20,9 +20,10 @@ if [[ "$OS_TYPE" == "Darwin" ]]; then
     CHIP_NAME=$(sysctl -n machdep.cpu.brand_string)
     if [[ "$CHIP_NAME" == *"Apple"* ]]; then
         CHIP_TYPE="Apple Silicon (Unified Memory)"
-        # On Apple Silicon, unified memory acts as VRAM
+        # On Apple Silicon, unified memory acts as VRAM, but macOS limits it 
+        # to ~75% of total RAM by default for GPU usage.
         HAS_DEDICATED_GPU=true
-        GPU_VRAM_GB=$TOTAL_RAM_GB
+        GPU_VRAM_GB=$(( TOTAL_RAM_GB * 75 / 100 ))
     else
         CHIP_TYPE="Intel Mac"
     fi
@@ -35,11 +36,22 @@ elif [[ "$OS_TYPE" == "Linux" ]]; then
     fi
     CHIP_TYPE=$(grep "model name" /proc/cpuinfo | head -n 1 | awk -F': ' '{print $2}')
 
-    # Check for dedicated NVIDIA GPU
+    # Check for dedicated GPUs
     if command -v nvidia-smi >/dev/null; then
         HAS_DEDICATED_GPU=true
         VRAM_MB=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | head -n 1 || echo "0")
         GPU_VRAM_GB=$(( VRAM_MB / 1024 ))
+    elif command -v lspci >/dev/null; then
+        if lspci | grep -qi "vga.*amd"; then
+            HAS_DEDICATED_GPU=true
+            echo "AMD GPU detected via lspci (VRAM estimation limited on Linux without rocm-smi)"
+            # Default to a safe estimate or use direct sysfs if available
+            GPU_VRAM_GB=$(( TOTAL_RAM_GB / 2 )) # Conservative estimate
+        elif lspci | grep -qi "vga.*intel"; then
+            HAS_DEDICATED_GPU=true
+            echo "Intel GPU (Arc/Integrated) detected via lspci"
+            GPU_VRAM_GB=$(( TOTAL_RAM_GB / 2 ))
+        fi
     fi
 fi
 
@@ -47,11 +59,14 @@ echo "OS: $OS_TYPE"
 echo "CPU: $CHIP_TYPE"
 echo "RAM: ${TOTAL_RAM_GB} GB"
 
-if [ "$HAS_DEDICATED_GPU" = true ] && [[ "$OS_TYPE" != "Darwin" ]]; then
-    echo "Dedicated GPU detected (VRAM: ~${GPU_VRAM_GB} GB)"
-    echo "Unified Memory architecture, available for VRAM: up to ~${GPU_VRAM_GB} GB (depending on system load)"
+if [ "$HAS_DEDICATED_GPU" = true ]; then
+    if [[ "$OS_TYPE" == "Darwin" ]]; then
+        echo "Apple Silicon detected. Unified Memory available for VRAM: ~${GPU_VRAM_GB} GB (estimated)"
+    else
+        echo "GPU detected (VRAM: ~${GPU_VRAM_GB} GB)"
+    fi
 else
-    echo "No dedicated (NVIDIA) GPU detected. Inference will run on CPU or integrated graphics."
+    echo "No dedicated GPU detected. Inference will run on CPU or integrated graphics."
 fi
 
 echo "======================================"
@@ -119,7 +134,7 @@ else
 fi
 
 echo "======================================"
-echo "🤖 Recommended configuration for your hardware:"
+echo "Recommended configuration for your hardware:"
 echo "  - Coder:    $CODER_MODEL"
 echo "  - Reviewer: $REVIEWER_MODEL"
 echo "  - Commit:   $COMMIT_MODEL"
@@ -130,7 +145,12 @@ if [[ "$apply_cfg" =~ ^[Yy]$ ]]; then
     mkdir -p "$(dirname "$CONFIG_FILE")"
     
     # Initialize if missing
-    if [[ ! -f "$CONFIG_FILE" ]]; then echo '{"models":{}}' > "$CONFIG_FILE"; fi
+    if [[ ! -f "$CONFIG_FILE" ]]; then 
+        echo '{"models":{}}' > "$CONFIG_FILE"
+    else
+        echo "Creating backup: ${CONFIG_FILE}.bak"
+        cp "$CONFIG_FILE" "${CONFIG_FILE}.bak"
+    fi
 
     # Update using jq
     tmp_cfg=$(mktemp)
@@ -157,10 +177,52 @@ done
 
 if [ ${#MODELS_TO_DOWNLOAD[@]} -gt 0 ]; then
     echo "======================================"
-    read -r -p "Download missing models now? (y/N) " dl_choice
+    read -r -p "Download missing models? (y/N) " dl_choice
     if [[ "$dl_choice" =~ ^[Yy]$ ]]; then
+        # Check if ollama is installed
+        if ! command -v ollama >/dev/null; then
+            echo "⚠️ Ollama is not installed."
+            read -r -p "Install Ollama now? (y/N) " inst_choice
+            if [[ "$inst_choice" =~ ^[Yy]$ ]]; then
+                curl -fsSL https://ollama.com/install.sh | sh
+            else
+                echo "Abort: Ollama required for downloads."
+                exit 1
+            fi
+        fi
+
+        # Check if ollama service is running
+        if ! curl -s http://localhost:11434/api/tags >/dev/null; then
+            echo "⚠️ Ollama service is not running."
+            if [[ "$OS_TYPE" == "Darwin" ]]; then
+                read -r -p "Attempt to start Ollama? (y/N) " start_choice
+                if [[ "$start_choice" =~ ^[Yy]$ ]]; then
+                    open -a Ollama || echo "Please start Ollama manually and try again."
+                    echo "Waiting for Ollama to start..."
+                    until curl -s http://localhost:11434/api/tags >/dev/null; do sleep 2; done
+                fi
+            else
+                echo "Please run 'ollama serve' in another terminal and try again."
+                exit 1
+            fi
+        fi
+
         for m in "${MODELS_TO_DOWNLOAD[@]}"; do
+            echo "Pulling $m..."
             ollama pull "$m"
         done
     fi
 fi
+
+echo "======================================"
+read -r -p "Run a quick benchmark of $CODER_MODEL? (y/N) " run_bench
+if [[ "$run_bench" =~ ^[Yy]$ ]]; then
+    echo "Running benchmark (100 tokens)..."
+    start_time=$(date +%s.%N)
+    # Get total tokens and time using verbose mode (requires jq for parsing or simple grep)
+    # We'll use a simple approach: measure time for a fixed prompt
+    ollama run "$CODER_MODEL" "Write a fast Fibonacci function in C. Output code only." --verbose 2>&1 | grep -E "eval rate:|total duration:"
+    end_time=$(date +%s.%N)
+fi
+
+echo "Analysis complete. Happy coding!"
