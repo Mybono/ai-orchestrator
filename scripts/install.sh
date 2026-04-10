@@ -36,6 +36,7 @@ SYMLINK_TARGETS=(
   "scripts/stats.sh"
   "scripts/check-update.sh"
   "scripts/markdown_review.sh"
+  "scripts/shellcheck.sh"
 )
 
 echo "Installing ai-orchestrator from: $REPO_DIR"

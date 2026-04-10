@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# shellcheck.sh - Proactive shell script linting and auto-fix
+# Proactive shell script linting and auto-fix
 # Used to prevent ShellCheck failures in CI.
 
 set -e
@@ -18,37 +18,56 @@ fi
 
 cd "$ROOT_DIR" || { echo "❌ Failed to cd to $ROOT_DIR"; exit 1; }
 
-echo "Checking for staged shell scripts..."
+echo "Checking shell scripts..."
 
-# Find staged files
-STAGED_FILES=$(command git diff --staged --name-only --diff-filter=d || true)
+# Find files to check
+if [[ "$1" == "--all" ]]; then
+    echo "  [Mode: All files]"
+    # Find all shell files in the repo (excluding .git and node_modules)
+    # 1. By extension
+    ALL_FILES=$(find . -type f -not -path '*/.*' -not -path './node_modules/*' \( -name "*.sh" -o -name "*.bash" -o -name "*.ksh" -o -name "*.zsh" \))
+    
+    # 2. By shebang for extensionless files
+    EXTENSIONLESS=$(find . -type f -not -path '*/.*' -not -path './node_modules/*' -not -name "*.*")
+    for file in $EXTENSIONLESS; do
+        FIRST_LINE=$(head -n 1 "$file" 2>/dev/null || true)
+        if [[ "$FIRST_LINE" =~ ^#!.*(sh|bash|ksh|zsh) ]]; then
+            ALL_FILES="$ALL_FILES $file"
+        fi
+    done
+    TO_CHECK=$ALL_FILES
+else
+    echo "  [Mode: Staged files only]"
+    # Find staged files
+    STAGED_FILES=$(command git diff --staged --name-only --diff-filter=d || true)
+    
+    if [ -z "$STAGED_FILES" ]; then
+        echo "  - No staged files to check."
+        exit 0
+    fi
 
-if [ -z "$STAGED_FILES" ]; then
-    echo "  - No staged files to check."
-    exit 0
+    SHELL_FILES=""
+    for file in $STAGED_FILES; do
+        # Skip if file was deleted
+        [ ! -f "$file" ] && continue
+        
+        # 1. Check by extension
+        if [[ "$file" =~ \.(sh|bash|ksh|zsh)$ ]]; then
+            SHELL_FILES="$SHELL_FILES $file"
+            continue
+        fi
+        
+        # 2. Check by shebang
+        FIRST_LINE=$(head -n 1 "$file" 2>/dev/null || true)
+        if [[ "$FIRST_LINE" =~ ^#!.*(sh|bash|ksh|zsh) ]]; then
+            SHELL_FILES="$SHELL_FILES $file"
+        fi
+    done
+    TO_CHECK=$SHELL_FILES
 fi
 
-SHELL_FILES=""
-for file in $STAGED_FILES; do
-    # Skip if file was deleted
-    [ ! -f "$file" ] && continue
-    
-    # 1. Check by extension
-    if [[ "$file" =~ \.(sh|bash|ksh|zsh)$ ]]; then
-        SHELL_FILES="$SHELL_FILES $file"
-        continue
-    fi
-    
-    # 2. Check by shebang (for files without extension or with unknown extension)
-    # Only check if first line starts with #! and contains sh/bash/ksh/zsh
-    FIRST_LINE=$(head -n 1 "$file" 2>/dev/null || true)
-    if [[ "$FIRST_LINE" =~ ^#!.*(sh|bash|ksh|zsh) ]]; then
-        SHELL_FILES="$SHELL_FILES $file"
-    fi
-done
-
-if [ -z "$SHELL_FILES" ]; then
-    echo "  - No staged shell scripts found."
+if [ -z "$TO_CHECK" ]; then
+    echo "  - No shell scripts found to check."
     exit 0
 fi
 
@@ -103,7 +122,7 @@ EOF
     fi
 }
 
-for file in $SHELL_FILES; do
+for file in $TO_CHECK; do
     echo "  Linting $file..."
     
     # Run ShellCheck

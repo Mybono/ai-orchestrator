@@ -218,11 +218,9 @@ echo "======================================"
 read -r -p "Run a quick benchmark of $CODER_MODEL? (y/N) " run_bench
 if [[ "$run_bench" =~ ^[Yy]$ ]]; then
     echo "Running benchmark (100 tokens)..."
-    start_time=$(date +%s.%N)
     # Get total tokens and time using verbose mode (requires jq for parsing or simple grep)
     # We'll use a simple approach: measure time for a fixed prompt
     ollama run "$CODER_MODEL" "Write a fast Fibonacci function in C. Output code only." --verbose 2>&1 | grep -E "eval rate:|total duration:"
-    end_time=$(date +%s.%N)
 fi
 
 echo "Analysis complete. Happy coding!"
