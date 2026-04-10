@@ -3,6 +3,7 @@
 All notable changes to ai-orchestrator.
 ## [unreleased]
 ### 2026-04-10
+- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`96591aa`](https://github.com/Mybono/ai-orchestrator/commit/96591aab30f609699c5aee2571fb146dcae1f4e1) Sync changelog after merge
 - ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`b4bf717`](https://github.com/Mybono/ai-orchestrator/commit/b4bf717cda25c5f183e7fdc40574f453a8a6f840) Add proactive linting and fix CI failures
 - ![fix](https://img.shields.io/badge/fix-d73a4a?style=flat-square) [`ff66e9f`](https://github.com/Mybono/ai-orchestrator/commit/ff66e9f61ddf0c995d3d350291fd1b09b17ec191) Remove trailing whitespace
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`78b6089`](https://github.com/Mybono/ai-orchestrator/commit/78b60893784580075d0388a19d31d595bbd6a9d7) Bump version to 1.0.11
