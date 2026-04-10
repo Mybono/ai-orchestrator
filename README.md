@@ -7,7 +7,7 @@
 
 ---
 
-Portable AI developer setup: Claude thinks, local Ollama executes.
+Portable AI developer setup: Claude plans, local Ollama executes.
 
 Works with any project: TypeScript, Python, Flutter, Swift, C++.
 All orchestration is pure Bash and `jq`.
@@ -33,7 +33,7 @@ Layer 5  FINALIZE    → token savings tracked
 
 For focused tasks (optimize Dockerfile, run security audit, generate tests) triage routes directly to the matching plugin, skipping the planner and saving tokens. For composite tasks it runs the full pipeline with domain expertise pre-loaded.
 
-Claude orchestrates. A local Ollama model writes and reviews the code.
+Claude orchestrates and plans. A local Ollama model writes and reviews the code.
 Details: [Architecture](documentation/ARCHITECTURE.md) · [Agents](documentation/AGENTS.md)
 
 ```text
@@ -78,8 +78,6 @@ Model routing is controlled by [`llm-config.json`](llm-config.json) in the repo 
 {
   "models": {
     "coder":        "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
-    "planner":      "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
-    "architect":    "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
     "reviewer":     "qwen2.5-coder:7b",
     "pre-reviewer": "qwen2.5-coder:7b",
     "debugger":     "qwen2.5-coder:7b",

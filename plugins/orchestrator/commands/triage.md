@@ -82,10 +82,10 @@ Use `plugin-route` when **all three** are true:
 | `direct-edit` | nano | Claude makes the edit directly. No agents. |
 | `quick-coder` | micro | `quick-coder` agent (Ollama) → build check. |
 | `plugin-route` | standard + single domain + single intent | Plugin file as plan → `coder` (Ollama) → `reviewer` (Ollama). **Planner skipped.** |
-| `full-pipeline` | standard + multi-domain or multi-intent | planner → `coder` (Ollama) → `reviewer` (Ollama). |
-| `architect-first` | complex | `architect` agent → planner → `coder` (Ollama) → `reviewer` (Ollama). |
+| `full-pipeline` | standard + multi-domain or multi-intent | Claude plans → `coder` (Ollama) → `reviewer` (Ollama). |
+| `architect-first` | complex | Claude architect analysis → Claude plans → `coder` (Ollama) → `reviewer` (Ollama). |
 
-> `plugin-route` saves planner tokens (Claude) while keeping Ollama for code generation and review.
+> `plugin-route` skips the planning step entirely (Claude) while keeping Ollama for code generation and review.
 
 ## Step 4 — Write Triage Output
 

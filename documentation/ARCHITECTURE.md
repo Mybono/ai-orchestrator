@@ -24,7 +24,7 @@ The `/implement` command runs a multi-layer smart pipeline:
           ▼                                     ▼
 ┌─────────────────────┐         ┌──────────────────────────────┐
 │  Plugin file        │         │  Layer 1 — PLAN               │
-│  used as plan       │         │  planner (Ollama)             │
+│  used as plan       │         │  Claude (orchestrator)        │
 │  (planner skipped)  │         │  → task_context.md            │
 └─────────────────────┘         │  (+ domain constraints)       │
           │                     │                               │
@@ -65,7 +65,7 @@ Agents communicate exclusively through files in `.claude/context/`. The orchestr
 | Layer | Stage | Agent | Reads | Writes |
 |---|---|---|---|---|
 | 0 | Triage | Claude | task description | `triage.md` |
-| 1 | Plan | planner (Ollama) | `triage.md` | `task_context.md` |
+| 1 | Plan | Claude (orchestrator) | `triage.md` | `task_context.md` |
 | 1 | Pre-review | reviewer (Ollama) | `task_context.md` | `pre_review.md` |
 | 2 | Code | coder (Ollama) | `task_context.md`, `triage.md` | `coder_output.md` |
 | 2 | Build check | — | changed files | — |
@@ -142,8 +142,6 @@ bash ~/.claude/call_ollama.sh \
 {
   "models": {
     "coder":        "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
-    "planner":      "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
-    "architect":    "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
     "reviewer":     "qwen2.5-coder:7b",
     "pre-reviewer": "qwen2.5-coder:7b",
     "quick-coder":  "qwen2.5-coder:7b",

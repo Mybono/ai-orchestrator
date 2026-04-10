@@ -75,7 +75,7 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 - Language standarts are in `skills/` and are named `<lang>-code-standarts.md` (note: "standarts" not "standards" — intentional spelling in filenames)
 - Context files produced during a task go to `.claude/context/`: `triage.md`, `task_context.md`, `pre_review.md`, `coder_output.md`, `review_fast_<file>.md`, `review_deep_<file>.md`, `fix_loop.md`, `project_overview.md`
 - **Context Handoff Protocol**: orchestrator passes only file paths between steps — never full content; each agent reads its input files directly and writes its own structured output file
-- The full pipeline is: triage → planner → pre-review → coder → build check → tiered review (fast + deep, parallel) → fix loop (max 3 rounds, only NEEDS CHANGES files) → track_savings.sh
+- The full pipeline is: triage (Ollama) → Claude plans → pre-review (Ollama, standards checklist) → coder (Ollama) → build check → tiered review (fast + deep, parallel, Ollama) → fix loop (max 3 rounds) → track_savings.sh
 - **Zero Python dependency**: All agents call `scripts/call_ollama.sh` directly, which uses `curl` and `jq` for API interaction
 - `install.sh` uses symlinks, not file copies — a `git pull` updates everything without reinstall
 - New scripts must be added to both `SYMLINK_TARGETS` array and a `chmod +x` block in `scripts/install.sh`

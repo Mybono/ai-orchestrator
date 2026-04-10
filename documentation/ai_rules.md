@@ -19,7 +19,7 @@ For heavy generation tasks (writing large code components, tests, or extensive d
 - **local-commit.sh**: Located at `~/.claude/local-commit.sh` (Terminal alias to fast-generate git commits using local LLM)
 - **open-pr.sh**: Located at `~/.claude/open-pr.sh` (Used by AI or human to generate and open Pull Requests via local LLM)
 - **Code Generation**: Role `coder` (`hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS`)
-- **Planning/Architecture**: Role `planner` or `architect` (`hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS`)
+- **Planning/Architecture**: Claude (orchestrator itself) — planner and architect roles are handled directly by Claude Sonnet, not via Ollama
 - **Review/Documentation**: Role `reviewer` (`qwen2.5-coder:7b`)
 - **Git Commits/Quick Fixes**: Role `commit` or `quick-coder` (`qwen2.5-coder:7b`)
 

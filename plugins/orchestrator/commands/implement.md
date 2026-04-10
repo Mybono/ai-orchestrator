@@ -39,7 +39,7 @@ Run [triage](./triage.md) first. It writes `.claude/context/triage.md` with:
 | `quick-coder` | Spawn `quick-coder` only → build check. Stop here. |
 | `plugin-route` | **Skip planner.** Use plugin file as plan → Step 2 (coder) → Step 2.5 (build) → Step 3 (review). |
 | `full-pipeline` | Continue to Step 1 (planner) below. |
-| `architect-first` | Spawn `architect` agent → wait for approval → continue to Step 1. |
+| `architect-first` | **You (Claude) perform architect analysis** → write `architect_review.md` → if `PROCEED` continue to Step 1. |
 
 For `plugin-route`: read `## Plugin Plan` from `.claude/context/triage.md` to get the plugin command file path. Load that file as the task plan. Pass it directly to the `coder` agent along with `## Constraints` from triage. Skip Step 1 and Step 1.5 entirely — the plugin file already defines what to do and how.
 
@@ -47,69 +47,51 @@ For `full-pipeline` and `architect-first`: read `.claude/context/triage.md` and 
 
 ### Step 1 — Plan
 
-Spawn the `planner` agent with:
+Spawn the **`planner` subagent** (Claude — not Ollama). Pass:
 
 - The user's task description.
-- The full content of `.claude/context/triage.md` — so the planner knows which domains, skills, and constraints apply.
+- The path `.claude/context/triage.md` — so the planner knows which domains, skills, and constraints apply.
 
-The planner writes `.claude/context/task_context.md` with the full plan, relevant file contents, and domain-specific standards from triage.
+The planner is a Claude subagent following `agents/planner.md`. It reads the codebase directly, writes `.claude/context/task_context.md` with the full plan, and updates `project_overview.md`.
 
-Wait for it to complete before proceeding.
+Wait for it to complete. Then read only the path `.claude/context/task_context.md` — do not carry full plan content in orchestrator context.
 
-**Context budget** — per [context-manager](../../../agents/context-manager.md):
+### Step 1.5 — Pre-Review (Standards Compliance Check)
 
-Load:
+Before coding starts, spawn the agent with the **pre-reviewer** role. Pass two paths — the agent reads them itself:
 
-- Files directly related to the task and their immediate dependencies.
-- Test files for modified code.
-- Type definitions and interfaces referenced by the task.
-- Relevant config files (`tsconfig.json`, `pyproject.toml`, `package.json`).
+- `.claude/context/task_context.md`
+- `.claude/context/triage.md` (to get the domain standards that apply)
 
-Never load:
+**Role:** The pre-reviewer is NOT an architectural validator — Claude already made the architectural decisions. Its job is a mechanical checklist: does the plan comply with the domain-specific standards loaded by triage?
 
-- `node_modules/`, `vendor/`, `target/`, `dist/`, `build/`.
-- Lock files (`package-lock.json`, `yarn.lock`, `Cargo.lock`, `poetry.lock`).
-- Generated code, binary files, images, large data fixtures.
-
-Budget: **40% critical** / **30% important** / **20% reference** / **10% reserve**.
-
-### Step 1.5 — Pre-Review (Plan Approval)
-
-Before coding starts, spawn the agent with the **pre-reviewer** role. Pass only the path `.claude/context/task_context.md` — the agent reads it itself.
-
-**Critical:** The pre-reviewer must read **only these sections** from `task_context.md`:
-
-- `## Plan`
-- `## Exact Signatures`
-- `## Anti-patterns — Do NOT do this`
-- `## Edge Cases to Handle`
-
-It must **not** read `## File Contents` or `## Patterns to Follow` — those are for the coder, not for architectural validation. Use `grep` to extract only the needed sections:
-
-```bash
-sed -n '/^## Plan/,/^## Files to Change/p;/^## Exact Signatures/,/^## Types Needed/p;/^## Anti-patterns/,/^## Public API/p;/^## Edge Cases/,/^## Self-critique/p' .claude/context/task_context.md
-```
+Read only `## Plan`, `## Exact Signatures`, `## Anti-patterns`, and `## Files to Change` from `task_context.md`. Read `## Domain Standards` and `## Constraints` from `triage.md`.
 
 > [!TIP]
-> Pre-reviewer uses `qwen2.5-coder:7b` (role: `pre-reviewer` in `llm-config.json`). Architectural validation is a logical reasoning task — it reads only the plan (~100–300 lines) and catches approach errors before a single line of code is written.
+> Pre-reviewer uses `qwen2.5-coder:7b` (role: `pre-reviewer` in `llm-config.json`). This is a checklist task — verify the plan follows the rules, not whether the rules themselves are right.
 
-The reviewer checks:
+Check against the domain standards from triage. Examples by domain:
 
-- Is the approach architecturally sound?
-- Does the plan respect the domain constraints from triage?
-- Are there design-level security or performance issues?
+- **docker**: HEALTHCHECK present? no root user? multi-stage build intact? correct interval/timeout syntax?
+- **security**: no hardcoded secrets in plan? auth checks mentioned? input validation noted?
+- **api**: HTTP verbs correct? versioning in path? error response format defined?
+- **ci_cd**: environment variables injected, not hardcoded? rollback step present?
+- **testing**: edge cases covered? mocks scoped correctly?
 
-**Output:** The pre-reviewer must write `.claude/context/pre_review.md`:
+For each standard in the loaded skill file — mark as `✓ compliant` or `✗ violated: <reason>`.
+
+**Output:** Write `.claude/context/pre_review.md`:
 
 ```markdown
 ## Verdict
-APPROACH APPROVED | APPROACH REJECTED
+COMPLIANT | NON-COMPLIANT
 
-## Issues
-- <issue 1, or "none">
+## Checklist
+- ✓ <standard met>
+- ✗ <standard violated: specific reason>
 
-## Constraints for Coder
-- <constraint derived from plan review>
+## Required Fixes
+- <what Claude's plan must add or change before coder runs, or "none">
 ```
 
 Orchestrator reads only `## Verdict` line from this file to decide next step. Do not carry full pre-review output in context.

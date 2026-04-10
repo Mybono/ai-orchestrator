@@ -134,7 +134,7 @@
 <g class="g-pre-review">
   <rect x="180" y="276" width="320" height="52" rx="8" class="c-teal-fill" stroke-width="1"/>
   <text x="340" y="297" text-anchor="middle" class="t-white">🛡  Pre-Reviewer agent</text>
-  <text x="340" y="315" text-anchor="middle" class="t-muted">validates architecture · checks security</text>
+  <text x="340" y="315" text-anchor="middle" class="t-muted">checks domain standards · compliance checklist</text>
 </g>
 
 <!-- fail loop (Pre-Review -> Planner) -->
@@ -220,8 +220,8 @@
   <rect x="510" y="149" width="130" height="20" rx="10" fill="#101a40" stroke="#406ec9" stroke-width="0.8"/>
   <text x="575" y="163" text-anchor="middle" class="t-mono">llama3.1:8b</text>
 
-  <rect x="510" y="219" width="130" height="20" rx="10" fill="#1a1040" stroke="#6e40c9" stroke-width="0.8"/>
-  <text x="575" y="233" text-anchor="middle" class="t-mono">14B-IQ4_XS</text>
+  <rect x="510" y="219" width="130" height="20" rx="10" fill="#1a0e00" stroke="#d97706" stroke-width="0.8"/>
+  <text x="575" y="233" text-anchor="middle" class="t-mono" fill="#f59e0b">Claude Sonnet</text>
 
   <rect x="510" y="289" width="130" height="20" rx="10" fill="#051f1a" stroke="#1b7a6e" stroke-width="0.8"/>
   <text x="575" y="303" text-anchor="middle" class="t-mono" fill="#56d364">coder:7b</text>
@@ -236,7 +236,7 @@
   <text x="575" y="583" text-anchor="middle" class="t-mono" fill="#3fb950">coder:7b</text>
 
   <path d="M500 159 H510" stroke="#406ec9" stroke-width="0.8" stroke-dasharray="2 1"/>
-  <path d="M500 229 H510" stroke="#6e40c9" stroke-width="0.8" stroke-dasharray="2 1"/>
+  <path d="M500 229 H510" stroke="#d97706" stroke-width="0.8" stroke-dasharray="2 1"/>
   <path d="M500 299 H510" stroke="#1b7a6e" stroke-width="0.8" stroke-dasharray="2 1"/>
   <path d="M500 369 H510" stroke="#1f6feb" stroke-width="0.8" stroke-dasharray="2 1"/>
   <path d="M500 509 H510" stroke="#1b7a6e" stroke-width="0.8" stroke-dasharray="2 1"/>

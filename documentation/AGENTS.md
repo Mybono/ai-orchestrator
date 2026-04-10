@@ -11,8 +11,8 @@ Agents are markdown files in `agents/`. Each file defines the behavior of a suba
 Analyzes a coding task, explores the codebase, and writes `.claude/context/task_context.md`. It never writes production code.
 
 - **Triggered by**: `/implement`, always first, before any code is written
-- **Claude model**: Sonnet (inherited from the calling session)
-- **Ollama**: not used directly — planner writes the context that coder and reviewer consume
+- **Model**: Claude Sonnet (orchestrator itself — no Ollama call)
+- **Ollama**: not used for planning — Claude reads files directly and writes the plan
 
 The planner checks for `.claude/context/project_overview.md` on every run (Phase 0). If it exists, the planner runs `git status --short` and `git diff --name-only HEAD~1 HEAD` to detect stale entries — any file from `## Key Files` that appears in the output is marked [STALE] and re-read fully. Files not marked stale are trusted from the cache. If the overview does not exist, the planner does a full codebase exploration.
 
@@ -22,12 +22,12 @@ After writing `task_context.md`, the planner updates `.claude/context/project_ov
 
 ## [pre-reviewer]
 
-Validates the proposed plan before implementation begins. It looks for architectural flaws, security risks, or contradictions with the project rules.
+Checks that Claude's plan complies with domain-specific standards before implementation begins. Not an architectural validator — Claude already made those decisions. A mechanical checklist against the rules loaded by triage.
 
-- **Triggered by**: `/implement` (Step 1.5), after the planner has written the task context
+- **Triggered by**: `/implement` (Step 1.5), after Claude has written the task context
 - **Ollama role**: `pre-reviewer` (qwen2.5-coder:7b)
 
-Validates the architectural approach before any code is written. Reads only the `## Plan`, `## Exact Signatures`, `## Anti-patterns`, and `## Edge Cases` sections from `task_context.md` — not the full file contents. Writes its verdict to `.claude/context/pre_review.md`. If the plan is rejected, the pipeline returns to the Planner for a rewrite.
+Reads `## Plan`, `## Exact Signatures`, `## Anti-patterns`, and `## Files to Change` from `task_context.md`, plus `## Domain Standards` and `## Constraints` from `triage.md`. Verifies compliance with domain rules (e.g. HEALTHCHECK syntax for docker, no hardcoded secrets for security, correct HTTP verbs for api). Writes verdict to `.claude/context/pre_review.md`. If non-compliant, Claude updates the plan before coder runs.
 
 ## [coder](../agents/coder.md)
 
@@ -140,9 +140,8 @@ The agent ALWAYS loads `skills/root-cause-analysis/SKILL.md` before starting the
 
 Evaluates designs, proposed refactors, and technology choices using fundamental truths instead of analogies.
 
-- **Triggered by**: `/implement` (Phase 1), user asking "is this the right approach?", or refactor requests
-- **Claude model**: Sonnet (inherited)
-- **Ollama role**: `architect` (model: `hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS`)
+- **Triggered by**: `/implement` (`architect-first` route), user asking "is this the right approach?", or refactor requests
+- **Model**: Claude Sonnet (orchestrator itself — no Ollama call)
 
 The agent ALWAYS loads `skills/first-principles/SKILL.md`. It identifies the core job to be done, challenges all current assumptions, identifies ground truths, and builds up the recommended solution from those fundamentals. It is the primary agent for "Phase 1: Planning".
 
