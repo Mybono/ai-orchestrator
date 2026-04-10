@@ -74,10 +74,17 @@ Model routing is controlled by [`llm-config.json`](llm-config.json) in the repo 
 ```json
 {
   "models": {
-    "coder":     "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
-    "reviewer":  "qwen2.5-coder:7b",
-    "commit":    "qwen2.5-coder:7b",
-    "embedding": "nomic-embed-text"
+    "coder":        "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
+    "planner":      "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
+    "architect":    "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
+    "reviewer":     "qwen2.5-coder:7b",
+    "pre-reviewer": "qwen3.5:0.8b",
+    "debugger":     "qwen2.5-coder:7b",
+    "devops":       "qwen2.5-coder:7b",
+    "quick-coder":  "qwen3.5:0.8b",
+    "commit":       "qwen3.5:0.8b",
+    "triage":       "qwen3.5:0.8b",
+    "embedding":    "nomic-embed-text"
   }
 }
 ```
@@ -135,7 +142,7 @@ The orchestrator tracks every Ollama call. View estimated savings vs Claude Sonn
  Runs: 12
  Tokens saved: ~186k
  Estimated saving: $7.20
-───────────────────────────────
+ ───────────────────────────────
 ```
 
 ## Project onboarding

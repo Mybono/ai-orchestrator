@@ -20,13 +20,23 @@ The output `task_context.md` contains: the task description, a step-by-step plan
 
 After writing `task_context.md`, the planner updates `.claude/context/project_overview.md` with any new architectural findings.
 
+## [pre-reviewer]
+
+Validates the proposed plan before implementation begins. It looks for architectural flaws, security risks, or contradictions with the project rules.
+
+- **Triggered by**: `/implement` (Step 1.5), after the planner has written the task context
+- **Claude model**: haiku (coordination)
+- **Ollama role**: `pre-reviewer` (qwen3.5:0.8b)
+
+This is a critical "gatekeeper" role. Using the 0.8b Thinking model, it provides a fast logical check of the architectural approach. If the plan is rejected, the pipeline returns to the Planner stage for a rewrite.
+
 ## [coder](../agents/coder.md)
 
 Reads `task_context.md` and implements the changes by calling Ollama for code generation, then applies them with Edit and Write tools.
 
 - **Triggered by**: `/implement`, after planner completes
 - **Claude model**: haiku
-- **Ollama role**: `coder` (default model: `qwen3-coder:30b-a3b-q4_K_M`)
+- **Ollama role**: `coder` (model: `hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS`)
 
 The coder does not re-explore the codebase. All context comes from `task_context.md`. For non-trivial generation it calls:
 
@@ -67,9 +77,9 @@ Handles small, targeted changes using the lightest available model. Intended for
 
 - **Triggered by**: user or agent request for a change under ~30 lines that does not require planning
 - **Claude model**: haiku
-- **Ollama role**: `commit` (qwen2.5-coder:7b)
+- **Ollama role**: `quick-coder` (qwen3.5:0.8b)
 
-If the task turns out to require more than one file or more than ~30 lines, quick-coder stops and recommends using `/implement` instead. Prompts must be short because the model has a 4096-token context window.
+The agent follows the **Expert Committer Rules** defined in `plugins/committer/commands/commit.md`. If the task turns out to require more than one file or more than ~30 lines, quick-coder stops and recommends using `/implement` instead. Prompts must be short because the model has a 4096-token context window.
 
 No review step follows quick-coder for trivial changes.
 
@@ -79,7 +89,7 @@ Stages and commits all pending changes. Generates the commit message via Ollama.
 
 - **Triggered by**: user says "commit", "make a commit", "save changes", or uses `/commit`
 - **Claude model**: haiku
-- **Ollama role**: `commit` (qwen2.5-coder:7b)
+- **Ollama role**: `commit` (qwen3.5:0.8b)
 
 The agent never asks for confirmation. It runs `git status`, gets the diff, generates a conventional-commits message (prefix: `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`), then stages and commits. It never commits `venv/`, `dist/`, `*.egg-info/`, `__pycache__/`, or `.env` files.
 
@@ -99,7 +109,7 @@ Writes tests for code that was just implemented, runs them, and performs one fix
 
 - **Triggered by**: on demand, after the coder agent has written code
 - **Claude model**: Sonnet (inherited)
-- **Ollama role**: `coder` (qwen3-coder:30b-a3b-q4_K_M)
+- **Ollama role**: `coder` (model: `hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS`)
 
 The agent reads `task_context.md` to understand what was built, detects the language and test framework from indicator files, reads existing test files to mirror their style, generates new tests via Ollama, writes them to the appropriate location, and runs them.
 
@@ -134,7 +144,7 @@ Evaluates designs, proposed refactors, and technology choices using fundamental 
 
 - **Triggered by**: `/implement` (Phase 1), user asking "is this the right approach?", or refactor requests
 - **Claude model**: Sonnet (inherited)
-- **Ollama role**: `architect` (qwen2.5-coder:14b)
+- **Ollama role**: `architect` (model: `hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS`)
 
 The agent ALWAYS loads `skills/first-principles/SKILL.md`. It identifies the core job to be done, challenges all current assumptions, identifies ground truths, and builds up the recommended solution from those fundamentals. It is the primary agent for "Phase 1: Planning".
 

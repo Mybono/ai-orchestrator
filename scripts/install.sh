@@ -58,8 +58,11 @@ if [[ ! -f "$REPO_CONFIG" ]]; then
 {
   "models": {
     "coder": "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
+    "planner": "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
     "reviewer": "qwen2.5-coder:7b",
-    "commit": "qwen2.5-coder:1.5b",
+    "quick-coder": "qwen3.5:0.8b",
+    "commit": "qwen3.5:0.8b",
+    "triage": "qwen3.5:0.8b",
     "embedding": "nomic-embed-text"
   }
 }

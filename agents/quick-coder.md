@@ -30,7 +30,7 @@ EOF
 
 # Call Ollama via role using the prompt file
 
-bash ~/.claude/call_ollama.sh --role commit --prompt-file "$TMP_PROMPT"
+bash ~/.claude/call_ollama.sh --role quick-coder --prompt-file "$TMP_PROMPT"
 rm -f "$TMP_PROMPT"
 
 If Ollama is not running: `ollama serve > /dev/null 2>&1 & sleep 3`

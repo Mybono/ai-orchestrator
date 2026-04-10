@@ -7,7 +7,7 @@
 The `/implement` command triggers the full pipeline:
 
 ```text
-planner → coder → build check → reviewer(s) → verdict
+planner → pre-review → coder → build check → reviewer(s) → verdict
 ```
 
 Each stage is a separate agent. If the reviewer returns NEEDS CHANGES, the coder runs again. The fix loop repeats at most 3 times before the pipeline stops and reports remaining issues.
@@ -17,6 +17,7 @@ Each stage is a separate agent. If the reviewer returns NEEDS CHANGES, the coder
 | Stage | Agent | Description |
 |-------|-------|-------------|
 | Plan | planner | Explores codebase, writes `.claude/context/task_context.md` |
+| Pre-Review | pre-reviewer | Validates the plan's logic and architecture (uses Qwen 3.5 0.8b) |
 | Code | coder | Reads context file, calls Ollama, applies changes |
 | Build check | — | `tsc --noEmit` (TS) or `py_compile` (Python); blocks review if it fails |
 | Review | reviewer | Diffs each changed file, calls Ollama, returns APPROVED or NEEDS CHANGES |
@@ -51,8 +52,10 @@ If `llm-config.json` is missing or the role is not found, the script falls back 
 | Role | Fallback model |
 |------|----------------|
 | `coder` | `hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS` |
+| `planner` | `hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS` |
+| `architect` | `hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS` |
 | `reviewer` | `qwen2.5-coder:7b` |
-| `commit` | `qwen2.5-coder:7b` |
+| `commit` | `qwen3.5:0.8b` |
 | (any other) | `qwen2.5-coder:7b` |
 
 ## Model Configuration
@@ -63,8 +66,12 @@ If `llm-config.json` is missing or the role is not found, the script falls back 
 {
   "models": {
     "coder": "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
+    "planner": "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
+    "architect": "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
     "reviewer": "qwen2.5-coder:7b",
-    "commit": "qwen2.5-coder:7b",
+    "quick-coder": "qwen3.5:0.8b",
+    "commit": "qwen3.5:0.8b",
+    "triage": "qwen3.5:0.8b",
     "embedding": "nomic-embed-text"
   }
 }
@@ -91,6 +98,8 @@ Items symlinked into `~/.claude/`:
 - `scripts/analyze_project.sh`
 - `scripts/track_savings.sh`
 - `scripts/stats.sh`
+- `scripts/check-update.sh`
+- `scripts/markdown_review.sh`
 - `llm-config.json`
 
 ## Context Files

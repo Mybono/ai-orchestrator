@@ -56,7 +56,10 @@ Budget: **40% critical** / **30% important** / **20% reference** / **10% reserve
 
 ### Step 1.5 — Pre-Review (Plan Approval)
 
-Before coding starts, spawn the `reviewer` agent with **only** `.claude/context/task_context.md` (not code — it doesn't exist yet).
+Before coding starts, spawn the agent with the **pre-reviewer** role (Qwen 3.5 0.8b) using **only** `.claude/context/task_context.md`.
+
+> [!TIP]
+> We use the 0.8b "Thinking" model here because architectural validation is a logical reasoning task, not a code generation task. It is ~10x faster than the 7b/14b models and catches approach errors before a single line of code is written.
 
 The reviewer checks:
 

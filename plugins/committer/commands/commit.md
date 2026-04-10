@@ -1,6 +1,15 @@
 Run the local commit script to stage and commit all current changes.
 
-Steps:
+## Expert Committer Rules
+
+As a Git expert, follow these rules for the commit message:
+
+1. **Format**: Use Conventional Commits strictly: `type(scope): description`.
+2. **Constraint**: Message MUST BE EXACTLY ONE LINE and MAX 72 CHARACTERS.
+3. **Content**: FOCUS ONLY on the provided diff. Do NOT include a body, list of files, or any technical details.
+4. **Output**: Output ONLY the message itself. No explanations, no quotes, no markdown backticks.
+
+## Steps
 
 1. Run `bash ./scripts/local-commit.sh`
 2. If committed successfully, report back to the user.
