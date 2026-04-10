@@ -3,7 +3,7 @@
 All notable changes to ai-orchestrator.
 ## [unreleased]
 ### 2026-04-10
-- ![fix](https://img.shields.io/badge/fix-d73a4a?style=flat-square) [`e6dc8df`](https://github.com/Mybono/ai-orchestrator/commit/e6dc8dfba9ad0b01f561b9d0b43028545ad0b95f) Remove trailing whitespace
+- ![fix](https://img.shields.io/badge/fix-d73a4a?style=flat-square) [`ff66e9f`](https://github.com/Mybono/ai-orchestrator/commit/ff66e9f61ddf0c995d3d350291fd1b09b17ec191) Remove trailing whitespace
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`78b6089`](https://github.com/Mybono/ai-orchestrator/commit/78b60893784580075d0388a19d31d595bbd6a9d7) Bump version to 1.0.11
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`02d86f1`](https://github.com/Mybono/ai-orchestrator/commit/02d86f1cca20ba469792ee791ebbe662e5e75711) Bump version to 1.0.10
 - ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`5d1d9c6`](https://github.com/Mybono/ai-orchestrator/commit/5d1d9c6e997ed3119efb00c74fe732fd329dfe9e) Update model version to qwen2.5-coder:7b
@@ -11,7 +11,7 @@ All notable changes to ai-orchestrator.
 - ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`871aa21`](https://github.com/Mybono/ai-orchestrator/commit/871aa214c285fdb765447b63e842966f72ee7443) Update benchmarks and config for better performance
 - ![fix](https://img.shields.io/badge/fix-d73a4a?style=flat-square) [`89ebe75`](https://github.com/Mybono/ai-orchestrator/commit/89ebe75dcea149f196b8a85404a15a7b10b33813) Update model configurations and documentation for consistency
 
-## v1.0.10 — 2026-04-09
+## v1.0.11 — 2026-04-09
 ### 2026-04-09
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`6c885ac`](https://github.com/Mybono/ai-orchestrator/commit/6c885ac7d08407db15cd66d74177e463a29584c5) Sync changelog after merge
 
