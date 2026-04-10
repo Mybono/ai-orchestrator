@@ -12,7 +12,9 @@ Portable AI developer setup: Claude thinks, local Ollama executes.
 Works with any project: TypeScript, Python, Flutter, Swift, C++.
 All orchestration is pure Bash and `jq`, with no Python required.
 
-![ai-orchestrator pipeline](documentation/pipeline.svg)
+<p align="center">
+  <img src="documentation/pipeline.svg" alt="ai-orchestrator pipeline" width="680">
+</p>
 
 ## How it works
 
