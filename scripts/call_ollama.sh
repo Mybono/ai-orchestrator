@@ -107,14 +107,21 @@ RESPONSE_CONTENT=$(echo "$RESPONSE" | jq -r '.message.content')
 # Track token usage — best effort, never fail the script
 TRACK_SCRIPT="$HOME/.claude/track_savings.sh"
 if [ -f "$TRACK_SCRIPT" ]; then
-    RESPONSE_CHARS=$(echo "$RESPONSE_CONTENT" | wc -c | tr -d ' ')
-    INPUT_TOKENS_EST=$(( PROMPT_CHARS / 4 ))
-    OUTPUT_TOKENS_EST=$(( RESPONSE_CHARS / 4 ))
+    INPUT_TOKENS_REAL=$(echo "$RESPONSE" | jq -r '.prompt_eval_count // 0')
+    OUTPUT_TOKENS_REAL=$(echo "$RESPONSE" | jq -r '.eval_count // 0')
+    # Fall back to char estimation if Ollama didn't return token counts
+    if [ "$INPUT_TOKENS_REAL" -eq 0 ] 2>/dev/null; then
+        INPUT_TOKENS_REAL=$(( PROMPT_CHARS / 4 ))
+    fi
+    if [ "$OUTPUT_TOKENS_REAL" -eq 0 ] 2>/dev/null; then
+        RESPONSE_CHARS=$(echo "$RESPONSE_CONTENT" | wc -c | tr -d ' ')
+        OUTPUT_TOKENS_REAL=$(( RESPONSE_CHARS / 4 ))
+    fi
     TASK_LABEL="${ROLE:-${SELECTED_MODEL}}"
     bash "$TRACK_SCRIPT" \
         --task "$TASK_LABEL" \
-        --input-tokens "$INPUT_TOKENS_EST" \
-        --output-tokens "$OUTPUT_TOKENS_EST" \
+        --input-tokens "$INPUT_TOKENS_REAL" \
+        --output-tokens "$OUTPUT_TOKENS_REAL" \
         --files "0" > /dev/null 2>&1 || true
 fi
 
