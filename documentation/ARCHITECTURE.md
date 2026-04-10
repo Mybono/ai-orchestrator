@@ -60,17 +60,21 @@ The `/implement` command runs a multi-layer smart pipeline:
 
 ### Layer details
 
-| Layer | Stage | Agent / Tool | Model | Description |
+Agents communicate exclusively through files in `.claude/context/`. The orchestrator passes only **file paths** between steps — never full content.
+
+| Layer | Stage | Agent | Reads | Writes |
 |---|---|---|---|---|
-| 0 | Triage | — | Claude | Detects complexity tier and domain; writes `.claude/context/triage.md` |
-| 1 | Plan | planner | Ollama | Reads triage context, writes `task_context.md` with domain constraints |
-| 1 | Pre-review | reviewer | Ollama | Reviews the **plan** (not code); approves approach before coding starts |
-| 2 | Code | coder | Ollama | Implements changes using `task_context.md` |
-| 2 | Build check | — | — | `tsc --noEmit` (TS) or `mypy` / `py_compile` (Python) |
-| 3 | Fast review | quick-coder | Ollama | Per-file parallel syntax + style check |
-| 3 | Deep review | reviewer | Ollama | Logic + security review; runs only if fast review flags issues or domain requires it |
-| 4 | Fix loop | coder + reviewer | Ollama | Repeats up to 3 rounds; circuit breaker stops on repeated identical errors |
-| 5 | Finalize | — | — | `track_savings.sh` + performance-monitor report |
+| 0 | Triage | Claude | task description | `triage.md` |
+| 1 | Plan | planner (Ollama) | `triage.md` | `task_context.md` |
+| 1 | Pre-review | reviewer (Ollama) | `task_context.md` | `pre_review.md` |
+| 2 | Code | coder (Ollama) | `task_context.md`, `triage.md` | `coder_output.md` |
+| 2 | Build check | — | changed files | — |
+| 3 | Fast review | quick-coder (Ollama) | changed file, `triage.md` | `review_fast_<file>.md` |
+| 3 | Deep review | reviewer (Ollama) | changed file, `review_fast_<file>.md`, `triage.md` | `review_deep_<file>.md` |
+| 4 | Fix loop | coder (Ollama) | `fix_loop.md`, `triage.md` | `coder_output.md` |
+| 5 | Finalize | — | `coder_output.md` | — |
+
+**Context handoff rule**: orchestrator reads only the `## Verdict` line from each output file. Full content stays on disk, out of the orchestrator context.
 
 ### Triage domains and routing
 
