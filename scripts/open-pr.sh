@@ -85,7 +85,23 @@ if command -v gh &> /dev/null && git remote -v 2>/dev/null | grep -q "github.com
     read -rp "GitHub and 'gh' CLI detected! Create this PR automatically? (y/N) " confirm
     if [[ "$confirm" =~ ^[Yy]$ ]]; then
         echo "Creating PR..."
-        gh pr create --title "$TITLE" --body "$BODY"
+        # Derive label from conventional commit prefix in title
+        PR_LABEL=""
+        case "$TITLE" in
+            feat*|refactor*|perf*)  PR_LABEL="enhancement" ;;
+            fix*)                   PR_LABEL="bug" ;;
+            docs*)                  PR_LABEL="documentation" ;;
+            chore*)                 PR_LABEL="maintenance" ;;
+            ci*)                    PR_LABEL="ci/cd" ;;
+            test*)                  PR_LABEL="testing" ;;
+            security*)              PR_LABEL="security" ;;
+        esac
+        if [ -n "$PR_LABEL" ]; then
+            gh pr create --title "$TITLE" --body "$BODY" --label "$PR_LABEL" 2>/dev/null \
+                || gh pr create --title "$TITLE" --body "$BODY"
+        else
+            gh pr create --title "$TITLE" --body "$BODY"
+        fi
         echo "✅ PR Created Successfully!"
     else
         echo "🚫 PR creation cancelled. You can copy the text above."
