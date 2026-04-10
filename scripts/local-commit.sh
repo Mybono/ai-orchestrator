@@ -57,8 +57,9 @@ fi
 echo "Staging all changes (git add -A)..."
 git add -A
 
-# Proactive markdown review
+# Proactive reviews
 bash "$SCRIPT_DIR/markdown_review.sh"
+bash "$SCRIPT_DIR/shellcheck.sh"
 
 
 # Get the staged diff
