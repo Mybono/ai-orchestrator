@@ -17,7 +17,7 @@ Each stage is a separate agent. If the reviewer returns NEEDS CHANGES, the coder
 | Stage | Agent | Description |
 |-------|-------|-------------|
 | Plan | planner | Explores codebase, writes `.claude/context/task_context.md` |
-| Pre-Review | pre-reviewer | Validates the plan's logic and architecture (uses Qwen 3.5 0.8b) |
+| Pre-Review | pre-reviewer | Validates the plan's logic and architecture (uses Qwen 2.5 Coder 7b) |
 | Code | coder | Reads context file, calls Ollama, applies changes |
 | Build check | — | `tsc --noEmit` (TS) or `py_compile` (Python); blocks review if it fails |
 | Review | reviewer | Diffs each changed file, calls Ollama, returns APPROVED or NEEDS CHANGES |
@@ -55,7 +55,7 @@ If `llm-config.json` is missing or the role is not found, the script falls back 
 | `planner` | `hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS` |
 | `architect` | `hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS` |
 | `reviewer` | `qwen2.5-coder:7b` |
-| `commit` | `qwen3.5:0.8b` |
+| `commit` | `qwen2.5-coder:7b` |
 | (any other) | `qwen2.5-coder:7b` |
 
 ## Model Configuration
@@ -69,10 +69,11 @@ If `llm-config.json` is missing or the role is not found, the script falls back 
     "planner": "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
     "architect": "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
     "reviewer": "qwen2.5-coder:7b",
-    "quick-coder": "qwen3.5:0.8b",
-    "commit": "qwen3.5:0.8b",
-    "triage": "qwen3.5:0.8b",
-    "embedding": "nomic-embed-text"
+    "pre-reviewer": "qwen2.5-coder:7b",
+    "quick-coder": "qwen2.5-coder:7b",
+    "commit": "qwen2.5-coder:7b",
+    "triage": "llama3.1:8b",
+    "embedding": "mxbai-embed-large"
   }
 }
 ```

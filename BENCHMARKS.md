@@ -19,8 +19,8 @@
 
 | Model | Latency | Dimensions | Context Window | Quality | Verdict |
 |-------|---------|------------|----------------|---------|---------|
+| **mxbai-embed-large** | 1.07s | **1024** | 512* | **Superior.** Much better for technical code RAG. | **EXPERT (Default)** |
 | **nomic-embed-text** | **0.07s** | 768 | 8k | Baseline. Good for simple search. | **The Speedrunner** |
-| **mxbai-embed-large** | 1.07s | **1024** | 512* | **Superior.** Much better for technical code RAG. | **EXPERT** |
 
 *Note: MxBai often has a smaller context window (512) compared to Nomic (8k), but its reasoning within that window is deeper.
 

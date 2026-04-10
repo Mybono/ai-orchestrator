@@ -21,7 +21,7 @@ For heavy generation tasks (writing large code components, tests, or extensive d
 - **Code Generation**: Role `coder` (`hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS`)
 - **Planning/Architecture**: Role `planner` or `architect` (`hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS`)
 - **Review/Documentation**: Role `reviewer` (`qwen2.5-coder:7b`)
-- **Git Commits/Quick Fixes**: Role `commit` or `quick-coder` (`qwen3.5:0.8b`)
+- **Git Commits/Quick Fixes**: Role `commit` or `quick-coder` (`qwen2.5-coder:7b`)
 
 ### 3. Pull Request Delegation
 

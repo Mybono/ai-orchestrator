@@ -26,7 +26,7 @@ Validates the proposed plan before implementation begins. It looks for architect
 
 - **Triggered by**: `/implement` (Step 1.5), after the planner has written the task context
 - **Claude model**: haiku (coordination)
-- **Ollama role**: `pre-reviewer` (qwen3.5:0.8b)
+- **Ollama role**: `pre-reviewer` (qwen2.5-coder:7b)
 
 This is a critical "gatekeeper" role. Using the 0.8b Thinking model, it provides a fast logical check of the architectural approach. If the plan is rejected, the pipeline returns to the Planner stage for a rewrite.
 
@@ -77,7 +77,7 @@ Handles small, targeted changes using the lightest available model. Intended for
 
 - **Triggered by**: user or agent request for a change under ~30 lines that does not require planning
 - **Claude model**: haiku
-- **Ollama role**: `quick-coder` (qwen3.5:0.8b)
+- **Ollama role**: `quick-coder` (qwen2.5-coder:7b)
 
 The agent follows the **Expert Committer Rules** defined in `plugins/committer/commands/commit.md`. If the task turns out to require more than one file or more than ~30 lines, quick-coder stops and recommends using `/implement` instead. Prompts must be short because the model has a 4096-token context window.
 
@@ -89,7 +89,7 @@ Stages and commits all pending changes. Generates the commit message via Ollama.
 
 - **Triggered by**: user says "commit", "make a commit", "save changes", or uses `/commit`
 - **Claude model**: haiku
-- **Ollama role**: `commit` (qwen3.5:0.8b)
+- **Ollama role**: `commit` (qwen2.5-coder:7b)
 
 The agent never asks for confirmation. It runs `git status`, gets the diff, generates a conventional-commits message (prefix: `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`), then stages and commits. It never commits `venv/`, `dist/`, `*.egg-info/`, `__pycache__/`, or `.env` files.
 

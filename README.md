@@ -78,13 +78,13 @@ Model routing is controlled by [`llm-config.json`](llm-config.json) in the repo 
     "planner":      "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
     "architect":    "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
     "reviewer":     "qwen2.5-coder:7b",
-    "pre-reviewer": "qwen3.5:0.8b",
+    "pre-reviewer": "qwen2.5-coder:7b",
     "debugger":     "qwen2.5-coder:7b",
     "devops":       "qwen2.5-coder:7b",
-    "quick-coder":  "qwen3.5:0.8b",
-    "commit":       "qwen3.5:0.8b",
-    "triage":       "qwen3.5:0.8b",
-    "embedding":    "nomic-embed-text"
+    "quick-coder":  "qwen2.5-coder:7b",
+    "commit":       "qwen2.5-coder:7b",
+    "triage":       "llama3.1:8b",
+    "embedding":    "mxbai-embed-large"
   }
 }
 ```
