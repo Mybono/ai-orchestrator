@@ -1,6 +1,11 @@
 # Changelog
 
 All notable changes to ai-orchestrator.
+## [unreleased]
+### 2026-04-10
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`2837980`](https://github.com/Mybono/ai-orchestrator/commit/2837980ea131db94c69c3bedfaeeff1e4035ea22) Update workflow for pre-review and coder steps
+- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`e7e9914`](https://github.com/Mybono/ai-orchestrator/commit/e7e9914f7a8407de26cb85b8bf106321715a5814) Sync changelog after merge
+
 ## v1.0.12 — 2026-04-10
 ### 2026-04-10
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`96591aa`](https://github.com/Mybono/ai-orchestrator/commit/96591aab30f609699c5aee2571fb146dcae1f4e1) Sync changelog after merge

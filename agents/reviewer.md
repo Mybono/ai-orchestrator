@@ -1,7 +1,6 @@
 ---
 name: reviewer
 description: Use this agent AFTER the coder agent writes code. Reviews generated code for correctness, bugs, edge cases, and project conventions by running the local Ollama model. Returns a verdict — APPROVED or NEEDS CHANGES — with specific issues listed.
-model: haiku
 tools: Read, Bash, Glob, Grep
 ---
 

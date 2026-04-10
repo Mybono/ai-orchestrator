@@ -10,7 +10,7 @@
 Portable AI developer setup: Claude thinks, local Ollama executes.
 
 Works with any project: TypeScript, Python, Flutter, Swift, C++.
-All orchestration is pure Bash and `jq`, with no Python required.
+All orchestration is pure Bash and `jq`.
 
 <p align="center">
   <img src="documentation/pipeline.svg" alt="ai-orchestrator pipeline" width="680">
@@ -18,32 +18,33 @@ All orchestration is pure Bash and `jq`, with no Python required.
 
 ## How it works
 
-`/implement` triggers the full pipeline:
+`/implement` triggers a multi-layer smart pipeline:
 
+```text
+Layer 0  TRIAGE      → detects domain, chooses route
+Layer 1  PLAN        → planner + pre-review (approach approval)
+Layer 2  CODE        → coder (Ollama) + build check
+Layer 3  GATE        → fast review → deep review (if needed)
+Layer 4  FIX LOOP    → error-coordinator, max 3 rounds
+Layer 5  FINALIZE    → token savings tracked
 ```
-triage → planner → pre-review → coder → build check → reviewer(s) → verdict
-```
 
-**Triage** detects task complexity and domain (api, docker, security, database, etc.) and loads the right plugins and agents automatically. Simple tasks skip the pipeline entirely.
+**Triage** auto-detects the task domain (api, docker, security, database, testing, etc.) and loads the right plugins, agents, and standards — no manual configuration needed.
 
-Claude writes the plan. A local Ollama model writes the code. Claude reviews the output.
+For focused tasks (optimize Dockerfile, run security audit, generate tests) triage routes directly to the matching plugin, skipping the planner and saving tokens. For composite tasks it runs the full pipeline with domain expertise pre-loaded.
+
+Claude orchestrates. A local Ollama model writes and reviews the code.
 Details: [Architecture](documentation/ARCHITECTURE.md) · [Agents](documentation/AGENTS.md)
-
-In your AI chat (Claude Code), type `/implement` followed by your task:
 
 ```text
 /implement Add JWT authentication to the REST API
-```
-
-```text
 /implement Optimize the Dockerfile with multi-stage build
-```
-
-```text
 /implement Refactor the user service to reduce complexity
+/implement Fix this crash: TypeError cannot read property of undefined
+/implement Generate tests for the payment module
 ```
 
-That's it. The pipeline detects the domain, loads the right expertise, and runs automatically.
+The pipeline detects the domain, loads the right expertise, and runs automatically.
 
 ## Requirements
 

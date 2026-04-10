@@ -2,7 +2,6 @@
 name: error-coordinator
 description: Handle errors across multi-agent workflows, implement recovery strategies, and prevent cascading failures
 tools: Read, Write, Edit, Bash, Glob, Grep
-model: sonnet
 ---
 
 # Error Coordinator Agent

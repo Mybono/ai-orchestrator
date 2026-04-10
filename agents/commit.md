@@ -1,7 +1,6 @@
 ---
 name: commit
 description: Stage and commit changes, or open a pull request. Trigger when the user asks to commit, make a commit, save changes, open a PR, or create a pull request.
-model: haiku
 tools: Bash
 ---
 

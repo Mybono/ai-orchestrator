@@ -1,7 +1,6 @@
 ---
 name: quick-coder
 description: Use for small, focused changes — single function fixes, import updates, renaming, adding a constant. Uses qwen2.5-coder:7b. No planning needed. Do NOT use for new agents, new classes, or multi-file changes — use the coder agent instead.
-model: haiku
 tools: Read, Write, Edit, Bash, Glob, Grep
 ---
 

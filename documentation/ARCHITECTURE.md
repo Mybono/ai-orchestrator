@@ -4,26 +4,107 @@
 
 ## Pipeline
 
-The `/implement` command triggers the full pipeline:
+The `/implement` command runs a multi-layer smart pipeline:
 
 ```text
-planner → pre-review → coder → build check → reviewer(s) → verdict
+┌──────────────────────────────────────────────────────────────┐
+│  Layer 0 — TRIAGE                                            │
+│  Detects complexity + domain → chooses route                 │
+│                                                              │
+│  nano → direct edit                                          │
+│  micro → quick-coder → build check                          │
+│  standard (single domain) → plugin-route                     │
+│  standard (multi-domain)  → full-pipeline                    │
+│  complex → architect-first → full-pipeline                   │
+└──────────────────────────────────────────────────────────────┘
+                            │
+          ┌─────────────────┴──────────────────┐
+          │ plugin-route                        │ full-pipeline
+          │                                     │
+          ▼                                     ▼
+┌─────────────────────┐         ┌──────────────────────────────┐
+│  Plugin file        │         │  Layer 1 — PLAN               │
+│  used as plan       │         │  planner (Ollama)             │
+│  (planner skipped)  │         │  → task_context.md            │
+└─────────────────────┘         │  (+ domain constraints)       │
+          │                     │                               │
+          │                     │  pre-reviewer (Ollama)        │
+          │                     │  → approves approach          │
+          │                     └──────────────────────────────┘
+          │                                     │
+          └─────────────────┬──────────────────┘
+                            │
+          ┌─────────────────▼──────────────────┐
+          │  Layer 2 — CODE                     │
+          │  coder (Ollama) → build check       │
+          └─────────────────────────────────────┘
+                            │
+          ┌─────────────────▼──────────────────┐
+          │  Layer 3 — GATE                     │
+          │  fast reviewer per file (parallel)  │
+          │  → deep reviewer (if issues found   │
+          │    or security/api domain)           │
+          └─────────────────────────────────────┘
+                            │
+          ┌─────────────────▼──────────────────┐
+          │  Layer 4 — FIX LOOP                 │
+          │  error-coordinator manages retries  │
+          │  max 3 rounds + circuit breaker     │
+          └─────────────────────────────────────┘
+                            │
+          ┌─────────────────▼──────────────────┐
+          │  Layer 5 — FINALIZE                 │
+          │  track_savings + performance-monitor│
+          └─────────────────────────────────────┘
 ```
 
-Each stage is a separate agent. If the reviewer returns NEEDS CHANGES, the coder runs again. The fix loop repeats at most 3 times before the pipeline stops and reports remaining issues.
+### Layer details
 
-### Stage details
+| Layer | Stage | Agent / Tool | Model | Description |
+|---|---|---|---|---|
+| 0 | Triage | — | Claude | Detects complexity tier and domain; writes `.claude/context/triage.md` |
+| 1 | Plan | planner | Ollama | Reads triage context, writes `task_context.md` with domain constraints |
+| 1 | Pre-review | reviewer | Ollama | Reviews the **plan** (not code); approves approach before coding starts |
+| 2 | Code | coder | Ollama | Implements changes using `task_context.md` |
+| 2 | Build check | — | — | `tsc --noEmit` (TS) or `mypy` / `py_compile` (Python) |
+| 3 | Fast review | quick-coder | Ollama | Per-file parallel syntax + style check |
+| 3 | Deep review | reviewer | Ollama | Logic + security review; runs only if fast review flags issues or domain requires it |
+| 4 | Fix loop | coder + reviewer | Ollama | Repeats up to 3 rounds; circuit breaker stops on repeated identical errors |
+| 5 | Finalize | — | — | `track_savings.sh` + performance-monitor report |
 
-| Stage | Agent | Description |
-|-------|-------|-------------|
-| Plan | planner | Explores codebase, writes `.claude/context/task_context.md` |
-| Pre-Review | pre-reviewer | Validates the plan's logic and architecture (uses Qwen 2.5 Coder 7b) |
-| Code | coder | Reads context file, calls Ollama, applies changes |
-| Build check | — | `tsc --noEmit` (TS) or `py_compile` (Python); blocks review if it fails |
-| Review | reviewer | Diffs each changed file, calls Ollama, returns APPROVED or NEEDS CHANGES |
-| Fix loop | coder + reviewer | Repeats up to 3 rounds on NEEDS CHANGES verdict |
+### Triage domains and routing
 
-When multiple files are changed, the pipeline spawns one reviewer agent per file in parallel and collects all verdicts before deciding.
+Triage scans the task description for domain keywords and loads the matching plugin, skills, and agents into `task_context.md` automatically:
+
+| Domain | Keywords (sample) | Plugin | Agents |
+|---|---|---|---|
+| `api` | api, endpoint, REST, GraphQL, OpenAPI | api-architect | architect, api-tester |
+| `docker` | docker, dockerfile, container | docker-helper | devops |
+| `ci_cd` | CI/CD, k8s, kubernetes, deploy | k8s-helper | devops |
+| `release` | release, version bump, semver, publish | release-manager | devops |
+| `security` | security, auth, JWT, OWASP, injection | security-guidance | security-auditor, reviewer |
+| `database` | schema, SQL, migration, ERD | database-tools | architect |
+| `testing` | test, unit test, e2e, playwright | qa-tools | unit-tester, test-agent, qa-orchestrator |
+| `accessibility` | aria, a11y, WCAG, screen reader | accessibility | ui-tester |
+| `bug` | bug, crash, stack trace, error, fix | debugger | debugger |
+| `refactor` | refactor, simplify, extract, complexity | refactor-engine | architect |
+| `python` | python, pep, mypy, pydantic | python-expert | — |
+| `ai_llm` | prompt, LLM, RAG, embedding, vector | ai-engineering | — |
+| `docs` | readme, docs, changelog | documentation | doc-writer |
+| `performance` | slow, optimize, cache, latency | database-tools | architect |
+
+### Plugin-route vs Full-pipeline
+
+| | plugin-route | full-pipeline |
+|---|---|---|
+| When | Single domain, task intent matches one plugin exactly | Multi-domain or composite task |
+| Plan | Plugin command file used directly as plan | planner agent writes `task_context.md` |
+| Pre-review | Skipped (plugin defines the approach) | Runs before coding |
+| Code | coder (Ollama) | coder (Ollama) |
+| Review | fast + deep reviewer (Ollama) | fast + deep reviewer (Ollama) |
+| Token cost | Lower (planner skipped) | Standard |
+
+---
 
 ## call_ollama.sh
 
@@ -43,46 +124,37 @@ bash ~/.claude/call_ollama.sh \
 
 1. Walks up from `$PWD` to find the nearest `llm-config.json`. Project-level config wins over `~/.claude/llm-config.json`.
 2. Resolves the Ollama model name for the given role using `jq`.
-3. Writes the prompt and optional context file to temp files, then builds the JSON payload with `jq` (avoids shell line-length limits).
+3. Writes the prompt and optional context file to temp files, then builds the JSON payload with `jq`.
 4. Sends `POST http://localhost:11434/api/chat` and extracts `.message.content` from the response.
 5. Calls `track_savings.sh` in best-effort mode to record estimated token usage.
 
-If `llm-config.json` is missing or the role is not found, the script falls back to hardcoded defaults:
-
-| Role | Fallback model |
-|------|----------------|
-| `coder` | `hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS` |
-| `planner` | `hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS` |
-| `architect` | `hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS` |
-| `reviewer` | `qwen2.5-coder:7b` |
-| `commit` | `qwen2.5-coder:7b` |
-| (any other) | `qwen2.5-coder:7b` |
+---
 
 ## Model Configuration
 
-`llm-config.json` in the repo root is the single source of truth for model routing. It is symlinked to `~/.claude/llm-config.json` so any project can override it by placing its own `llm-config.json` in the project root.
+`llm-config.json` in the repo root is the single source of truth for model routing.
 
 ```json
 {
   "models": {
-    "coder": "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
-    "planner": "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
-    "architect": "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
-    "reviewer": "qwen2.5-coder:7b",
+    "coder":        "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
+    "planner":      "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
+    "architect":    "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
+    "reviewer":     "qwen2.5-coder:7b",
     "pre-reviewer": "qwen2.5-coder:7b",
-    "quick-coder": "qwen2.5-coder:7b",
-    "commit": "qwen2.5-coder:7b",
-    "triage": "llama3.1:8b",
-    "embedding": "mxbai-embed-large"
+    "quick-coder":  "qwen2.5-coder:7b",
+    "commit":       "qwen2.5-coder:7b",
+    "triage":       "llama3.1:8b",
+    "embedding":    "mxbai-embed-large"
   }
 }
 ```
 
-`call_ollama.sh` resolves the role → model mapping at call time, so changing this file takes effect immediately without restarting anything.
+---
 
 ## Symlinks
 
-`scripts/install.sh` creates symlinks from `~/.claude/` into the cloned repo using `ln -sfn`. After installation, a `git pull` in the repo directory instantly updates all global tooling with no reinstall required.
+`scripts/install.sh` creates symlinks from `~/.claude/` into the cloned repo using `ln -sfn`. After installation, a `git pull` in the repo directory instantly updates all global tooling.
 
 Items symlinked into `~/.claude/`:
 
@@ -94,22 +166,20 @@ Items symlinked into `~/.claude/`:
 - `scripts/call_ollama.sh`
 - `scripts/local-commit.sh`
 - `scripts/open-pr.sh`
-- `scripts/analyze_hardware.sh`
-- `scripts/analyze_soft.sh`
-- `scripts/analyze_project.sh`
 - `scripts/track_savings.sh`
 - `scripts/stats.sh`
-- `scripts/check-update.sh`
-- `scripts/markdown_review.sh`
 - `llm-config.json`
+
+---
 
 ## Context Files
 
 Agents share state through files in `.claude/context/`:
 
 | File | Written by | Read by | Purpose |
-|------|-----------|---------|---------|
-| `task_context.md` | planner | coder, reviewer | Full plan: signatures, patterns, file contents |
+|---|---|---|---|
+| `triage.md` | triage (Layer 0) | planner, coder, reviewer | Complexity tier, domain, route, skills, agents, constraints |
+| `task_context.md` | planner | coder, reviewer | Full plan: signatures, patterns, file contents, domain standards |
 | `coder_output.md` | coder | — | Summary of what was implemented |
 | `project_overview.md` | planner | planner | Cached project map; speeds up future planner runs |
 

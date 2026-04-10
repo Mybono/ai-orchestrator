@@ -1,5 +1,24 @@
 Run the full plan → code → review pipeline for a coding task.
 
+## Context Handoff Protocol
+
+**Rule**: The orchestrator never carries agent output in its own context. Between every step:
+
+1. The completing agent writes a structured summary file to `.claude/context/`.
+2. The next step receives only the **file path** in its prompt, not the content.
+3. The next agent reads the file itself using its Read tool.
+
+| Step | Agent writes | Next step reads |
+|---|---|---|
+| Triage | `triage.md` | Planner, Coder, Reviewer |
+| Planner | `task_context.md` | Coder |
+| Pre-review | `pre_review.md` | Orchestrator (verdict only) |
+| Coder | `coder_output.md` | Reviewer, Fix loop |
+| Reviewer (per file) | `review_<filename>.md` | Fix loop |
+| Fix loop | `fix_loop.md` | Next fix iteration |
+
+**Never** pass full file contents between steps via prompt. Pass paths.
+
 ## Pipeline
 
 ### Step 0 — Triage
@@ -56,10 +75,10 @@ Budget: **40% critical** / **30% important** / **20% reference** / **10% reserve
 
 ### Step 1.5 — Pre-Review (Plan Approval)
 
-Before coding starts, spawn the agent with the **pre-reviewer** role (Qwen 3.5 0.8b) using **only** `.claude/context/task_context.md`.
+Before coding starts, spawn the agent with the **pre-reviewer** role (Qwen 3.5 0.8b). Pass only the path `.claude/context/task_context.md` — the agent reads it itself.
 
 > [!TIP]
-> We use the 0.8b "Thinking" model here because architectural validation is a logical reasoning task, not a code generation task. It is ~10x faster than the 7b/14b models and catches approach errors before a single line of code is written.
+> Pre-reviewer uses `qwen2.5-coder:7b` (role: `pre-reviewer` in `llm-config.json`). Architectural validation is a logical reasoning task — it reads only the plan (~100–300 lines) and catches approach errors before a single line of code is written.
 
 The reviewer checks:
 
@@ -67,19 +86,38 @@ The reviewer checks:
 - Does the plan respect the domain constraints from triage?
 - Are there design-level security or performance issues?
 
+**Output:** The pre-reviewer must write `.claude/context/pre_review.md`:
+
+```markdown
+## Verdict
+APPROACH APPROVED | APPROACH REJECTED
+
+## Issues
+- <issue 1, or "none">
+
+## Constraints for Coder
+- <constraint derived from plan review>
+```
+
+Orchestrator reads only `## Verdict` line from this file to decide next step. Do not carry full pre-review output in context.
+
 **Verdict:**
 
 - `APPROACH APPROVED` → proceed to Step 2.
-- `APPROACH REJECTED` → return to planner with reviewer's objections. Planner rewrites the plan. Re-run Step 1.5 once. If still rejected, report to user and stop.
+- `APPROACH REJECTED` → return to planner with path to `pre_review.md`. Planner reads `## Issues` and rewrites the plan. Re-run Step 1.5 once. If still rejected, report to user and stop.
 
 > Pre-review is cheap: it reads only the plan (~100–300 lines), not code. Catching a wrong approach here saves an entire fix loop.
 
 ### Step 2 — Code
 
-Spawn the `coder` agent.
-The coder reads `.claude/context/task_context.md` (which includes domain constraints from triage) and implements the changes using the local Ollama model.
-It writes a summary to `.claude/context/coder_output.md`.
-Wait for it to complete before proceeding.
+Spawn the `coder` agent. Pass only these paths — the agent reads them itself:
+
+- `.claude/context/task_context.md`
+- `.claude/context/triage.md` (for domain constraints)
+
+Do not pass file contents. The coder writes `.claude/context/coder_output.md` when done.
+
+After coder completes, read only `## Changed Files` and `## Verdict` from `coder_output.md`. Do not carry the full coder output in context.
 
 ### Step 2.5 — Build / Type check
 
@@ -112,14 +150,24 @@ Do NOT proceed to reviewer until build passes.
 
 ### Step 3 — Post-Review (parallel if multiple files)
 
+Read `## Changed Files` from `.claude/context/coder_output.md` to get the list of files to review.
+
 **Tiered review:**
 
-1. **Fast review** — spawn `quick-coder` agent per changed file (all in parallel). Checks: syntax, style, obvious bugs. Uses fastest local model.
-2. **Deep review** — spawn `reviewer` agent only for files where fast review flagged issues OR if triage detected `security` / `api` / `complex` domains.
+1. **Fast review** — spawn `quick-coder` agent per changed file (all in parallel). Pass only:
+   - The file path to review
+   - Path to `.claude/context/triage.md` (for domain constraints)
+   Each fast reviewer writes `.claude/context/review_fast_<filename>.md`.
 
-Each reviewer also receives the domain constraints from `.claude/context/triage.md` — so it knows which standards apply (e.g., OWASP rules for security domain, API design rules for api domain).
+2. **Deep review** — spawn `reviewer` agent only for files where fast review wrote `## Verdict: NEEDS CHANGES` OR if triage detected `security` / `api` / `complex` domains. Pass only:
+   - The file path to review
+   - Path to `.claude/context/review_fast_<filename>.md`
+   - Path to `.claude/context/triage.md`
+   Each deep reviewer writes `.claude/context/review_deep_<filename>.md`.
 
-Overall verdict is **NEEDS CHANGES** if any reviewer returns NEEDS CHANGES.
+After all reviewers complete, read only `## Verdict` line from each review file. Do not carry reviewer output in context.
+
+Overall verdict is **NEEDS CHANGES** if any `review_deep_*.md` contains `Verdict: NEEDS CHANGES`.
 
 > Post-review is now cheaper: the approach was pre-approved in Step 1.5, so reviewer focuses only on implementation correctness — not architecture.
 
@@ -136,11 +184,12 @@ Apply [error-coordinator](../../../agents/error-coordinator.md) recovery:
 
 **Fix loop steps:**
 
-1. Capture diff: `git diff`
-2. Spawn `coder` with: reviewer issues + full diff + domain constraints from triage.
-3. Re-run Step 2.5.
-4. Re-run Step 3 (post-review).
-5. Repeat at most **3 times**.
+1. Capture diff: `git diff` → write to `.claude/context/fix_loop.md` under `## Diff`.
+2. Collect issues: read `## Issues` from every `review_deep_*.md` that returned NEEDS CHANGES → append to `fix_loop.md` under `## Issues`.
+3. Spawn `coder` with only paths: `fix_loop.md` + `triage.md`. Coder reads both itself.
+4. Re-run Step 2.5.
+5. Re-run Step 3 (post-review).
+6. Repeat at most **3 times**.
 
 **Circuit breaker**: same error in 2 consecutive rounds → stop immediately, report to user.
 

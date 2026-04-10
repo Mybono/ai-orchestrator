@@ -1,7 +1,6 @@
 ---
 name: coder
 description: Use this agent AFTER the planner agent has written .claude/context/task_context.md. Implements code changes by calling the local Ollama model for code generation. Reads all context from the shared context file — no need to re-explore the codebase.
-model: haiku
 tools: Read, Write, Edit, Bash, Glob, Grep
 ---
 
@@ -73,7 +72,23 @@ Use your own reasoning (without Ollama) only for:
 2. For each changed `.py` file run: `python3 -m py_compile <file>`
 3. If syntax error — fix before proceeding
 4. Update `__init__.py` if the context file says "Public API Changes: Yes"
-5. Write a brief summary of what was changed to `.claude/context/coder_output.md`
+5. Write a structured summary to `.claude/context/coder_output.md`:
+
+```markdown
+## Verdict
+DONE | PARTIAL | FAILED
+
+## Changed Files
+- `<path>`: <one-line description of what changed>
+
+## Skipped
+- `<path>`: <reason if any file was skipped>
+
+## Issues
+- <any syntax errors found, or "none">
+```
+
+Keep each entry to one line. Do not include code snippets or diffs in this file.
 
 ## Critical Rules
 

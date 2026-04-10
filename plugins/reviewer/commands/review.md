@@ -6,19 +6,22 @@ Review the current code changes against the project coding standarts.
 
 ## Output format
 
-For each violation:
+Write results to `.claude/context/review_<filename>.md` (replace `/` with `_` in filename). Always write this file — even if no violations.
 
 ```markdown
-❌ [Rule section] <short description>
-   File: <path>:<line>
-   Issue: <what's wrong>
-   Fix: <concrete fix>
-```markdown
+## Verdict
+APPROVED | NEEDS CHANGES
 
-If no violations:
+## Issues
+- `<path>:<line>` [<Rule section>] <short description> — Fix: <concrete fix>
 
-```markdown
-✅ No violations found. Code follows project standarts.
-```markdown
+## Notes
+- <optional low-priority observations, or "none">
+```
+
+For console output (visible to user), print a one-line summary only:
+
+- `✅ <filename> — APPROVED`
+- `❌ <filename> — NEEDS CHANGES (N issues)`
 
 Be concise. Only flag real violations — not style preferences or theoretical issues.
