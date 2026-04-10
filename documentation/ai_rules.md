@@ -18,8 +18,10 @@ For heavy generation tasks (writing large code components, tests, or extensive d
 - **call_ollama.sh**: Located at `~/.claude/call_ollama.sh` (Used by AI for delegating general text/code tasks)
 - **local-commit.sh**: Located at `~/.claude/local-commit.sh` (Terminal alias to fast-generate git commits using local LLM)
 - **open-pr.sh**: Located at `~/.claude/open-pr.sh` (Used by AI or human to generate and open Pull Requests via local LLM)
-- **Code Generation**: `qwen2.5-coder:14b` (or `7b` for simpler tasks)
-- **Documentation/PRs**: `qwen2.5-coder:7b` down to `qwen3:8b`
+- **Code Generation**: Role `coder` (`hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS`)
+- **Planning/Architecture**: Role `planner` or `architect` (`hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS`)
+- **Review/Documentation**: Role `reviewer` (`qwen2.5-coder:7b`)
+- **Git Commits/Quick Fixes**: Role `commit` or `quick-coder` (`qwen2.5-coder:7b`)
 
 ### 3. Pull Request Delegation
 

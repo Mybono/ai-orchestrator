@@ -3,6 +3,11 @@
 # Find the script's directory to locate call_ollama.sh
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OLLAMA_SCRIPT="$SCRIPT_DIR/call_ollama.sh"
+PLUGIN_RULES="$SCRIPT_DIR/../plugins/committer/commands/commit.md"
+# Fallback to symlinked location if run from ~/.claude/
+if [ ! -f "$PLUGIN_RULES" ]; then
+    PLUGIN_RULES="$HOME/.claude/commands/commit.md"
+fi
 
 PROJECT_NAME=$(basename "$PWD")
 CURRENT_BRANCH=$(git branch --show-current)
@@ -52,8 +57,9 @@ fi
 echo "Staging all changes (git add -A)..."
 git add -A
 
-# Proactive markdown review
-bash "$SCRIPT_DIR/markdown_review.sh"
+# Proactive reviews
+[ -f "$SCRIPT_DIR/markdown_review.sh" ] && bash "$SCRIPT_DIR/markdown_review.sh"
+[ -f "$SCRIPT_DIR/shellcheck.sh" ] && bash "$SCRIPT_DIR/shellcheck.sh"
 
 
 # Get the staged diff
@@ -73,13 +79,23 @@ STAGED_FILES=$(git diff --cached --name-only | tr '\n' ', ' | sed 's/, $//')
 echo "📂 Staged files: $STAGED_FILES"
 echo "🤖 Ollama is analyzing the code and writing a commit message..."
 
-PROMPT="As a Git expert, review this git diff for the project '$PROJECT_NAME' (branch: '$CURRENT_BRANCH').
-Write a concise, professional commit message in Conventional Commits format: type(scope): description.
+# Load rules from plugin if available
+RULES=""
+if [ -f "$PLUGIN_RULES" ]; then
+    # Extract the Expert Committer Rules section
+    RULES=$(sed -n '/## Expert Committer Rules/,/##/p' "$PLUGIN_RULES" | sed '1d;$d')
+fi
 
-STRICT RULES:
-1. FOCUS ONLY on the provided diff. Do NOT hallucinate features or files not present in the diff.
-2. If the diff shows changes to prompts or LLM logic, describe them accurately.
-3. Output ONLY the message itself. No explanations, no quotes, no markdown backticks."
+# Fallback or base rules if plugin not found or extraction failed
+if [ -z "$RULES" ]; then
+    RULES="Write a concise, professional commit message in Conventional Commits format: type(scope): description.
+1. COMMIT MESSAGE MUST BE EXACTLY ONE LINE AND MAX 72 CHARACTERS.
+2. DO NOT include a body, list of files, or any technical details."
+fi
+
+PROMPT="As a Git expert, review this git diff for the project '$PROJECT_NAME' (branch: '$CURRENT_BRANCH').
+$RULES
+Output ONLY the message itself. No explanations, no quotes, no markdown backticks."
 
 MESSAGE=$("$OLLAMA_SCRIPT" --role commit --prompt "$PROMPT" --context-file "$TMP_DIFF")
 

@@ -17,7 +17,7 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 | `agents/planner.md` | Authoritative source of project context — explores codebase, writes `.claude/context/task_context.md` and maintains `project_overview.md` |
 | `agents/coder.md` | Coding agent — reads context, generates code via `call_ollama.sh` (role: coder), applies changes |
 | `agents/reviewer.md` | Review agent — diffs changed files, invokes `call_ollama.sh` (role: reviewer), reports verdict |
-| `agents/quick-coder.md` | Fast fix agent — uses `qwen2.5-coder:1.5b` via `call_ollama.sh` (role: commit) |
+| `agents/quick-coder.md` | Fast fix agent — uses `qwen2.5-coder:7b` via `call_ollama.sh` (role: quick-coder) |
 | `agents/commit.md` | Commit agent — generates commit message via `call_ollama.sh` (role: commit), stages and commits |
 | `agents/doc-writer.md` | Documentation agent — reads git diff, drafts docs via `call_ollama.sh` (role: reviewer) |
 | `agents/test-agent.md` | Test agent — generates and runs tests via `call_ollama.sh` (role: coder) |
@@ -98,9 +98,8 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 
 - Never mock Ollama in tests: the system relies on real local model responses
 - The `debug.md` agent file does not exist in `agents/` — it exists only as `commands/debug.md`
-- `quick-coder` uses `qwen2.5-coder:1.5b` with a hard 4096-token context limit — never use it for multi-file changes or new classes
+- `quick-coder` uses `qwen2.5-coder:7b` — never use it for multi-file changes or new classes
 - The fix loop in `/implement` is capped at 3 rounds — after that, unresolved issues are reported to the user
-- `doc-writer` uses `think=False` when calling `qwen3:8b` — do not remove this flag
 - `track_savings.sh` Step 5 in `/implement` is best-effort — skip silently if script not found (not yet installed)
 - Float arithmetic in bash scripts must use `jq -n` — bash `$(( ))` handles integers only
 - `call_ollama.sh` and `track_savings.sh` do NOT use `set -euo pipefail` — do not add it; callers depend on lenient error handling

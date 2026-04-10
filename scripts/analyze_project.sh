@@ -48,8 +48,8 @@ analyze_structure() {
     "$CALL_OLLAMA" --role reviewer --prompt "$prompt" > "$TMP_DIR/structure.txt"
 }
 
-# Agent B: Documentation Analysis (14B model - role: coder)
-# Using 'coder' role as it defaults to 14b (high-performing model)
+# Agent B: Documentation Analysis (14B model - role: planner)
+# Using 'planner' role as it is designed for high-level architectural understanding
 analyze_docs() {
     local doc_contents=""
     for f in $MD_FILES; do
@@ -63,10 +63,10 @@ analyze_docs() {
     
     DOCS:
     $doc_contents"
-    "$CALL_OLLAMA" --role coder --prompt "$prompt" > "$TMP_DIR/docs.txt"
+    "$CALL_OLLAMA" --role planner --prompt "$prompt" > "$TMP_DIR/docs.txt"
 }
 
-# Agent C: Logic & Tech Stack Analysis (14B model - role: coder)
+# Agent C: Logic & Tech Stack Analysis (14B model - role: planner)
 analyze_logic() {
     local logic_contents=""
     for f in $LOGIC_FILES; do
@@ -81,7 +81,7 @@ analyze_logic() {
     
     FILES:
     $logic_contents"
-    "$CALL_OLLAMA" --role coder --prompt "$prompt" > "$TMP_DIR/logic.txt"
+    "$CALL_OLLAMA" --role planner --prompt "$prompt" > "$TMP_DIR/logic.txt"
 }
 
 # Run Analysis (Parallel)
@@ -141,7 +141,7 @@ Output a Markdown report named 'Project Analysis Delta'.
 4. **Suggested Updates**: Provide specific markdown snippets to be merged into project_overview.md."
 
 DELTA_FILE="$CONTEXT_DIR/analysis_delta.md"
-"$CALL_OLLAMA" --role coder --prompt "$FINAL_PROMPT" > "$DELTA_FILE"
+"$CALL_OLLAMA" --role planner --prompt "$FINAL_PROMPT" > "$DELTA_FILE"
 
 # Clean up Markdown backticks if the model included them
 sed -i '' '/^```/d' "$DELTA_FILE" 2>/dev/null || sed -i '/^```/d' "$DELTA_FILE"
