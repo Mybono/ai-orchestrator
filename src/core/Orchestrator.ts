@@ -2,25 +2,19 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { AgentRunner } from '../agents/AgentRunner.js';
 import { PlannerAgent } from '../agents/PlannerAgent.js';
+import { TriageAgent } from '../agents/TriageAgent.js';
 import { DependencyGraph } from './DependencyGraph.js';
-import type { AgentDomain, AgentResult, AgentTask, OrchestratorConfig } from '../types/index.js';
-
-// Keyword -> domain mapping used by triage()
-const DOMAIN_KEYWORDS: Record<AgentDomain, readonly string[]> = {
-  coder: ['implement', 'add', 'fix', 'refactor', 'create', 'build', 'change', 'update'],
-  'unit-tester': ['test', 'spec', 'unit', 'coverage', 'mock'],
-  'doc-writer': ['doc', 'readme', 'comment', 'jsdoc', 'documentation'],
-  devops: ['deploy', 'ci', 'cd', 'docker', 'k8s', 'pipeline', 'release'],
-};
+import type { AgentDomain, AgentResult, AgentTask, TriageResult } from '../types/index.js';
 
 export class Orchestrator {
-  private readonly config: OrchestratorConfig;
   private readonly runner: AgentRunner;
   private readonly planner: PlannerAgent;
+  private readonly triageAgent: TriageAgent;
 
   constructor(configPath: string, contextDir: string) {
     const resolvedConfig = resolve(configPath);
     const resolvedContext = resolve(contextDir);
+    const projectRoot = resolve('.');
 
     try {
       readFileSync(resolvedConfig, 'utf8');
@@ -28,16 +22,17 @@ export class Orchestrator {
       throw new Error(`Orchestrator: configPath not found: ${resolvedConfig}`);
     }
 
-    this.config = { configPath: resolvedConfig, contextDir: resolvedContext };
     this.runner = new AgentRunner(resolvedConfig);
     this.planner = new PlannerAgent(this.runner, resolvedContext);
+    this.triageAgent = new TriageAgent(this.runner, resolvedContext, projectRoot);
   }
 
   /**
    * Full pipeline: triage -> planAll -> execute -> review.
    */
   async run(task: string): Promise<AgentResult[]> {
-    const domains = this.triage(task);
+    const triageResult = await this.triage(task);
+    const { domains, reasoning } = triageResult;
 
     if (domains.length === 0) {
       process.stderr.write(`[orchestrator] warning: no domains matched for task: "${task}"\n`);
@@ -45,9 +40,10 @@ export class Orchestrator {
       return [];
     }
 
-    console.log(`[orchestrator] domains: ${domains.join(', ')}`);
+    console.log(`[orchestrator] domains: ${[...domains].join(', ')}`);
+    console.log(`[orchestrator] reasoning: ${reasoning}`);
 
-    const tasks = await this.planAll(task, domains);
+    const tasks = await this.planAll(task, [...domains]);
     const results = await this.execute(tasks, task);
     await this.review(results);
 
@@ -55,28 +51,12 @@ export class Orchestrator {
   }
 
   /**
-   * Keyword-based domain detection. No LLM call.
-   * Always includes 'coder' as the base domain.
+   * LLM-powered domain detection via TriageAgent.
+   * Uses llama3.1:8b to reason about task implications.
+   * Falls back to ['coder'] if the LLM call fails.
    */
-  private triage(task: string): AgentDomain[] {
-    const lower = task.toLowerCase();
-    const matched = new Set<AgentDomain>();
-
-    matched.add('coder');
-
-    for (const [domain, keywords] of Object.entries(DOMAIN_KEYWORDS) as [
-      AgentDomain,
-      readonly string[],
-    ][]) {
-      for (const keyword of keywords) {
-        if (lower.includes(keyword)) {
-          matched.add(domain);
-          break;
-        }
-      }
-    }
-
-    return Array.from(matched);
+  private async triage(task: string): Promise<TriageResult> {
+    return this.triageAgent.analyze(task);
   }
 
   /**

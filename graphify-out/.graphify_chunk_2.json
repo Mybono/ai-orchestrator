@@ -1,0 +1,870 @@
+{
+  "nodes": [
+    {
+      "id": "agent_test-agent",
+      "label": "Test Agent",
+      "file_type": "document",
+      "source_file": "agents/test-agent.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_ui-tester",
+      "label": "UI Tester Agent",
+      "file_type": "document",
+      "source_file": "agents/ui-tester.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_unit-tester",
+      "label": "Unit Tester Agent",
+      "file_type": "document",
+      "source_file": "agents/unit-tester.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_quick-coder",
+      "label": "Quick Coder Agent",
+      "file_type": "document",
+      "source_file": "agents/quick-coder.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "plugin_orchestrator",
+      "label": "Orchestrator Plugin",
+      "file_type": "document",
+      "source_file": "plugins/orchestrator/.claude-plugin/plugin.json",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "cmd_implement",
+      "label": "Implement Command",
+      "file_type": "document",
+      "source_file": "plugins/orchestrator/commands/implement.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "cmd_stats",
+      "label": "Stats Command",
+      "file_type": "document",
+      "source_file": "plugins/orchestrator/commands/stats.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "plugin_api-architect",
+      "label": "API Architect Plugin",
+      "file_type": "document",
+      "source_file": "plugins/api-architect/.claude-plugin/plugin.json",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "cmd_design-api",
+      "label": "Design API Command",
+      "file_type": "document",
+      "source_file": "plugins/api-architect/commands/design-api.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "plugin_docker-helper",
+      "label": "Docker Helper Plugin",
+      "file_type": "document",
+      "source_file": "plugins/docker-helper/.claude-plugin/plugin.json",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "cmd_optimize-dockerfile",
+      "label": "Optimize Dockerfile Command",
+      "file_type": "document",
+      "source_file": "plugins/docker-helper/commands/optimize-dockerfile.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "plugin_k8s-helper",
+      "label": "Kubernetes Helper Plugin",
+      "file_type": "document",
+      "source_file": "plugins/k8s-helper/.claude-plugin/plugin.json",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "cmd_debug-pod",
+      "label": "Debug Pod Command",
+      "file_type": "document",
+      "source_file": "plugins/k8s-helper/commands/debug-pod.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "plugin_security-guidance",
+      "label": "Security Guidance Plugin",
+      "file_type": "document",
+      "source_file": "plugins/security-guidance/.claude-plugin/plugin.json",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "cmd_fix-vulnerability",
+      "label": "Fix Vulnerability Command",
+      "file_type": "document",
+      "source_file": "plugins/security-guidance/commands/fix-vulnerability.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "skill_humanizer",
+      "label": "Humanizer Skill",
+      "file_type": "document",
+      "source_file": "skills/humanizer.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "skill_api-design-patterns",
+      "label": "API Design Patterns Skill",
+      "file_type": "document",
+      "source_file": "skills/api-design-patterns/SKILL.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "skill_docker-best-practices",
+      "label": "Docker Best Practices Skill",
+      "file_type": "document",
+      "source_file": "skills/docker-best-practices/SKILL.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "skill_kubernetes-operations",
+      "label": "Kubernetes Operations Skill",
+      "file_type": "document",
+      "source_file": "skills/kubernetes-operations/SKILL.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "skill_security-hardening",
+      "label": "Security Hardening Skill",
+      "file_type": "document",
+      "source_file": "skills/security-hardening/SKILL.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_planner",
+      "label": "Planner Agent",
+      "file_type": "document",
+      "source_file": "agents/planner.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_coder",
+      "label": "Coder Agent",
+      "file_type": "document",
+      "source_file": "agents/coder.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_reviewer",
+      "label": "Reviewer Agent",
+      "file_type": "document",
+      "source_file": "agents/reviewer.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_devops",
+      "label": "DevOps Agent",
+      "file_type": "document",
+      "source_file": "agents/devops.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_architect",
+      "label": "Architect Agent",
+      "file_type": "document",
+      "source_file": "agents/architect.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_error-coordinator",
+      "label": "Error Coordinator Agent",
+      "file_type": "document",
+      "source_file": "agents/error-coordinator.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_performance-monitor",
+      "label": "Performance Monitor Agent",
+      "file_type": "document",
+      "source_file": "agents/performance-monitor.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "plugin_qa-tools",
+      "label": "QA Tools Plugin",
+      "file_type": "document",
+      "source_file": "plugins/qa-tools",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "context_task_context",
+      "label": "Task Context File",
+      "file_type": "document",
+      "source_file": ".claude/context/task_context.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "context_triage",
+      "label": "Triage Context File",
+      "file_type": "document",
+      "source_file": ".claude/context/triage.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "context_coder_output",
+      "label": "Coder Output File",
+      "file_type": "document",
+      "source_file": ".claude/context/coder_output.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "script_call_ollama",
+      "label": "Call Ollama Script",
+      "file_type": "code",
+      "source_file": "~/.claude/call_ollama.sh",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "script_stats",
+      "label": "Stats Shell Script",
+      "file_type": "code",
+      "source_file": "~/.claude/stats.sh",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "script_track_savings",
+      "label": "Track Savings Script",
+      "file_type": "code",
+      "source_file": "~/.claude/track_savings.sh",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "cmd_triage",
+      "label": "Triage Command",
+      "file_type": "document",
+      "source_file": "plugins/orchestrator/commands/triage.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "plugin_orchestrator",
+      "target": "cmd_implement",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/orchestrator/.claude-plugin/plugin.json",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "plugin_orchestrator",
+      "target": "cmd_stats",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/orchestrator/.claude-plugin/plugin.json",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "plugin_api-architect",
+      "target": "cmd_design-api",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/api-architect/.claude-plugin/plugin.json",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "plugin_docker-helper",
+      "target": "cmd_optimize-dockerfile",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/docker-helper/.claude-plugin/plugin.json",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "plugin_k8s-helper",
+      "target": "cmd_debug-pod",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/k8s-helper/.claude-plugin/plugin.json",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "plugin_security-guidance",
+      "target": "cmd_fix-vulnerability",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/security-guidance/.claude-plugin/plugin.json",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_test-agent",
+      "target": "skill_humanizer",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agents/test-agent.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_test-agent",
+      "target": "script_call_ollama",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agents/test-agent.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_test-agent",
+      "target": "context_task_context",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agents/test-agent.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_quick-coder",
+      "target": "skill_humanizer",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agents/quick-coder.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_quick-coder",
+      "target": "script_call_ollama",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agents/quick-coder.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_unit-tester",
+      "target": "plugin_qa-tools",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agents/unit-tester.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "cmd_implement",
+      "target": "agent_planner",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/orchestrator/commands/implement.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "cmd_implement",
+      "target": "agent_coder",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/orchestrator/commands/implement.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "cmd_implement",
+      "target": "agent_reviewer",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/orchestrator/commands/implement.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "cmd_implement",
+      "target": "agent_quick-coder",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/orchestrator/commands/implement.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "cmd_implement",
+      "target": "agent_error-coordinator",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/orchestrator/commands/implement.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "cmd_implement",
+      "target": "cmd_triage",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/orchestrator/commands/implement.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "cmd_implement",
+      "target": "context_task_context",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/orchestrator/commands/implement.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "cmd_implement",
+      "target": "context_triage",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/orchestrator/commands/implement.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "cmd_implement",
+      "target": "context_coder_output",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/orchestrator/commands/implement.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "cmd_implement",
+      "target": "script_track_savings",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/orchestrator/commands/implement.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "cmd_stats",
+      "target": "script_stats",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/orchestrator/commands/stats.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "cmd_stats",
+      "target": "agent_performance-monitor",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/orchestrator/commands/stats.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "cmd_design-api",
+      "target": "skill_api-design-patterns",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/api-architect/commands/design-api.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "cmd_design-api",
+      "target": "agent_architect",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/api-architect/commands/design-api.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "cmd_optimize-dockerfile",
+      "target": "skill_docker-best-practices",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/docker-helper/commands/optimize-dockerfile.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "cmd_optimize-dockerfile",
+      "target": "agent_devops",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/docker-helper/commands/optimize-dockerfile.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "cmd_debug-pod",
+      "target": "skill_kubernetes-operations",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/k8s-helper/commands/debug-pod.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "cmd_debug-pod",
+      "target": "agent_devops",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/k8s-helper/commands/debug-pod.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "cmd_fix-vulnerability",
+      "target": "skill_security-hardening",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/security-guidance/commands/fix-vulnerability.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "cmd_fix-vulnerability",
+      "target": "agent_reviewer",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/security-guidance/commands/fix-vulnerability.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_ui-tester",
+      "target": "agent_unit-tester",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "agents/ui-tester.md",
+      "source_location": null,
+      "weight": 0.75
+    },
+    {
+      "source": "agent_ui-tester",
+      "target": "agent_test-agent",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "agents/ui-tester.md",
+      "source_location": null,
+      "weight": 0.8
+    },
+    {
+      "source": "agent_unit-tester",
+      "target": "agent_test-agent",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "agents/unit-tester.md",
+      "source_location": null,
+      "weight": 0.85
+    },
+    {
+      "source": "agent_quick-coder",
+      "target": "agent_coder",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "agents/quick-coder.md",
+      "source_location": null,
+      "weight": 0.85
+    },
+    {
+      "source": "cmd_implement",
+      "target": "agent_test-agent",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "plugins/orchestrator/commands/implement.md",
+      "source_location": null,
+      "weight": 0.7
+    },
+    {
+      "source": "agent_test-agent",
+      "target": "agent_coder",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "agents/test-agent.md",
+      "source_location": null,
+      "weight": 0.9
+    },
+    {
+      "source": "plugin_security-guidance",
+      "target": "skill_security-hardening",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "plugins/security-guidance/.claude-plugin/plugin.json",
+      "source_location": null,
+      "weight": 0.9
+    },
+    {
+      "source": "plugin_docker-helper",
+      "target": "skill_docker-best-practices",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "plugins/docker-helper/.claude-plugin/plugin.json",
+      "source_location": null,
+      "weight": 0.9
+    },
+    {
+      "source": "plugin_k8s-helper",
+      "target": "skill_kubernetes-operations",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "plugins/k8s-helper/.claude-plugin/plugin.json",
+      "source_location": null,
+      "weight": 0.9
+    },
+    {
+      "source": "plugin_api-architect",
+      "target": "skill_api-design-patterns",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "plugins/api-architect/.claude-plugin/plugin.json",
+      "source_location": null,
+      "weight": 0.9
+    },
+    {
+      "source": "cmd_implement",
+      "target": "script_call_ollama",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "plugins/orchestrator/commands/implement.md",
+      "source_location": null,
+      "weight": 0.8
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "testing_agent_cluster",
+      "label": "Testing Agent Cluster",
+      "nodes": ["agent_test-agent", "agent_ui-tester", "agent_unit-tester"],
+      "relation": "implement",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "agents/test-agent.md"
+    },
+    {
+      "id": "implement_pipeline",
+      "label": "Implement Pipeline Steps",
+      "nodes": ["cmd_implement", "agent_planner", "agent_coder", "agent_reviewer", "agent_quick-coder", "agent_error-coordinator", "context_task_context", "context_triage", "context_coder_output"],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "plugins/orchestrator/commands/implement.md"
+    },
+    {
+      "id": "devops_plugin_cluster",
+      "label": "DevOps Plugin Cluster",
+      "nodes": ["plugin_docker-helper", "plugin_k8s-helper", "agent_devops", "skill_docker-best-practices", "skill_kubernetes-operations"],
+      "relation": "implement",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "plugins/docker-helper/.claude-plugin/plugin.json"
+    },
+    {
+      "id": "security_cluster",
+      "label": "Security Guidance Cluster",
+      "nodes": ["plugin_security-guidance", "cmd_fix-vulnerability", "skill_security-hardening", "agent_reviewer"],
+      "relation": "implement",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "plugins/security-guidance/.claude-plugin/plugin.json"
+    },
+    {
+      "id": "ollama_consumers",
+      "label": "Ollama-Calling Agents",
+      "nodes": ["agent_test-agent", "agent_quick-coder", "script_call_ollama"],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "agents/test-agent.md"
+    }
+  ],
+  "input_tokens": 4800,
+  "output_tokens": 1800
+}

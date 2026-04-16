@@ -1,0 +1,1365 @@
+{
+  "nodes": [
+    {
+      "id": "index_orchestrator_entrypoint",
+      "label": "Orchestrator Entry Point (src/index.ts)",
+      "file_type": "code",
+      "source_file": "src/index.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "orchestrator_class",
+      "label": "Orchestrator Class",
+      "file_type": "code",
+      "source_file": "src/core/Orchestrator.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "dependency_graph_class",
+      "label": "DependencyGraph Class (Kahn's Algorithm)",
+      "file_type": "code",
+      "source_file": "src/core/DependencyGraph.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_runner_class",
+      "label": "AgentRunner Class",
+      "file_type": "code",
+      "source_file": "src/agents/AgentRunner.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "planner_agent_class",
+      "label": "PlannerAgent Class",
+      "file_type": "code",
+      "source_file": "src/agents/PlannerAgent.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "triage_agent_class",
+      "label": "TriageAgent Class",
+      "file_type": "code",
+      "source_file": "src/agents/TriageAgent.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "types_agent_domain",
+      "label": "AgentDomain Type",
+      "file_type": "code",
+      "source_file": "src/types/index.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "types_agent_task",
+      "label": "AgentTask Type",
+      "file_type": "code",
+      "source_file": "src/types/index.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "types_agent_result",
+      "label": "AgentResult Type",
+      "file_type": "code",
+      "source_file": "src/types/index.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "types_triage_result",
+      "label": "TriageResult Type",
+      "file_type": "code",
+      "source_file": "src/types/index.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "types_run_result",
+      "label": "RunResult Type",
+      "file_type": "code",
+      "source_file": "src/types/index.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "types_llm_config",
+      "label": "LlmConfig Type",
+      "file_type": "code",
+      "source_file": "src/types/index.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "bitbucket_review_script",
+      "label": "Bitbucket Review Script",
+      "file_type": "code",
+      "source_file": "scripts/bitbucket-review.js",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "ci_debugger_script",
+      "label": "CI Debugger Script",
+      "file_type": "code",
+      "source_file": "scripts/ci-debugger.js",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "call_ollama_sh",
+      "label": "call_ollama.sh Shell Script",
+      "file_type": "code",
+      "source_file": "scripts/call_ollama.sh",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "llm_config_json",
+      "label": "LLM Model Config (llm-config.json)",
+      "file_type": "code",
+      "source_file": "llm-config.json",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_pipeline_layers",
+      "label": "Multi-Layer Smart Pipeline (Triage->Plan->Code->Gate->Fix->Finalize)",
+      "file_type": "document",
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_plugin_route",
+      "label": "Plugin-Route vs Full-Pipeline Routing Strategy",
+      "file_type": "document",
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_context_file_handoff",
+      "label": "Context File Handoff Pattern (.claude/context/)",
+      "file_type": "document",
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_triage_domain_routing",
+      "label": "Triage Domain Auto-Routing",
+      "file_type": "document",
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_local_first",
+      "label": "Local-First LLM Architecture (Ollama delegation)",
+      "file_type": "document",
+      "source_file": "documentation/ai_rules.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_graphify_integration",
+      "label": "Graphify Knowledge Graph Integration in Triage",
+      "file_type": "code",
+      "source_file": "src/agents/TriageAgent.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_domain_dependencies",
+      "label": "Hardcoded Domain Dependency Map (coder->unit-tester->doc-writer->devops)",
+      "file_type": "code",
+      "source_file": "src/agents/PlannerAgent.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_autofix_hygiene",
+      "label": "AI Auto-Fix Hygiene Mode",
+      "file_type": "code",
+      "source_file": "scripts/bitbucket-review.js",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_security_audit_contextual",
+      "label": "Contextual Security Audit (exploitability via code usage)",
+      "file_type": "code",
+      "source_file": "scripts/bitbucket-review.js",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_self_healing_ci",
+      "label": "Self-Healing CI (AI Debugger on failure)",
+      "file_type": "document",
+      "source_file": "documentation/BITBUCKET_INTEGRATION.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_role_coder",
+      "label": "Agent Role: coder",
+      "file_type": "document",
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_role_reviewer",
+      "label": "Agent Role: reviewer",
+      "file_type": "document",
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_role_triage",
+      "label": "Agent Role: triage",
+      "file_type": "document",
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_role_debugger",
+      "label": "Agent Role: debugger",
+      "file_type": "document",
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_role_devops",
+      "label": "Agent Role: devops",
+      "file_type": "document",
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "agent_role_planner",
+      "label": "Agent Role: planner",
+      "file_type": "document",
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "skill_root_cause_analysis",
+      "label": "Skill: Root Cause Analysis (5-Whys)",
+      "file_type": "document",
+      "source_file": "documentation/SKILLS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "skill_security_hardening",
+      "label": "Skill: Security Hardening (OWASP)",
+      "file_type": "document",
+      "source_file": "documentation/SKILLS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "skill_typescript",
+      "label": "Skill: TypeScript Mastery",
+      "file_type": "document",
+      "source_file": "documentation/SKILLS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "plugin_qa_tools",
+      "label": "Plugin: qa-tools",
+      "file_type": "document",
+      "source_file": "documentation/PLUGINS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "plugin_security_guidance",
+      "label": "Plugin: security-guidance",
+      "file_type": "document",
+      "source_file": "documentation/PLUGINS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "plugin_api_architect",
+      "label": "Plugin: api-architect",
+      "file_type": "document",
+      "source_file": "documentation/PLUGINS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "plugin_release_manager",
+      "label": "Plugin: release-manager",
+      "file_type": "document",
+      "source_file": "documentation/PLUGINS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "plugin_reviewer",
+      "label": "Plugin: reviewer",
+      "file_type": "document",
+      "source_file": "documentation/PLUGINS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "model_qwen25_coder_14b",
+      "label": "Model: Qwen2.5-Coder-14B (coder role)",
+      "file_type": "document",
+      "source_file": "BENCHMARKS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "model_qwen25_coder_7b",
+      "label": "Model: qwen2.5-coder:7b (reviewer/commit/quick-coder roles)",
+      "file_type": "document",
+      "source_file": "BENCHMARKS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "model_llama31_8b",
+      "label": "Model: llama3.1:8b (triage role)",
+      "file_type": "document",
+      "source_file": "BENCHMARKS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "model_mxbai_embed_large",
+      "label": "Model: mxbai-embed-large (embedding role)",
+      "file_type": "document",
+      "source_file": "BENCHMARKS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_token_savings",
+      "label": "Token Savings Tracking (Ollama vs Claude Sonnet pricing)",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_symlink_install",
+      "label": "Symlink-based Installation (~/.claude/)",
+      "file_type": "document",
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "rationale_pure_bash",
+      "label": "Rationale: Pure Bash for portability and zero dependencies",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "rationale_local_llm_delegation",
+      "label": "Rationale: Delegate to local LLM to save API tokens and keep data local",
+      "file_type": "document",
+      "source_file": "documentation/ai_rules.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "rationale_specialist_model_advantage",
+      "label": "Rationale: Specialist coder models outperform general models for diff review",
+      "file_type": "document",
+      "source_file": "BENCHMARKS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "rationale_context_verdict_only",
+      "label": "Rationale: Orchestrator reads only Verdict line to keep context window small",
+      "file_type": "document",
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "bitbucket_integration_doc",
+      "label": "Bitbucket Pipelines Integration Guide",
+      "file_type": "document",
+      "source_file": "documentation/BITBUCKET_INTEGRATION.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "readme_doc",
+      "label": "Project README",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "changelog_doc",
+      "label": "Project Changelog",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "benchmarks_doc",
+      "label": "Model Benchmarks Document",
+      "file_type": "document",
+      "source_file": "BENCHMARKS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "contributing_doc",
+      "label": "Contributing Guide",
+      "file_type": "document",
+      "source_file": "CONTRIBUTING.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "security_doc",
+      "label": "Security Policy",
+      "file_type": "document",
+      "source_file": "SECURITY.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "ai_rules_doc",
+      "label": "IDE Agent Orchestration Rules",
+      "file_type": "document",
+      "source_file": "documentation/ai_rules.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_doc",
+      "label": "Architecture Documentation",
+      "file_type": "document",
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "skills_doc",
+      "label": "Skills Registry Documentation",
+      "file_type": "document",
+      "source_file": "documentation/SKILLS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "plugins_doc",
+      "label": "Plugins Documentation",
+      "file_type": "document",
+      "source_file": "documentation/PLUGINS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "graphify_out_dir",
+      "label": "graphify-out/ Knowledge Graph Output Directory",
+      "file_type": "document",
+      "source_file": "src/agents/TriageAgent.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "index_orchestrator_entrypoint",
+      "target": "orchestrator_class",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/index.ts",
+      "source_location": "line 15-16",
+      "weight": 1.0
+    },
+    {
+      "source": "orchestrator_class",
+      "target": "agent_runner_class",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/core/Orchestrator.ts",
+      "source_location": "line 30",
+      "weight": 1.0
+    },
+    {
+      "source": "orchestrator_class",
+      "target": "planner_agent_class",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/core/Orchestrator.ts",
+      "source_location": "line 31",
+      "weight": 1.0
+    },
+    {
+      "source": "orchestrator_class",
+      "target": "triage_agent_class",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/core/Orchestrator.ts",
+      "source_location": "line 32",
+      "weight": 1.0
+    },
+    {
+      "source": "orchestrator_class",
+      "target": "dependency_graph_class",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/core/Orchestrator.ts",
+      "source_location": "line 94",
+      "weight": 1.0
+    },
+    {
+      "source": "triage_agent_class",
+      "target": "agent_runner_class",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/agents/TriageAgent.ts",
+      "source_location": "line 36",
+      "weight": 1.0
+    },
+    {
+      "source": "planner_agent_class",
+      "target": "agent_runner_class",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/agents/PlannerAgent.ts",
+      "source_location": "line 47",
+      "weight": 1.0
+    },
+    {
+      "source": "agent_runner_class",
+      "target": "call_ollama_sh",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/agents/AgentRunner.ts",
+      "source_location": "line 7, 31",
+      "weight": 1.0
+    },
+    {
+      "source": "call_ollama_sh",
+      "target": "llm_config_json",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "orchestrator_class",
+      "target": "types_agent_domain",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/core/Orchestrator.ts",
+      "source_location": "line 7-12",
+      "weight": 0.8
+    },
+    {
+      "source": "orchestrator_class",
+      "target": "types_agent_task",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/core/Orchestrator.ts",
+      "source_location": "line 7-12",
+      "weight": 1.0
+    },
+    {
+      "source": "orchestrator_class",
+      "target": "types_agent_result",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/core/Orchestrator.ts",
+      "source_location": "line 7-12",
+      "weight": 1.0
+    },
+    {
+      "source": "orchestrator_class",
+      "target": "types_triage_result",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/core/Orchestrator.ts",
+      "source_location": "line 7-12",
+      "weight": 1.0
+    },
+    {
+      "source": "dependency_graph_class",
+      "target": "types_agent_task",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/core/DependencyGraph.ts",
+      "source_location": "line 1",
+      "weight": 1.0
+    },
+    {
+      "source": "dependency_graph_class",
+      "target": "types_agent_domain",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/core/DependencyGraph.ts",
+      "source_location": "line 1",
+      "weight": 1.0
+    },
+    {
+      "source": "planner_agent_class",
+      "target": "types_agent_domain",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/agents/PlannerAgent.ts",
+      "source_location": "line 4",
+      "weight": 1.0
+    },
+    {
+      "source": "planner_agent_class",
+      "target": "types_agent_task",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/agents/PlannerAgent.ts",
+      "source_location": "line 4",
+      "weight": 1.0
+    },
+    {
+      "source": "triage_agent_class",
+      "target": "types_agent_domain",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/agents/TriageAgent.ts",
+      "source_location": "line 4",
+      "weight": 1.0
+    },
+    {
+      "source": "triage_agent_class",
+      "target": "types_triage_result",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/agents/TriageAgent.ts",
+      "source_location": "line 4",
+      "weight": 1.0
+    },
+    {
+      "source": "triage_agent_class",
+      "target": "concept_graphify_integration",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/agents/TriageAgent.ts",
+      "source_location": "line 82-129",
+      "weight": 1.0
+    },
+    {
+      "source": "triage_agent_class",
+      "target": "graphify_out_dir",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/agents/TriageAgent.ts",
+      "source_location": "line 83",
+      "weight": 1.0
+    },
+    {
+      "source": "planner_agent_class",
+      "target": "concept_domain_dependencies",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/agents/PlannerAgent.ts",
+      "source_location": "line 7-12",
+      "weight": 1.0
+    },
+    {
+      "source": "bitbucket_review_script",
+      "target": "concept_autofix_hygiene",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/bitbucket-review.js",
+      "source_location": "line 180-198",
+      "weight": 1.0
+    },
+    {
+      "source": "bitbucket_review_script",
+      "target": "concept_security_audit_contextual",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/bitbucket-review.js",
+      "source_location": "line 233-258",
+      "weight": 1.0
+    },
+    {
+      "source": "bitbucket_review_script",
+      "target": "agent_role_reviewer",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/bitbucket-review.js",
+      "source_location": "line 61-65",
+      "weight": 1.0
+    },
+    {
+      "source": "bitbucket_review_script",
+      "target": "skill_security_hardening",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/bitbucket-review.js",
+      "source_location": "line 101-105",
+      "weight": 1.0
+    },
+    {
+      "source": "bitbucket_review_script",
+      "target": "bitbucket_integration_doc",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "scripts/bitbucket-review.js",
+      "source_location": null,
+      "weight": 0.85
+    },
+    {
+      "source": "ci_debugger_script",
+      "target": "agent_role_debugger",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/ci-debugger.js",
+      "source_location": "line 28",
+      "weight": 1.0
+    },
+    {
+      "source": "ci_debugger_script",
+      "target": "skill_root_cause_analysis",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/ci-debugger.js",
+      "source_location": "line 29",
+      "weight": 1.0
+    },
+    {
+      "source": "ci_debugger_script",
+      "target": "concept_self_healing_ci",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/ci-debugger.js",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "concept_pipeline_layers",
+      "target": "orchestrator_class",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": null,
+      "weight": 0.9
+    },
+    {
+      "source": "concept_plugin_route",
+      "target": "concept_triage_domain_routing",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "concept_context_file_handoff",
+      "target": "concept_rationale_context_verdict_only",
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": null,
+      "weight": 0.85
+    },
+    {
+      "source": "rationale_context_verdict_only",
+      "target": "concept_context_file_handoff",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": "line 77",
+      "weight": 1.0
+    },
+    {
+      "source": "rationale_pure_bash",
+      "target": "call_ollama_sh",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTRIBUTING.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "rationale_local_llm_delegation",
+      "target": "concept_local_first",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "documentation/ai_rules.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "rationale_specialist_model_advantage",
+      "target": "model_qwen25_coder_7b",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "BENCHMARKS.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "llm_config_json",
+      "target": "model_qwen25_coder_14b",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": "line 148",
+      "weight": 1.0
+    },
+    {
+      "source": "llm_config_json",
+      "target": "model_qwen25_coder_7b",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": "line 149-152",
+      "weight": 1.0
+    },
+    {
+      "source": "llm_config_json",
+      "target": "model_llama31_8b",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": "line 153",
+      "weight": 1.0
+    },
+    {
+      "source": "llm_config_json",
+      "target": "model_mxbai_embed_large",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": "line 154",
+      "weight": 1.0
+    },
+    {
+      "source": "agent_role_triage",
+      "target": "model_llama31_8b",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_role_coder",
+      "target": "model_qwen25_coder_14b",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "agent_role_reviewer",
+      "target": "model_qwen25_coder_7b",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "concept_local_first",
+      "target": "concept_token_savings",
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "documentation/ai_rules.md",
+      "source_location": null,
+      "weight": 0.85
+    },
+    {
+      "source": "concept_symlink_install",
+      "target": "call_ollama_sh",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "documentation/ARCHITECTURE.md",
+      "source_location": "line 162",
+      "weight": 1.0
+    },
+    {
+      "source": "triage_agent_class",
+      "target": "concept_triage_domain_routing",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "src/agents/TriageAgent.ts",
+      "source_location": null,
+      "weight": 0.9
+    },
+    {
+      "source": "dependency_graph_class",
+      "target": "concept_domain_dependencies",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "src/core/DependencyGraph.ts",
+      "source_location": null,
+      "weight": 0.9
+    },
+    {
+      "source": "plugin_security_guidance",
+      "target": "agent_role_reviewer",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "documentation/PLUGINS.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "plugin_api_architect",
+      "target": "skill_typescript",
+      "relation": "conceptually_related_to",
+      "confidence": "AMBIGUOUS",
+      "confidence_score": 0.3,
+      "source_file": "documentation/PLUGINS.md",
+      "source_location": null,
+      "weight": 0.3
+    },
+    {
+      "source": "ai_rules_doc",
+      "target": "concept_local_first",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "documentation/ai_rules.md",
+      "source_location": "line 1-12",
+      "weight": 1.0
+    },
+    {
+      "source": "ai_rules_doc",
+      "target": "skill_root_cause_analysis",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "documentation/ai_rules.md",
+      "source_location": "line 44-45",
+      "weight": 1.0
+    },
+    {
+      "source": "ai_rules_doc",
+      "target": "skill_security_hardening",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "documentation/ai_rules.md",
+      "source_location": "line 52",
+      "weight": 1.0
+    },
+    {
+      "source": "bitbucket_review_script",
+      "target": "agent_role_devops",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/bitbucket-review.js",
+      "source_location": "line 62-64",
+      "weight": 1.0
+    },
+    {
+      "source": "concept_self_healing_ci",
+      "target": "ci_debugger_script",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "documentation/BITBUCKET_INTEGRATION.md",
+      "source_location": "line 108-126",
+      "weight": 1.0
+    },
+    {
+      "source": "benchmarks_doc",
+      "target": "rationale_specialist_model_advantage",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "BENCHMARKS.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "types_triage_result",
+      "target": "concept_graphify_integration",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/types/index.ts",
+      "source_location": "line 27-30",
+      "weight": 1.0
+    },
+    {
+      "source": "agent_runner_class",
+      "target": "types_run_result",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/agents/AgentRunner.ts",
+      "source_location": "line 5",
+      "weight": 1.0
+    },
+    {
+      "source": "orchestrator_class",
+      "target": "concept_pipeline_layers",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "src/core/Orchestrator.ts",
+      "source_location": null,
+      "weight": 0.9
+    },
+    {
+      "source": "orchestrator_class",
+      "target": "concept_context_file_handoff",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/core/Orchestrator.ts",
+      "source_location": null,
+      "weight": 0.85
+    },
+    {
+      "source": "planner_agent_class",
+      "target": "concept_context_file_handoff",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/agents/PlannerAgent.ts",
+      "source_location": "line 29, 56",
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "ts_orchestration_core",
+      "label": "TypeScript Orchestration Core Classes",
+      "nodes": [
+        "orchestrator_class",
+        "dependency_graph_class",
+        "agent_runner_class",
+        "planner_agent_class",
+        "triage_agent_class"
+      ],
+      "relation": "implement",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/core/Orchestrator.ts"
+    },
+    {
+      "id": "type_system",
+      "label": "Shared Type System",
+      "nodes": [
+        "types_agent_domain",
+        "types_agent_task",
+        "types_agent_result",
+        "types_triage_result",
+        "types_run_result",
+        "types_llm_config"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/types/index.ts"
+    },
+    {
+      "id": "ci_integration_scripts",
+      "label": "CI Integration Scripts (Bitbucket)",
+      "nodes": [
+        "bitbucket_review_script",
+        "ci_debugger_script",
+        "concept_self_healing_ci"
+      ],
+      "relation": "implement",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "documentation/BITBUCKET_INTEGRATION.md"
+    },
+    {
+      "id": "local_model_routing",
+      "label": "Local Model Routing Layer",
+      "nodes": [
+        "call_ollama_sh",
+        "llm_config_json",
+        "model_qwen25_coder_14b",
+        "model_qwen25_coder_7b",
+        "model_llama31_8b",
+        "model_mxbai_embed_large"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "documentation/ARCHITECTURE.md"
+    },
+    {
+      "id": "pipeline_rationale_cluster",
+      "label": "Design Rationale Cluster",
+      "nodes": [
+        "rationale_pure_bash",
+        "rationale_local_llm_delegation",
+        "rationale_specialist_model_advantage",
+        "rationale_context_verdict_only"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "CONTRIBUTING.md"
+    }
+  ],
+  "input_tokens": 18500,
+  "output_tokens": 3200
+}

@@ -22,3 +22,9 @@ export type OrchestratorConfig = {
 export type LlmConfig = {
   readonly models: Record<string, string>;
 };
+
+export type TriageResult = {
+  readonly domains: readonly AgentDomain[];
+  readonly reasoning: string;
+  readonly graphifyContext: string | undefined;
+};
