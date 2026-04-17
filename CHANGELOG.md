@@ -3,6 +3,8 @@
 All notable changes to ai-orchestrator.
 ## [unreleased]
 ### 2026-04-17
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`bc30c94`](https://github.com/Mybono/ai-orchestrator/commit/bc30c945ab50944274b24225484371a3da916a64) Update git hooks and watcher settings
+- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`4d1a6f5`](https://github.com/Mybono/ai-orchestrator/commit/4d1a6f528817588a030712d335242ce33d074ab3) Sync changelog after merge
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`a9f39c4`](https://github.com/Mybono/ai-orchestrator/commit/a9f39c4bbb9cca2500fc3a6b80b4317d070a8842) Auto-fix markdown lint errors
 - ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`59ebf75`](https://github.com/Mybono/ai-orchestrator/commit/59ebf75c9f51828d690b3c80500d9f2524071e32) Add Role type and update AgentResult
 - ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`9cadca6`](https://github.com/Mybono/ai-orchestrator/commit/9cadca605eff72fe4cb39f53e1a405a7fc2452a7) Limit stdout and stderr output sizes
