@@ -31,7 +31,7 @@ Run the full plan → code → review pipeline for a coding task.
 If `graphify-out/graph.json` exists, run:
 
 ```bash
-npx tsx src/agents/TriageAgent.ts "<task description>"
+~/.claude/triage-agent.sh "<task description>"
 ```
 
 This writes `.claude/context/triage_ts.md` with:
@@ -116,7 +116,7 @@ After planning completes, check how many domains triage detected. Read `## Domai
 The TypeScript Orchestrator reads the context files Claude already wrote and executes them in dependency order:
 
 ```bash
-npm start "<domain1>,<domain2>,..."
+~/.claude/ts-orchestrator.sh "<domain1>,<domain2>,..."
 ```
 
 Pass the comma-separated domain list exactly as returned by triage (e.g. `"coder,unit-tester,doc-writer"`). The TS Orchestrator will:

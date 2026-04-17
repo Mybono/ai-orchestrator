@@ -1,18 +1,16 @@
-<svg width="680" height="720" viewBox="0 0 680 720" xmlns="http://www.w3.org/2000/svg">
+<svg width="680" height="810" viewBox="0 0 680 810" xmlns="http://www.w3.org/2000/svg">
 <defs>
   <style>
-    .bg { fill: #0d1117; }
-    .card { rx: 10; }
-
     /* ── colors ── */
     .c-gray-fill    { fill: #21262d; stroke: #30363d; }
     .c-purple-fill  { fill: #1a1040; stroke: #6e40c9; }
+    .c-purple-inner { fill: #120b30; stroke: #4a2c99; }
     .c-blue-fill    { fill: #0c1a2e; stroke: #1f6feb; }
     .c-amber-fill   { fill: #1a1200; stroke: #9e6a03; }
     .c-teal-fill    { fill: #051f1a; stroke: #1b7a6e; }
     .c-green-fill   { fill: #0a1f0a; stroke: #238636; }
-    .c-red-fill     { fill: #1f0a0a; stroke: #8b2020; }
     .c-indigo-fill  { fill: #101a40; stroke: #406ec9; }
+    .c-ts-fill      { fill: #0a1628; stroke: #3178c6; }
 
     .t-white  { fill: #e6edf3; font-family: -apple-system, system-ui, sans-serif; font-size: 13px; font-weight: 600; }
     .t-muted  { fill: #8b949e; font-family: -apple-system, system-ui, sans-serif; font-size: 11px; font-weight: 400; }
@@ -21,6 +19,8 @@
     .t-label  { fill: #f0883e; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px; font-weight: 600; }
     .t-fail   { fill: #f85149; font-family: -apple-system, system-ui, sans-serif; font-size: 10px; font-weight: 600; }
     .t-pass   { fill: #3fb950; font-family: -apple-system, system-ui, sans-serif; font-size: 10px; font-weight: 600; }
+    .t-domain { fill: #a5b4fc; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 10px; font-weight: 600; }
+    .t-par    { fill: #6e40c9; font-family: -apple-system, system-ui, sans-serif; font-size: 9px; font-weight: 700; }
 
     /* ── animations ── */
     @keyframes fadeUp {
@@ -39,37 +39,33 @@
       from { stroke-dashoffset: 20; }
       to   { stroke-dashoffset: 0; }
     }
-    @keyframes pulseArrow {
-      0%, 100% { stroke-opacity: 0.3; stroke-width: 1.2; }
-      50% { stroke-opacity: 0.8; stroke-width: 2.0; }
-    }
 
     /* timing */
-    .g-trigger { opacity:0; animation: fadeUp .5s ease forwards; animation-delay: 0.1s; }
-    .g-triage  { opacity:0; animation: fadeUp .5s ease forwards; animation-delay: 0.8s; }
-    .g-planner { opacity:0; animation: fadeUp .5s ease forwards; animation-delay: 1.6s; }
-    .g-pre-review { opacity:0; animation: fadeUp .5s ease forwards; animation-delay: 2.4s; }
-    .g-coder   { opacity:0; animation: fadeUp .5s ease forwards; animation-delay: 3.2s; }
-    .g-build   { opacity:0; animation: fadeUp .5s ease forwards; animation-delay: 4.0s; }
-    .g-review  { opacity:0; animation: fadeUp .5s ease forwards; animation-delay: 4.8s; }
-    .g-commit  { opacity:0; animation: fadeUp .5s ease forwards; animation-delay: 5.6s; }
-    .g-badges  { opacity:0; animation: fadeIn .6s ease forwards; animation-delay: 6.2s; }
-    .g-fail    { opacity:0; animation: fadeIn .5s ease forwards; animation-delay: 4.4s; }
-    .g-fail-review { opacity:0; animation: fadeIn .5s ease forwards; animation-delay: 5.2s; }
-    .g-fail-plan   { opacity:0; animation: fadeIn .5s ease forwards; animation-delay: 2.8s; }
+    .g-trigger    { opacity:0; animation: fadeUp .5s ease forwards; animation-delay: 0.1s; }
+    .g-triage     { opacity:0; animation: fadeUp .5s ease forwards; animation-delay: 0.8s; }
+    .g-planner    { opacity:0; animation: fadeUp .5s ease forwards; animation-delay: 1.6s; }
+    .g-pre-review { opacity:0; animation: fadeUp .5s ease forwards; animation-delay: 2.6s; }
+    .g-ts-orch    { opacity:0; animation: fadeUp .5s ease forwards; animation-delay: 3.2s; }
+    .g-coder      { opacity:0; animation: fadeUp .5s ease forwards; animation-delay: 4.0s; }
+    .g-build      { opacity:0; animation: fadeUp .5s ease forwards; animation-delay: 4.8s; }
+    .g-review     { opacity:0; animation: fadeUp .5s ease forwards; animation-delay: 5.6s; }
+    .g-commit     { opacity:0; animation: fadeUp .5s ease forwards; animation-delay: 6.4s; }
+    .g-badges     { opacity:0; animation: fadeIn .6s ease forwards; animation-delay: 7.0s; }
+    .g-fail       { opacity:0; animation: fadeIn .5s ease forwards; animation-delay: 5.2s; }
+    .g-fail-review { opacity:0; animation: fadeIn .5s ease forwards; animation-delay: 6.0s; }
+    .g-fail-plan   { opacity:0; animation: fadeIn .5s ease forwards; animation-delay: 3.0s; }
 
-    .arr-1 { opacity:0; stroke-dasharray:30; stroke-dashoffset:30; animation: drawLine .4s ease forwards; animation-delay:0.5s; }
-    .arr-2 { opacity:0; stroke-dasharray:30; stroke-dashoffset:30; animation: drawLine .4s ease forwards; animation-delay:1.3s; }
-    .arr-3 { opacity:0; stroke-dasharray:30; stroke-dashoffset:30; animation: drawLine .4s ease forwards; animation-delay:2.1s; }
-    .arr-4 { opacity:0; stroke-dasharray:30; stroke-dashoffset:30; animation: drawLine .4s ease forwards; animation-delay:2.9s; }
-    .arr-5 { opacity:0; stroke-dasharray:30; stroke-dashoffset:30; animation: drawLine .4s ease forwards; animation-delay:3.7s; }
-    .arr-6 { opacity:0; stroke-dasharray:30; stroke-dashoffset:30; animation: drawLine .4s ease forwards; animation-delay:4.5s; }
-    .arr-7 { opacity:0; stroke-dasharray:30; stroke-dashoffset:30; animation: drawLine .4s ease forwards; animation-delay:5.3s; }
+    .arr-1  { opacity:0; stroke-dasharray:30; stroke-dashoffset:30; animation: drawLine .4s ease forwards; animation-delay:0.5s; }
+    .arr-2  { opacity:0; stroke-dasharray:30; stroke-dashoffset:30; animation: drawLine .4s ease forwards; animation-delay:1.3s; }
+    .arr-3  { opacity:0; stroke-dasharray:30; stroke-dashoffset:30; animation: drawLine .4s ease forwards; animation-delay:2.3s; }
+    .arr-4  { opacity:0; stroke-dasharray:30; stroke-dashoffset:30; animation: drawLine .4s ease forwards; animation-delay:3.1s; }
+    .arr-4b { opacity:0; stroke-dasharray:30; stroke-dashoffset:30; animation: drawLine .4s ease forwards; animation-delay:3.7s; }
+    .arr-5  { opacity:0; stroke-dasharray:30; stroke-dashoffset:30; animation: drawLine .4s ease forwards; animation-delay:4.5s; }
+    .arr-6  { opacity:0; stroke-dasharray:30; stroke-dashoffset:30; animation: drawLine .4s ease forwards; animation-delay:5.3s; }
+    .arr-7  { opacity:0; stroke-dasharray:30; stroke-dashoffset:30; animation: drawLine .4s ease forwards; animation-delay:6.1s; }
 
-    .flow-success { 
-      stroke: #3fb950; 
-      stroke-width: 1.5; 
-      stroke-dasharray: 4 6; 
+    .flow-success {
+      stroke: #3fb950; stroke-width: 1.5; stroke-dasharray: 4 6;
       opacity: 0;
       animation: dashFlowSuccess 1s linear infinite, fadeIn .3s ease forwards;
     }
@@ -84,17 +80,18 @@
   <marker id="arrowG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
     <path d="M2 1L8 5L2 9" fill="none" stroke="#3fb950" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
   </marker>
+  <marker id="arrowP" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#6e40c9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
 </defs>
 
 <!-- background -->
-<rect width="680" height="720" fill="#0d1117" rx="12"/>
-
-<!-- top border accent -->
+<rect width="680" height="810" fill="#0d1117" rx="12"/>
 <rect x="0" y="0" width="680" height="3" fill="#6e40c9" rx="2"/>
 
 <!-- title -->
 <text x="340" y="36" text-anchor="middle" class="t-title">ai-orchestrator /implement pipeline</text>
-<text x="340" y="54" text-anchor="middle" class="t-muted">Claude Code · Ollama · Bash</text>
+<text x="340" y="54" text-anchor="middle" class="t-muted">Claude Code · Ollama · TypeScript · Bash</text>
 
 <!-- ══ TRIGGER ══ -->
 <g class="g-trigger">
@@ -104,9 +101,9 @@
   <text x="340" y="108" text-anchor="middle" class="t-muted" font-size="10">slash command · Claude Code</text>
 </g>
 
-<!-- arrow 1 (Success Path) -->
+<!-- arrow 1 -->
 <line x1="340" y1="118" x2="340" y2="136" stroke="#30363d" stroke-width="1.2" class="arr-1" marker-end="url(#arrowW)"/>
-<line x1="340" y1="120" x2="340" y2="134" class="flow-success" style="animation-delay: 0.8s;"/>
+<line x1="340" y1="120" x2="340" y2="134" class="flow-success" style="animation-delay:0.8s;"/>
 
 <!-- ══ TRIAGE ══ -->
 <g class="g-triage">
@@ -115,149 +112,201 @@
   <text x="340" y="175" text-anchor="middle" class="t-muted">selects expertise · loads plugins</text>
 </g>
 
-<!-- arrow 2 (Success Path) -->
+<!-- arrow 2 -->
 <line x1="340" y1="188" x2="340" y2="206" stroke="#30363d" stroke-width="1.2" class="arr-2" marker-end="url(#arrowW)"/>
-<line x1="340" y1="190" x2="340" y2="204" class="flow-success" style="animation-delay: 1.6s;"/>
+<line x1="340" y1="190" x2="340" y2="204" class="flow-success" style="animation-delay:1.6s;"/>
 
-<!-- ══ PLANNER ══ -->
+<!-- ══ PLANNER (parallel) ══ -->
 <g class="g-planner">
-  <rect x="180" y="206" width="320" height="52" rx="8" class="c-purple-fill" stroke-width="1"/>
-  <text x="340" y="227" text-anchor="middle" class="t-white">🗺  Planner agent</text>
-  <text x="340" y="245" text-anchor="middle" class="t-muted">explores codebase · writes plan</text>
+  <!-- outer box -->
+  <rect x="180" y="206" width="320" height="96" rx="8" class="c-purple-fill" stroke-width="1"/>
+  <!-- header -->
+  <text x="340" y="225" text-anchor="middle" class="t-white">🗺  Planner agents</text>
+  <text x="340" y="241" text-anchor="middle" class="t-muted">parallel planning · one per domain</text>
+
+  <!-- parallel domain sub-boxes -->
+  <!-- coder -->
+  <rect x="194" y="250" width="64" height="26" rx="5" class="c-purple-inner" stroke-width="0.8"/>
+  <text x="226" y="267" text-anchor="middle" class="t-domain">coder</text>
+
+  <!-- api -->
+  <rect x="264" y="250" width="64" height="26" rx="5" class="c-purple-inner" stroke-width="0.8"/>
+  <text x="296" y="267" text-anchor="middle" class="t-domain">api</text>
+
+  <!-- devops -->
+  <rect x="334" y="250" width="64" height="26" rx="5" class="c-purple-inner" stroke-width="0.8"/>
+  <text x="366" y="267" text-anchor="middle" class="t-domain">devops</text>
+
+  <!-- docs -->
+  <rect x="404" y="250" width="64" height="26" rx="5" class="c-purple-inner" stroke-width="0.8"/>
+  <text x="436" y="267" text-anchor="middle" class="t-domain">docs</text>
+
+  <!-- parallel indicator lines (fan-out from center top, fan-in to center bottom) -->
+  <!-- fan-out: from 340,249 to each box center top -->
+  <line x1="340" y1="244" x2="226" y2="250" stroke="#6e40c9" stroke-width="0.7" stroke-dasharray="2 1" opacity="0.6"/>
+  <line x1="340" y1="244" x2="296" y2="250" stroke="#6e40c9" stroke-width="0.7" stroke-dasharray="2 1" opacity="0.6"/>
+  <line x1="340" y1="244" x2="366" y2="250" stroke="#6e40c9" stroke-width="0.7" stroke-dasharray="2 1" opacity="0.6"/>
+  <line x1="340" y1="244" x2="436" y2="250" stroke="#6e40c9" stroke-width="0.7" stroke-dasharray="2 1" opacity="0.6"/>
+
+  <!-- parallel label -->
+  <text x="171" y="270" text-anchor="end" class="t-par">∥</text>
 </g>
 
-<!-- arrow 3 (Success Path) -->
-<line x1="340" y1="258" x2="340" y2="276" stroke="#30363d" stroke-width="1.2" class="arr-3" marker-end="url(#arrowW)"/>
-<line x1="340" y1="260" x2="340" y2="274" class="flow-success" style="animation-delay: 2.4s;"/>
+<!-- arrow 3 -->
+<line x1="340" y1="302" x2="340" y2="320" stroke="#30363d" stroke-width="1.2" class="arr-3" marker-end="url(#arrowW)"/>
+<line x1="340" y1="304" x2="340" y2="318" class="flow-success" style="animation-delay:2.6s;"/>
 
 <!-- ══ PRE-REVIEW ══ -->
 <g class="g-pre-review">
-  <rect x="180" y="276" width="320" height="52" rx="8" class="c-teal-fill" stroke-width="1"/>
-  <text x="340" y="297" text-anchor="middle" class="t-white">🛡  Pre-Reviewer agent</text>
-  <text x="340" y="315" text-anchor="middle" class="t-muted">checks domain standards · compliance checklist</text>
+  <rect x="180" y="320" width="320" height="52" rx="8" class="c-teal-fill" stroke-width="1"/>
+  <text x="340" y="341" text-anchor="middle" class="t-white">🛡  Pre-Reviewer agent</text>
+  <text x="340" y="359" text-anchor="middle" class="t-muted">checks domain standards · compliance checklist</text>
 </g>
 
 <!-- fail loop (Pre-Review -> Planner) -->
 <g class="g-fail-plan">
-  <path d="M180 302 L155 302 L155 232 L180 232"
+  <path d="M180 346 L155 346 L155 240 L180 240"
         fill="none" stroke="#f85149" stroke-width="1.2"
         stroke-dasharray="4 2"
         marker-end="url(#arrowR)"
-        style="animation: dashFlowSuccess 0.8s linear infinite; animation-delay: 2.8s;"/>
-  <text x="145" y="267" text-anchor="middle" class="t-fail" transform="rotate(-90,145,267)">refine plan</text>
+        style="animation: dashFlowSuccess 0.8s linear infinite; animation-delay: 3.0s;"/>
+  <text x="145" y="293" text-anchor="middle" class="t-fail" transform="rotate(-90,145,293)">refine plan</text>
 </g>
 
-<!-- arrow 4 (Success Path) -->
-<line x1="340" y1="328" x2="340" y2="346" stroke="#30363d" stroke-width="1.2" class="arr-4" marker-end="url(#arrowW)"/>
-<line x1="340" y1="330" x2="340" y2="344" class="flow-success" style="animation-delay: 3.2s;"/>
+<!-- arrow 4 -->
+<line x1="340" y1="372" x2="340" y2="390" stroke="#30363d" stroke-width="1.2" class="arr-4" marker-end="url(#arrowW)"/>
+<line x1="340" y1="374" x2="340" y2="388" class="flow-success" style="animation-delay:3.2s;"/>
+
+<!-- ══ TS ORCHESTRATOR ══ -->
+<g class="g-ts-orch">
+  <rect x="180" y="390" width="320" height="52" rx="8" class="c-ts-fill" stroke-width="1"/>
+  <text x="340" y="411" text-anchor="middle" class="t-white">🔷  TS Orchestrator</text>
+  <text x="340" y="429" text-anchor="middle" class="t-muted">dependency graph · parallel Ollama agents</text>
+</g>
+
+<!-- arrow 4b -->
+<line x1="340" y1="442" x2="340" y2="460" stroke="#30363d" stroke-width="1.2" class="arr-4b" marker-end="url(#arrowW)"/>
+<line x1="340" y1="444" x2="340" y2="458" class="flow-success" style="animation-delay:4.0s;"/>
 
 <!-- ══ CODER ══ -->
 <g class="g-coder">
-  <rect x="180" y="346" width="320" height="52" rx="8" class="c-blue-fill" stroke-width="1"/>
-  <text x="340" y="367" text-anchor="middle" class="t-white">⚙️  Coder agent</text>
-  <text x="340" y="385" text-anchor="middle" class="t-muted">generates code via Ollama</text>
+  <rect x="180" y="460" width="320" height="52" rx="8" class="c-blue-fill" stroke-width="1"/>
+  <text x="340" y="481" text-anchor="middle" class="t-white">⚙️  Coder agent</text>
+  <text x="340" y="499" text-anchor="middle" class="t-muted">generates code via Ollama</text>
 </g>
 
-<!-- arrow 5 (Success Path) -->
-<line x1="340" y1="398" x2="340" y2="416" stroke="#30363d" stroke-width="1.2" class="arr-5" marker-end="url(#arrowW)"/>
-<line x1="340" y1="400" x2="340" y2="414" class="flow-success" style="animation-delay: 4.0s;"/>
+<!-- arrow 5 -->
+<line x1="340" y1="512" x2="340" y2="530" stroke="#30363d" stroke-width="1.2" class="arr-5" marker-end="url(#arrowW)"/>
+<line x1="340" y1="514" x2="340" y2="528" class="flow-success" style="animation-delay:4.8s;"/>
 
 <!-- ══ BUILD CHECK ══ -->
 <g class="g-build">
-  <rect x="180" y="416" width="320" height="52" rx="8" class="c-amber-fill" stroke-width="1"/>
-  <text x="340" y="437" text-anchor="middle" class="t-white">🔨  Build check</text>
-  <text x="340" y="455" text-anchor="middle" class="t-muted">compile · lint · syntax</text>
+  <rect x="180" y="530" width="320" height="52" rx="8" class="c-amber-fill" stroke-width="1"/>
+  <text x="340" y="551" text-anchor="middle" class="t-white">🔨  Build check</text>
+  <text x="340" y="569" text-anchor="middle" class="t-muted">compile · lint · syntax</text>
 </g>
 
 <!-- fail loop (Build -> Coder) -->
 <g class="g-fail">
-  <path d="M180 442 L155 442 L155 372 L180 372"
-        fill="none" stroke="#f85149" stroke-width="1.2"
-        stroke-dasharray="4 2"
-        marker-end="url(#arrowR)"
-        style="animation: dashFlowSuccess 0.8s linear infinite; animation-delay: 4.4s;"/>
-  <text x="145" y="407" text-anchor="middle" class="t-fail" transform="rotate(-90,145,407)">fix syntax</text>
-</g>
-
-<!-- pass arrow (Build -> Review) -->
-<g class="arr-6" style="opacity:0">
-  <line x1="340" y1="468" x2="340" y2="486" stroke="#3fb950" stroke-width="1.2" marker-end="url(#arrowG)"
-        style="stroke-dasharray:20; stroke-dashoffset:20; animation: drawLine .4s ease forwards; animation-delay: 4.5s;"/>
-  <text x="356" y="480" class="t-pass">pass</text>
-</g>
-<line x1="340" y1="470" x2="340" y2="484" class="flow-success" style="stroke: #3fb950; animation-delay: 4.8s;"/>
-
-<!-- ══ REVIEWER ══ -->
-<g class="g-review">
-  <rect x="180" y="486" width="320" height="52" rx="8" class="c-teal-fill" stroke-width="1"/>
-  <text x="340" y="507" text-anchor="middle" class="t-white">🔍  Reviewer agent</text>
-  <text x="340" y="525" text-anchor="middle" class="t-muted">checks standards · security check</text>
-</g>
-
-<!-- fail loop (Reviewer -> Coder) -->
-<g class="g-fail-review">
-  <path d="M180 512 L125 512 L125 372 L180 372"
+  <path d="M180 556 L155 556 L155 486 L180 486"
         fill="none" stroke="#f85149" stroke-width="1.2"
         stroke-dasharray="4 2"
         marker-end="url(#arrowR)"
         style="animation: dashFlowSuccess 0.8s linear infinite; animation-delay: 5.2s;"/>
-  <text x="115" y="442" text-anchor="middle" class="t-fail" transform="rotate(-90,115,442)">needs changes</text>
+  <text x="145" y="521" text-anchor="middle" class="t-fail" transform="rotate(-90,145,521)">fix syntax</text>
 </g>
 
-<!-- arrow 7 (Success Path) -->
-<line x1="340" y1="538" x2="340" y2="556" stroke="#30363d" stroke-width="1.2" class="arr-7" marker-end="url(#arrowW)"/>
-<line x1="340" y1="540" x2="340" y2="554" class="flow-success" style="animation-delay: 5.6s;"/>
+<!-- pass arrow (Build -> Review) -->
+<g class="arr-6" style="opacity:0">
+  <line x1="340" y1="582" x2="340" y2="600" stroke="#3fb950" stroke-width="1.2" marker-end="url(#arrowG)"
+        style="stroke-dasharray:20; stroke-dashoffset:20; animation: drawLine .4s ease forwards; animation-delay: 5.3s;"/>
+  <text x="356" y="594" class="t-pass">pass</text>
+</g>
+<line x1="340" y1="584" x2="340" y2="598" class="flow-success" style="stroke:#3fb950; animation-delay:5.6s;"/>
+
+<!-- ══ REVIEWER ══ -->
+<g class="g-review">
+  <rect x="180" y="600" width="320" height="52" rx="8" class="c-teal-fill" stroke-width="1"/>
+  <text x="340" y="621" text-anchor="middle" class="t-white">🔍  Reviewer agent</text>
+  <text x="340" y="639" text-anchor="middle" class="t-muted">checks standards · security check</text>
+</g>
+
+<!-- fail loop (Reviewer -> Coder) -->
+<g class="g-fail-review">
+  <path d="M180 626 L125 626 L125 486 L180 486"
+        fill="none" stroke="#f85149" stroke-width="1.2"
+        stroke-dasharray="4 2"
+        marker-end="url(#arrowR)"
+        style="animation: dashFlowSuccess 0.8s linear infinite; animation-delay: 6.0s;"/>
+  <text x="115" y="556" text-anchor="middle" class="t-fail" transform="rotate(-90,115,556)">needs changes</text>
+</g>
+
+<!-- arrow 7 -->
+<line x1="340" y1="652" x2="340" y2="670" stroke="#30363d" stroke-width="1.2" class="arr-7" marker-end="url(#arrowW)"/>
+<line x1="340" y1="654" x2="340" y2="668" class="flow-success" style="animation-delay:6.4s;"/>
 
 <!-- ══ COMMIT ══ -->
 <g class="g-commit">
-  <rect x="180" y="556" width="320" height="52" rx="8" class="c-green-fill" stroke-width="1"/>
-  <text x="340" y="577" text-anchor="middle" class="t-white">✅  Commit agent</text>
-  <text x="340" y="595" text-anchor="middle" class="t-muted">stages · message · git commit</text>
+  <rect x="180" y="670" width="320" height="52" rx="8" class="c-green-fill" stroke-width="1"/>
+  <text x="340" y="691" text-anchor="middle" class="t-white">✅  Commit agent</text>
+  <text x="340" y="709" text-anchor="middle" class="t-muted">stages · message · git commit</text>
 </g>
 
 <!-- ══ MODEL BADGES ══ -->
 <g class="g-badges">
-  <rect x="510" y="149" width="130" height="20" rx="10" fill="#101a40" stroke="#406ec9" stroke-width="0.8"/>
-  <text x="575" y="163" text-anchor="middle" class="t-mono">llama3.1:8b</text>
+  <!-- Triage: Claude Agent -->
+  <rect x="510" y="149" width="130" height="20" rx="10" fill="#1a0e00" stroke="#d97706" stroke-width="0.8"/>
+  <text x="575" y="163" text-anchor="middle" class="t-mono" fill="#f59e0b">Claude Agent</text>
 
-  <rect x="510" y="219" width="130" height="20" rx="10" fill="#1a0e00" stroke="#d97706" stroke-width="0.8"/>
-  <text x="575" y="233" text-anchor="middle" class="t-mono" fill="#f59e0b">Claude Sonnet</text>
+  <!-- Planner: Claude Sonnet -->
+  <rect x="510" y="246" width="130" height="20" rx="10" fill="#1a0e00" stroke="#d97706" stroke-width="0.8"/>
+  <text x="575" y="260" text-anchor="middle" class="t-mono" fill="#f59e0b">Claude Sonnet</text>
 
-  <rect x="510" y="289" width="130" height="20" rx="10" fill="#051f1a" stroke="#1b7a6e" stroke-width="0.8"/>
-  <text x="575" y="303" text-anchor="middle" class="t-mono" fill="#56d364">coder:7b</text>
+  <!-- Pre-Review: coder:7b -->
+  <rect x="510" y="333" width="130" height="20" rx="10" fill="#051f1a" stroke="#1b7a6e" stroke-width="0.8"/>
+  <text x="575" y="347" text-anchor="middle" class="t-mono" fill="#56d364">coder:7b</text>
 
-  <rect x="510" y="359" width="130" height="20" rx="10" fill="#0c1a2e" stroke="#1f6feb" stroke-width="0.8"/>
-  <text x="575" y="373" text-anchor="middle" class="t-mono" fill="#58a6ff">14B-IQ4_XS</text>
+  <!-- TS Orch: TS + Ollama -->
+  <rect x="510" y="403" width="130" height="20" rx="10" fill="#0a1628" stroke="#3178c6" stroke-width="0.8"/>
+  <text x="575" y="417" text-anchor="middle" class="t-mono" fill="#58a6ff">TS + Ollama</text>
 
-  <rect x="510" y="499" width="130" height="20" rx="10" fill="#051f1a" stroke="#1b7a6e" stroke-width="0.8"/>
-  <text x="575" y="513" text-anchor="middle" class="t-mono" fill="#56d364">coder:7b</text>
+  <!-- Coder: 14B-IQ4_XS -->
+  <rect x="510" y="473" width="130" height="20" rx="10" fill="#0c1a2e" stroke="#1f6feb" stroke-width="0.8"/>
+  <text x="575" y="487" text-anchor="middle" class="t-mono" fill="#58a6ff">14B-IQ4_XS</text>
 
-  <rect x="510" y="569" width="130" height="20" rx="10" fill="#0a1f0a" stroke="#238636" stroke-width="0.8"/>
-  <text x="575" y="583" text-anchor="middle" class="t-mono" fill="#3fb950">coder:7b</text>
+  <!-- Reviewer: coder:7b -->
+  <rect x="510" y="613" width="130" height="20" rx="10" fill="#051f1a" stroke="#1b7a6e" stroke-width="0.8"/>
+  <text x="575" y="627" text-anchor="middle" class="t-mono" fill="#56d364">coder:7b</text>
 
-  <path d="M500 159 H510" stroke="#406ec9" stroke-width="0.8" stroke-dasharray="2 1"/>
-  <path d="M500 229 H510" stroke="#d97706" stroke-width="0.8" stroke-dasharray="2 1"/>
-  <path d="M500 299 H510" stroke="#1b7a6e" stroke-width="0.8" stroke-dasharray="2 1"/>
-  <path d="M500 369 H510" stroke="#1f6feb" stroke-width="0.8" stroke-dasharray="2 1"/>
-  <path d="M500 509 H510" stroke="#1b7a6e" stroke-width="0.8" stroke-dasharray="2 1"/>
-  <path d="M500 579 H510" stroke="#238636" stroke-width="0.8" stroke-dasharray="2 1"/>
+  <!-- Commit: coder:7b -->
+  <rect x="510" y="683" width="130" height="20" rx="10" fill="#0a1f0a" stroke="#238636" stroke-width="0.8"/>
+  <text x="575" y="697" text-anchor="middle" class="t-mono" fill="#3fb950">coder:7b</text>
+
+  <!-- connector dashes -->
+  <path d="M500 159 H510" stroke="#d97706" stroke-width="0.8" stroke-dasharray="2 1"/>
+  <path d="M500 256 H510" stroke="#d97706" stroke-width="0.8" stroke-dasharray="2 1"/>
+  <path d="M500 346 H510" stroke="#1b7a6e" stroke-width="0.8" stroke-dasharray="2 1"/>
+  <path d="M500 416 H510" stroke="#3178c6" stroke-width="0.8" stroke-dasharray="2 1"/>
+  <path d="M500 486 H510" stroke="#1f6feb" stroke-width="0.8" stroke-dasharray="2 1"/>
+  <path d="M500 626 H510" stroke="#1b7a6e" stroke-width="0.8" stroke-dasharray="2 1"/>
+  <path d="M500 696 H510" stroke="#238636" stroke-width="0.8" stroke-dasharray="2 1"/>
 </g>
 
 <!-- ══ FOOTER LEGEND ══ -->
-<g class="g-badges" style="animation-delay: 6.8s">
-  <rect x="180" y="640" width="110" height="34" rx="6" fill="#161b22" stroke="#30363d" stroke-width="0.8" stroke-dasharray="3 2"/>
-  <text x="235" y="654" text-anchor="middle" fill="#8b949e" font-family="sans-serif" font-size="9">powered by</text>
-  <text x="235" y="668" text-anchor="middle" fill="#79c0ff" font-family="monospace" font-size="10" font-weight="600">call_ollama.sh</text>
-  
-  <rect x="300" y="640" width="80" height="34" rx="6" fill="#161b22" stroke="#30363d" stroke-width="0.8" stroke-dasharray="3 2"/>
-  <text x="340" y="654" text-anchor="middle" fill="#8b949e" font-family="sans-serif" font-size="9">config</text>
-  <text x="340" y="668" text-anchor="middle" fill="#79c0ff" font-family="monospace" font-size="10" font-weight="600">llm-config.json</text>
+<g class="g-badges" style="animation-delay:7.0s">
+  <rect x="180" y="754" width="110" height="34" rx="6" fill="#161b22" stroke="#30363d" stroke-width="0.8" stroke-dasharray="3 2"/>
+  <text x="235" y="768" text-anchor="middle" fill="#8b949e" font-family="sans-serif" font-size="9">powered by</text>
+  <text x="235" y="782" text-anchor="middle" fill="#79c0ff" font-family="monospace" font-size="10" font-weight="600">call_ollama.sh</text>
 
-  <rect x="390" y="640" width="110" height="34" rx="6" fill="#161b22" stroke="#30363d" stroke-width="0.8" stroke-dasharray="3 2"/>
-  <text x="445" y="654" text-anchor="middle" fill="#8b949e" font-family="sans-serif" font-size="9">core logic</text>
-  <text x="445" y="668" text-anchor="middle" fill="#79c0ff" font-family="monospace" font-size="10" font-weight="600">Bash + curl + jq</text>
+  <rect x="300" y="754" width="80" height="34" rx="6" fill="#161b22" stroke="#30363d" stroke-width="0.8" stroke-dasharray="3 2"/>
+  <text x="340" y="768" text-anchor="middle" fill="#8b949e" font-family="sans-serif" font-size="9">config</text>
+  <text x="340" y="782" text-anchor="middle" fill="#79c0ff" font-family="monospace" font-size="10" font-weight="600">llm-config.json</text>
+
+  <rect x="390" y="754" width="110" height="34" rx="6" fill="#161b22" stroke="#30363d" stroke-width="0.8" stroke-dasharray="3 2"/>
+  <text x="445" y="768" text-anchor="middle" fill="#8b949e" font-family="sans-serif" font-size="9">core logic</text>
+  <text x="445" y="782" text-anchor="middle" fill="#79c0ff" font-family="monospace" font-size="10" font-weight="600">Bash + TS + jq</text>
 </g>
 
-<text x="340" y="700" text-anchor="middle" fill="#3d444d" font-family="sans-serif" font-size="10">github.com/Mybono/ai-orchestrator</text>
+<text x="340" y="800" text-anchor="middle" fill="#3d444d" font-family="sans-serif" font-size="10">github.com/Mybono/ai-orchestrator</text>
 
 </svg>

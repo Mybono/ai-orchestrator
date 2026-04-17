@@ -3,6 +3,11 @@
 All notable changes to ai-orchestrator.
 ## [unreleased]
 ### 2026-04-17
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`af9dc0d`](https://github.com/Mybono/ai-orchestrator/commit/af9dc0de729bd0b835cf37c3f3f3b5f684e30a3b) Update layout and improve usability
+
+## v1.0.16 — 2026-04-17
+### 2026-04-17
+- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`41015f6`](https://github.com/Mybono/ai-orchestrator/commit/41015f63c6b6730c652ec1c6941041f8249e0a3c) Bump version to 1.0.16
 - ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`84bc265`](https://github.com/Mybono/ai-orchestrator/commit/84bc265e924c3c8a35fbd1ff2c4298eaac41eae2) Update git hooks and watcher settings
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`4d1a6f5`](https://github.com/Mybono/ai-orchestrator/commit/4d1a6f528817588a030712d335242ce33d074ab3) Sync changelog after merge
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`a9f39c4`](https://github.com/Mybono/ai-orchestrator/commit/a9f39c4bbb9cca2500fc3a6b80b4317d070a8842) Auto-fix markdown lint errors
