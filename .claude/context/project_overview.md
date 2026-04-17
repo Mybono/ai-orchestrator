@@ -1,6 +1,6 @@
 # Project Overview
 
-_Last updated: 2026-04-16 by planner after task: 4 improvements — BFS graph traversal in TriageAgent, delete PlannerAgent, pure-execution Orchestrator, graphify post-commit hook_
+_Last updated: 2026-04-16 by planner after task: fix 3 bugs — Ollama output written to disk, buildTasks() fallback for missing context files, implement.md parallel planning + Step 2 apply output_
 
 ## Language(s)
 - Shell (Bash): `install.sh`, `call_ollama.sh`, `local-commit.sh`, `analyze_project.sh` — pure Bash + `jq` for orchestration — standarts: inferred from existing scripts (no dedicated standarts file)
@@ -73,10 +73,10 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 | `src/core/DependencyGraph.ts` | DAG class with Kahn's topological sort — `getLevels()` returns `AgentTask[][]` for parallel execution |
 | `src/agents/AgentRunner.ts` | Wraps `~/.claude/call_ollama.sh` via `child_process.spawn` — returns `RunResult` discriminated union |
 | `src/agents/TriageAgent.ts` | LLM-powered triage — scans project structure, does BFS traversal on `graphify-out/graph.json` (NetworkX node-link format, depth=2), calls triage role, parses response into `TriageResult` |
-| `src/core/Orchestrator.ts` | Pure execution engine — accepts pre-written domain list, reads `task_context_<domain>.md` files, builds dependency graph, executes by levels, reviews; no triage or planning logic |
+| `src/core/Orchestrator.ts` | Pure execution engine — accepts pre-written domain list, reads `task_context_<domain>.md` files (falls back to `task_context.md` with warning), executes by levels, writes `ollama_output_<domain>.md` after each Ollama call, then reviews |
 | `src/index.ts` | CLI entry point — parses `process.argv[2]` as comma-separated `AgentDomain` list, validates, runs `Orchestrator.run(domains)` |
 | `tsconfig.json` | TypeScript strict ESM config — target ES2022, module NodeNext, `noUncheckedIndexedAccess: true`, `exactOptionalPropertyTypes: true` |
-| `plugins/orchestrator/commands/implement.md` | `/implement` pipeline — Steps 0–6: triage → plan → multi-domain TS Orchestrator (Step 1.5) → pre-review → code → build → post-review → fix loop → finalize |
+| `plugins/orchestrator/commands/implement.md` | `/implement` pipeline — Steps 0–6: triage → parallel planning per domain (Step 1) → multi-domain TS Orchestrator (Step 1.5) → apply Ollama output via Claude coders (Step 2) → pre-review (Step 2.5) → code → build → post-review → fix loop → finalize |
 
 ## Architecture & Conventions
 
@@ -84,9 +84,9 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 - All agents are Markdown files in `agents/` with a YAML front-matter block (`name`, `description`, `tools`) — no `model` field; models are defined exclusively in `llm-config.json`
 - All slash commands are Markdown files in `commands/` with no front-matter — they describe steps to orchestrate agents
 - Language standarts are in `skills/` and are named `<lang>-code-standarts.md` (note: "standarts" not "standards" — intentional spelling in filenames)
-- Context files produced during a task go to `.claude/context/`: `triage.md`, `triage_ts.md` (TriageAgent output), `task_context.md`, `pre_review.md`, `coder_output.md`, `review_fast_<file>.md`, `review_deep_<file>.md`, `fix_loop.md`, `project_overview.md`, `task_context_<domain>.md` (per-domain plans written by Claude planner)
+- Context files produced during a task go to `.claude/context/`: `triage.md`, `triage_ts.md` (TriageAgent output), `task_context_<domain>.md` (per-domain plans, fallback `task_context.md`), `ollama_output_<domain>.md` (Ollama output written by TS Orchestrator), `pre_review.md`, `coder_output.md`, `coder_output_<domain>.md`, `review_fast_<file>.md`, `review_deep_<file>.md`, `fix_loop.md`, `project_overview.md`
 - **Context Handoff Protocol**: orchestrator passes only file paths between steps — never full content; each agent reads its input files directly and writes its own structured output file
-- **Pipeline separation**: Claude (planner subagent) writes `task_context_<domain>.md`; TS Orchestrator only reads those files and executes Ollama calls — no planning in TypeScript
+- **Pipeline separation**: Claude planner subagents write `task_context_<domain>.md` (one per domain, in parallel); TS Orchestrator reads those files, executes Ollama calls, writes `ollama_output_<domain>.md`; Claude coder subagents read `ollama_output_<domain>.md` and apply changes to disk — no file writes in TypeScript except the output files
 - The full pipeline is: triage (TriageAgent → Ollama) → Claude plans per domain → multi-domain TS Orchestrator (`npm start "d1,d2"`) OR single-domain coder → pre-review → build check → tiered review → fix loop (max 3 rounds) → track_savings.sh
 - **TypeScript orchestrator layer** (`src/`): ESM modules (`"type": "module"`), all imports use `.js` extensions, strict mode + `noUncheckedIndexedAccess` + `exactOptionalPropertyTypes`. Shell bridge is `~/.claude/call_ollama.sh` via `child_process.spawn`. No new heavy dependencies — only `typescript` + `tsx` + `@types/node` as devDeps.
 - **TriageAgent graph traversal**: reads `graphify-out/graph.json` (NetworkX node-link format), matches seed nodes by label keywords, runs BFS depth=2, formats "Affected nodes: X\nConnected to:\n- Y (via relation)" output truncated to 1500 chars

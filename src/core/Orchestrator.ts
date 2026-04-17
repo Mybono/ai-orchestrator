@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { AgentRunner } from '../agents/AgentRunner.js';
 import { DependencyGraph } from './DependencyGraph.js';
@@ -49,11 +49,40 @@ export class Orchestrator {
   }
 
   private buildTasks(domains: AgentDomain[]): AgentTask[] {
-    return domains.map(domain => ({
-      domain,
-      dependencies: DOMAIN_DEPENDENCIES[domain],
-      contextFile: join(this.contextDir, `task_context_${domain}.md`),
-    }));
+    return domains.map(domain => {
+      const domainContextFile = join(this.contextDir, `task_context_${domain}.md`);
+      const fallbackContextFile = join(this.contextDir, 'task_context.md');
+
+      if (existsSync(domainContextFile)) {
+        return {
+          domain,
+          dependencies: DOMAIN_DEPENDENCIES[domain],
+          contextFile: domainContextFile,
+        };
+      }
+
+      if (existsSync(fallbackContextFile)) {
+        process.stderr.write(
+          `[orchestrator] task_context_${domain}.md not found — falling back to task_context.md\n`,
+        );
+
+        return {
+          domain,
+          dependencies: DOMAIN_DEPENDENCIES[domain],
+          contextFile: fallbackContextFile,
+        };
+      }
+
+      process.stderr.write(
+        `[orchestrator] warning: neither task_context_${domain}.md nor task_context.md found — proceeding with empty context\n`,
+      );
+
+      return {
+        domain,
+        dependencies: DOMAIN_DEPENDENCIES[domain],
+        contextFile: '',
+      };
+    });
   }
 
   /**
@@ -71,10 +100,13 @@ export class Orchestrator {
       const levelResults = await Promise.all(
         level.map(async (agentTask): Promise<AgentResult> => {
           const result = await this.runner.run(agentTask.domain, agentTask.contextFile);
+          const output = result.ok ? result.output : `ERROR: ${result.error}`;
+
+          this.writeOutputFile(agentTask.domain, output);
 
           return {
             domain: agentTask.domain,
-            output: result.ok ? result.output : `ERROR: ${result.error}`,
+            output,
             contextFile: agentTask.contextFile,
           };
         }),
@@ -84,6 +116,12 @@ export class Orchestrator {
     }
 
     return allResults;
+  }
+
+  private writeOutputFile(domain: AgentDomain, output: string): void {
+    const outputPath = join(this.contextDir, `ollama_output_${domain}.md`);
+    writeFileSync(outputPath, output, 'utf8');
+    console.log(`[orchestrator] wrote output: ${outputPath}`);
   }
 
   /**

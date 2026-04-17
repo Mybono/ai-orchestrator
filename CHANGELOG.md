@@ -3,7 +3,8 @@
 All notable changes to ai-orchestrator.
 ## [unreleased]
 ### 2026-04-17
-- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`113cb45`](https://github.com/Mybono/ai-orchestrator/commit/113cb45a501209cbde49707b4f90288b891c4191) Simplify orchestrator run method
+- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`9e87e0f`](https://github.com/Mybono/ai-orchestrator/commit/9e87e0f3ab5e0d43a76b5ea90f03fdb901cd2912) Update orchestrator logic to handle domain-specific files and write Ollama outputs
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`e73f513`](https://github.com/Mybono/ai-orchestrator/commit/e73f51396523cac02fe8b46e7aa1c31272ef4e10) Simplify orchestrator run method
 - ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`90c3f06`](https://github.com/Mybono/ai-orchestrator/commit/90c3f0681c4ea6bd2feab9d72c8784b4f833e9a5) Update commit template with Conventional Commits
 ### 2026-04-16
 - ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`0470543`](https://github.com/Mybono/ai-orchestrator/commit/0470543992f7aaf53df043ead52bbc5cc88c0089) Add triage agent for dynamic domain detection
