@@ -12,10 +12,6 @@ export class DependencyGraph {
     }
   }
 
-  addTask(task: AgentTask): void {
-    this.tasks.set(task.domain, task);
-  }
-
   /**
    * Kahn's algorithm topological sort.
    * Returns tasks grouped into parallel execution levels.

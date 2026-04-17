@@ -2,7 +2,7 @@ import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
-import type { AgentDomain, RunResult } from '../types/index.js';
+import type { Role, RunResult } from '../types/index.js';
 
 const CALL_OLLAMA_SCRIPT = join(homedir(), '.claude', 'call_ollama.sh');
 
@@ -27,7 +27,11 @@ export class AgentRunner {
    * Optionally passes a context file.
    * Returns stdout on success or error message on failure.
    */
-  run(role: AgentDomain | string, promptFile: string, contextFile?: string): Promise<RunResult> {
+  run(role: Role, promptFile: string, contextFile?: string): Promise<RunResult> {
+    if (!existsSync(promptFile)) {
+      return Promise.resolve({ ok: false, error: `prompt file not found: ${promptFile}` });
+    }
+
     const args: string[] = [this.callOllamaScript, '--role', role, '--prompt-file', promptFile];
 
     if (contextFile !== undefined) {
@@ -40,6 +44,7 @@ export class AgentRunner {
       let stderr = '';
       let settled = false;
       let stdoutTruncated = false;
+      let stderrTruncated = false;
 
       const settle = (result: RunResult) => {
         if (settled) return;
@@ -62,6 +67,11 @@ export class AgentRunner {
         stdout += chunk.toString();
       });
       proc.stderr.on('data', (chunk: Buffer) => {
+        if (stderrTruncated) return;
+        if (stderr.length + chunk.length > MAX_OUTPUT_BYTES) {
+          stderrTruncated = true;
+          return;
+        }
         stderr += chunk.toString();
       });
 

@@ -94,30 +94,44 @@ export class Orchestrator {
     const graph = new DependencyGraph(tasks);
     const levels = graph.getLevels();
     const allResults: AgentResult[] = [];
+    const failedDomains = new Set<AgentDomain>();
 
     for (const level of levels) {
       console.log(`[orchestrator] executing: ${level.map(t => t.domain).join(', ')}`);
 
       const levelResults = await Promise.all(
         level.map(async (agentTask): Promise<AgentResult> => {
+          const blockedBy = agentTask.dependencies.find(dep => failedDomains.has(dep));
+          if (blockedBy !== undefined) {
+            process.stderr.write(
+              `[orchestrator] blocking ${agentTask.domain}: dependency "${blockedBy}" failed\n`,
+            );
+            failedDomains.add(agentTask.domain);
+
+            return { domain: agentTask.domain, output: '', contextFile: agentTask.contextFile, status: 'blocked' };
+          }
+
           if (agentTask.contextFile === undefined) {
             process.stderr.write(
               `[orchestrator] skipping ${agentTask.domain}: no context file found\n`,
             );
+            failedDomains.add(agentTask.domain);
 
-            return { domain: agentTask.domain, output: '', contextFile: undefined };
+            return { domain: agentTask.domain, output: '', contextFile: undefined, status: 'skipped' };
           }
 
           const result = await this.runner.run(agentTask.domain, agentTask.contextFile);
-          const output = result.ok ? result.output : `ERROR: ${result.error}`;
 
-          this.writeOutputFile(agentTask.domain, output);
+          if (!result.ok) {
+            process.stderr.write(`[orchestrator] ${agentTask.domain} failed: ${result.error}\n`);
+            failedDomains.add(agentTask.domain);
 
-          return {
-            domain: agentTask.domain,
-            output,
-            contextFile: agentTask.contextFile,
-          };
+            return { domain: agentTask.domain, output: '', contextFile: agentTask.contextFile, status: 'failed' };
+          }
+
+          this.writeOutputFile(agentTask.domain, result.output);
+
+          return { domain: agentTask.domain, output: result.output, contextFile: agentTask.contextFile, status: 'done' };
         }),
       );
 
@@ -141,15 +155,24 @@ export class Orchestrator {
 
     await Promise.all(
       results.map(async result => {
-        if (result.contextFile === undefined) {
+        if (result.status !== 'done') {
           process.stderr.write(
-            `[orchestrator] review skipped for ${result.domain}: no context file\n`,
+            `[orchestrator] review skipped for ${result.domain}: status=${result.status}\n`,
           );
 
           return;
         }
 
-        const reviewResult = await this.runner.run('reviewer', result.contextFile);
+        const outputPath = join(this.contextDir, `ollama_output_${result.domain}.md`);
+        if (!existsSync(outputPath)) {
+          process.stderr.write(
+            `[orchestrator] review skipped for ${result.domain}: output file not found\n`,
+          );
+
+          return;
+        }
+
+        const reviewResult = await this.runner.run('reviewer', outputPath);
         if (!reviewResult.ok) {
           errors.push(`${result.domain}: ${reviewResult.error}`);
           process.stderr.write(

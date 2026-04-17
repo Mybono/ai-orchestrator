@@ -1,5 +1,3 @@
-# ai-orchestrator
-
 [![CI](https://github.com/Mybono/ai-orchestrator/actions/workflows/ci.yml/badge.svg)](https://github.com/Mybono/ai-orchestrator/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -7,10 +5,7 @@
 
 ---
 
-Portable AI developer setup: Claude plans, local Ollama executes.
-
-Works with any project: TypeScript, Python, Flutter, Swift, C++.
-All orchestration is pure Bash and `jq`.
+TypeScript + Bash orchestration that runs AI agents — Ollama for code generation, Claude for planning and triage — in parallel, in dependency order.
 
 <p align="center">
   <img src="documentation/pipeline.svg" alt="ai-orchestrator pipeline" width="680">
@@ -18,49 +13,60 @@ All orchestration is pure Bash and `jq`.
 
 ## How it works
 
-`/implement` triggers a multi-layer smart pipeline:
+`/implement` triggers a multi-step pipeline. Claude handles triage and planning; the TypeScript orchestrator runs Ollama agents in dependency order; Claude applies the generated output.
 
 ```text
-Layer 0  TRIAGE      → detects domain, chooses route
-Layer 1  PLAN        → planner + pre-review (approach approval)
-Layer 2  CODE        → coder (Ollama) + build check
-Layer 3  GATE        → fast review → deep review (if needed)
-Layer 4  FIX LOOP    → error-coordinator, max 3 rounds
-Layer 5  FINALIZE    → token savings tracked
+Step 0   Triage      Claude reads graph.json (BFS depth=2), writes triage_ts.md
+Step 1   Plan        Parallel Claude planners write task_context_<domain>.md
+Step 1.5 Orchestrate npm start runs Ollama agents in dependency order,
+                     writes ollama_output_<domain>.md
+Step 2   Code        Parallel Claude coders apply ollama_output_<domain>.md,
+                     write coder_output_<domain>.md
+Step 2.5 Pre-review  Standards compliance check
+Step 3   Build       npx tsc --noEmit
+Step 4   Review      Fast review per file; deep review for flagged files
+Step 5   Fix loop    Max 3 rounds, circuit breaker on repeat errors
+Step 6   Finalize    git diff + track savings
 ```
 
-**Triage** auto-detects the task domain (api, docker, security, database, testing, etc.) and loads the right plugins, agents, and standards — no manual configuration needed.
+Agents communicate through files in `.claude/context/`. Each step reads file paths from the previous step, not the full content.
 
-For focused tasks (optimize Dockerfile, run security audit, generate tests) triage routes directly to the matching plugin, skipping the planner and saving tokens. For composite tasks it runs the full pipeline with domain expertise pre-loaded.
-
-Claude orchestrates and plans. A local Ollama model writes and reviews the code.
-Details: [Architecture](documentation/ARCHITECTURE.md) · [Agents](documentation/AGENTS.md)
+## Source layout
 
 ```text
-/implement Add JWT authentication to the REST API
-/implement Optimize the Dockerfile with multi-stage build
-/implement Refactor the user service to reduce complexity
-/implement Fix this crash: TypeError cannot read property of undefined
-/implement Generate tests for the payment module
+src/
+  types/index.ts        AgentDomain, KNOWN_DOMAINS, Role, AgentTask,
+                        AgentResult (done|skipped|failed|blocked), TriageResult
+  agents/
+    AgentRunner.ts      Wraps call_ollama.sh via spawn; 5 min timeout; 10 MB output limit
+    TriageAgent.ts      BFS depth=2 on graph.json; writes triage_ts.md; CLI via import.meta.url
+  core/
+    DependencyGraph.ts  Kahn topological sort; duplicate domain detection
+    Orchestrator.ts     Reads task_context_<domain>.md; circuit breaker for failed deps;
+                        reviews ollama_output_<domain>.md after all domains complete
+  index.ts              CLI entry point
 ```
 
-The pipeline detects the domain, loads the right expertise, and runs automatically.
+## Domain dependencies
+
+| Domain | Depends on |
+|--------|------------|
+| `coder` | (none) |
+| `unit-tester` | `coder` |
+| `doc-writer` | `coder` |
+| `devops` | `coder`, `unit-tester`, `doc-writer` |
+
+Domains within the same dependency level run concurrently. If a domain fails, its dependents are marked `blocked` and skipped.
 
 ## Requirements
 
+- Node.js 20+ with `tsx`
 - [Claude Code](https://claude.ai/code) CLI
 - [Ollama](https://ollama.com) installed and running
-- `jq` (`install.sh` installs it automatically)
+- `jq`
+- Python 3 with `graphify` package (optional, for knowledge graph updates)
 
 ## Installation
-
-### Quick Install (curl)
-
-```bash
-curl -sSL https://raw.githubusercontent.com/Mybono/ai-orchestrator/main/scripts/install.sh | bash
-```
-
-### Manual Installation (Git)
 
 ```bash
 git clone https://github.com/Mybono/ai-orchestrator ~/Projects/ai-orchestrator
@@ -68,11 +74,17 @@ cd ~/Projects/ai-orchestrator
 ./scripts/install.sh
 ```
 
-Both methods run `scripts/install.sh` automatically to configure your local system (creating symlinks in `~/.claude/` and configuring Ollama models for your hardware).
+Or with curl:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/Mybono/ai-orchestrator/main/scripts/install.sh | bash
+```
+
+`install.sh` creates symlinks from `~/.claude/` into the repo. A `git pull` in the repo directory updates all tooling immediately.
 
 ## Configuration
 
-Model routing is controlled by [`llm-config.json`](llm-config.json) in the repo root:
+Model routing is controlled by `llm-config.json` in the repo root:
 
 ```json
 {
@@ -80,8 +92,6 @@ Model routing is controlled by [`llm-config.json`](llm-config.json) in the repo 
     "coder":        "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
     "reviewer":     "qwen2.5-coder:7b",
     "pre-reviewer": "qwen2.5-coder:7b",
-    "debugger":     "qwen2.5-coder:7b",
-    "devops":       "qwen2.5-coder:7b",
     "quick-coder":  "qwen2.5-coder:7b",
     "commit":       "qwen2.5-coder:7b",
     "triage":       "llama3.1:8b",
@@ -90,80 +100,23 @@ Model routing is controlled by [`llm-config.json`](llm-config.json) in the repo 
 }
 ```
 
-Changing a model name takes effect immediately without restarting anything.
-See [Architecture → Model Configuration](documentation/ARCHITECTURE.md#model-configuration) for details.
+Changing a model name takes effect immediately — no restart needed. See [Architecture](documentation/ARCHITECTURE.md#model-configuration) for details.
 
-## Commands
-
-| Command | What it does |
-|---------|-------------|
-| [`/implement`](commands/implement.md) | Full plan → code → build → review pipeline |
-| [`/review`](commands/review.md) | Check current changes against language standards |
-| [`/stats`](commands/stats.md) | Show token savings (`day`, `week`, `month`, or all-time) |
-| [`/debug`](commands/debug.md) | Trace root cause of an error |
-
-All commands and agents: [Skills & Commands](documentation/SKILLS.md) · [Agents](documentation/AGENTS.md) · [Plugins](documentation/PLUGINS.md)
-
-## Plugins
-
-Domain-specific extensions that add slash commands to the orchestrator. Each plugin in `plugins/` handles a specific area — accessibility, database work, Docker, Kubernetes, testing, security, and more.
-
-| Plugin | What it adds |
-|--------|-------------|
-| `qa-tools` | Generate tests, analyze failures, fix PR comments |
-| `security-guidance` | Security audit and vulnerability fixes |
-| `api-architect` | REST API design and OpenAPI spec generation |
-| `database-tools` | Schema design, query optimization, ERD generation |
-| `release-manager` | Version bumps, releases, changelog updates |
-
-Full list with trigger keywords and paired agents: [Plugins](documentation/PLUGINS.md)
-
-## Scripts
-
-`install.sh` adds shell aliases for these commands automatically:
+## Development
 
 ```bash
-local-commit              # stage all changes, generate a commit message via Ollama, confirm and commit
-open-pr                   # generate a PR title and description via Ollama, optionally create it via gh
-stats [day|week|month]    # show token savings summary
+npm run build                                    # compile TypeScript
+npm run typecheck                                # tsc --noEmit, no output files
+npm start "coder,unit-tester"                    # run TS orchestrator for given domains
+npx tsx src/agents/TriageAgent.ts "<task>"       # run triage standalone
 ```
 
-## Token savings
+`local-commit` generates a commit message via Ollama and calls `scripts/graphify-update.sh` before staging, so the updated `graph.json` is included in the same commit.
 
-The orchestrator tracks every Ollama call. View estimated savings vs Claude Sonnet pricing:
+## License
 
-```bash
-/stats week
-```
-
-```
-───────────────────────────────
- ai-orchestrator savings
- Period: this week
- Runs: 12
- Tokens saved: ~186k
- Estimated saving: $7.20
- ───────────────────────────────
-```
-
-## Project onboarding
-
-To apply orchestration rules in any project:
-
-```bash
-cp ~/.claude/ai_rules.md ~/Projects/your-project/ai_rules.md
-```
-
-Compatible with `.cursorrules` and `.clauderules`.
-
-## Updating
-
-```bash
-cd ~/Projects/ai-orchestrator && git pull
-```
-
-Changes apply immediately via symlinks, so you do not need to reinstall.
+MIT
 
 ---
 
-**README** · [Architecture](documentation/ARCHITECTURE.md) · [Agents](documentation/AGENTS.md) · [Skills & Commands](documentation/SKILLS.md) · [Plugins](documentation/PLUGINS.md)# Testing shellcheck
+**README** · [Architecture](documentation/ARCHITECTURE.md) · [Agents](documentation/AGENTS.md) · [Skills & Commands](documentation/SKILLS.md) · [Plugins](documentation/PLUGINS.md)

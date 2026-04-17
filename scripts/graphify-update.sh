@@ -64,8 +64,11 @@ for f in all_changed:
 if code_files:
     extraction = extract(code_files)
     G = build_from_json(extraction)
-    to_json(G, {}, str(repo / 'graphify-out' / 'graph.json'))
-    print(f'Updated graph: {G.number_of_nodes()} nodes, {G.number_of_edges()} edges')
+    if G.number_of_nodes() == 0:
+        print('Warning: extraction returned 0 nodes — graph not updated', file=sys.stderr)
+    else:
+        to_json(G, {}, str(repo / 'graphify-out' / 'graph.json'))
+        print(f'Updated graph: {G.number_of_nodes()} nodes, {G.number_of_edges()} edges')
 
 save_manifest(result.get('files', {}))
 " "$REPO_DIR" 2>/dev/null || true

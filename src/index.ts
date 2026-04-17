@@ -1,8 +1,7 @@
 import { resolve } from 'node:path';
 import { Orchestrator } from './core/Orchestrator.js';
+import { KNOWN_DOMAINS } from './types/index.js';
 import type { AgentDomain } from './types/index.js';
-
-const KNOWN_DOMAINS: readonly AgentDomain[] = ['coder', 'unit-tester', 'doc-writer', 'devops'];
 const DEFAULT_CONFIG = resolve('llm-config.json');
 const DEFAULT_CONTEXT_DIR = resolve('.claude/context');
 
@@ -31,7 +30,7 @@ async function main(): Promise<void> {
   console.log(`\n[orchestrator] completed ${results.length} agent(s)`);
 
   for (const result of results) {
-    console.log(`  ${result.domain}: ${result.contextFile ?? '(no context file)'}`);
+    console.log(`  ${result.domain} [${result.status}]: ${result.contextFile ?? '(no context file)'}`);
   }
 }
 

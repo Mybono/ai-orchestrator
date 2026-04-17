@@ -1,10 +1,9 @@
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { KNOWN_DOMAINS } from '../types/index.js';
 import type { AgentDomain, TriageResult } from '../types/index.js';
 import type { AgentRunner } from './AgentRunner.js';
-
-const KNOWN_DOMAINS: readonly AgentDomain[] = ['coder', 'unit-tester', 'doc-writer', 'devops'];
 
 const TRIAGE_FALLBACK: TriageResult = {
   domains: ['coder'],
@@ -257,8 +256,8 @@ export class TriageAgent {
   }
 
   private parseResponse(output: string, graphifyContext: string | undefined): TriageResult {
-    const domainsMatch = output.match(/##\s+Domains\s*\n([\s\S]*?)(?=##|$)/i);
-    const reasoningMatch = output.match(/##\s+Reasoning\s*\n([\s\S]*?)(?=##|$)/i);
+    const domainsMatch = output.match(/#{1,6}\s*Domains\s*[:\n]([\s\S]*?)(?=#{1,6}|$)/i);
+    const reasoningMatch = output.match(/#{1,6}\s*Reasoning\s*[:\n]([\s\S]*?)(?=#{1,6}|$)/i);
 
     if (domainsMatch === null) {
       process.stderr.write('[triage] could not parse ## Domains section — fallback to coder\n');
@@ -306,6 +305,7 @@ export class TriageAgent {
       lines.push('', '## Graphify Context Used', result.graphifyContext);
     }
 
+    mkdirSync(this.contextDir, { recursive: true });
     const outputFile = join(this.contextDir, 'triage_ts.md');
     writeFileSync(outputFile, lines.join('\n'), 'utf8');
   }
