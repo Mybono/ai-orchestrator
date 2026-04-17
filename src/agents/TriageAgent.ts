@@ -1,4 +1,4 @@
-import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import type { AgentDomain, TriageResult } from '../types/index.js';
@@ -10,6 +10,25 @@ const TRIAGE_FALLBACK: TriageResult = {
   domains: ['coder'],
   reasoning: 'LLM call failed — fallback to coder',
   graphifyContext: undefined,
+};
+
+type GraphNode = {
+  readonly id: string;
+  readonly label: string;
+  readonly source_file: string | undefined;
+  readonly community: number | undefined;
+};
+
+type GraphLink = {
+  readonly source: string;
+  readonly target: string;
+  readonly relation: string | undefined;
+  readonly confidence: string | undefined;
+};
+
+type GraphData = {
+  readonly nodes: readonly GraphNode[];
+  readonly links: readonly GraphLink[];
 };
 
 export class TriageAgent {
@@ -81,9 +100,29 @@ export class TriageAgent {
     return checks.join('\n');
   }
 
+  private readGraphJson(): GraphData | undefined {
+    const graphPath = join(this.projectRoot, 'graphify-out', 'graph.json');
+    if (!existsSync(graphPath)) {
+      return undefined;
+    }
+    try {
+      const raw: unknown = JSON.parse(readFileSync(graphPath, 'utf8'));
+      if (
+        raw === null ||
+        typeof raw !== 'object' ||
+        !Array.isArray((raw as Record<string, unknown>)['nodes']) ||
+        !Array.isArray((raw as Record<string, unknown>)['links'])
+      ) {
+        return undefined;
+      }
+      return raw as GraphData;
+    } catch {
+      return undefined;
+    }
+  }
+
   private readGraphifyContext(task: string): string | undefined {
     const graphifyDir = join(this.projectRoot, 'graphify-out');
-
     if (!existsSync(graphifyDir)) {
       return undefined;
     }
@@ -97,37 +136,87 @@ export class TriageAgent {
       return undefined;
     }
 
-    let jsonFiles: string[];
-    try {
-      jsonFiles = readdirSync(graphifyDir).filter(f => f.endsWith('.json'));
-    } catch {
+    const graph = this.readGraphJson();
+    if (graph === undefined) {
       return undefined;
     }
 
-    const matches: string[] = [];
-
-    for (const file of jsonFiles) {
-      const filePath = join(graphifyDir, file);
-      let content: string;
-      try {
-        content = readFileSync(filePath, 'utf8');
-      } catch {
-        continue;
-      }
-
-      const lower = content.toLowerCase();
-      const hasMatch = keywords.some(kw => lower.includes(kw));
-
-      if (hasMatch) {
-        matches.push(`### ${file}\n${content.slice(0, 500)}`);
+    // Find seed nodes whose label matches any keyword
+    const seedIds = new Set<string>();
+    for (const node of graph.nodes) {
+      const lower = node.label.toLowerCase();
+      if (keywords.some(kw => lower.includes(kw))) {
+        seedIds.add(node.id);
       }
     }
 
-    if (matches.length === 0) {
+    if (seedIds.size === 0) {
       return undefined;
     }
 
-    return matches.join('\n\n');
+    // Build adjacency map: id -> [{ id, relation }]
+    const adjacency = new Map<string, Array<{ id: string; relation: string }>>();
+    for (const link of graph.links) {
+      const rel = link.relation ?? 'related';
+      if (!adjacency.has(link.source)) adjacency.set(link.source, []);
+      if (!adjacency.has(link.target)) adjacency.set(link.target, []);
+      adjacency.get(link.source)!.push({ id: link.target, relation: rel });
+      adjacency.get(link.target)!.push({ id: link.source, relation: rel });
+    }
+
+    // BFS depth=2 from seed nodes
+    const visited = new Map<string, number>(); // id -> depth first seen
+    const queue: Array<{ id: string; depth: number }> = [];
+    for (const id of seedIds) {
+      visited.set(id, 0);
+      queue.push({ id, depth: 0 });
+    }
+
+    while (queue.length > 0) {
+      const item = queue.shift();
+      if (item === undefined) break;
+      const { id, depth } = item;
+      if (depth >= 2) continue;
+      for (const neighbor of adjacency.get(id) ?? []) {
+        if (!visited.has(neighbor.id)) {
+          visited.set(neighbor.id, depth + 1);
+          queue.push({ id: neighbor.id, depth: depth + 1 });
+        }
+      }
+    }
+
+    // Build node lookup
+    const nodeById = new Map<string, GraphNode>();
+    for (const node of graph.nodes) {
+      nodeById.set(node.id, node);
+    }
+
+    // Format structured output
+    const seedLabels = [...seedIds]
+      .map(id => nodeById.get(id)?.label ?? id)
+      .join(', ');
+
+    const neighborLines: string[] = [];
+    for (const [id, depth] of visited) {
+      if (depth === 0) continue;
+      const node = nodeById.get(id);
+      if (node === undefined) continue;
+      const link = graph.links.find(
+        l =>
+          (l.source === id || l.target === id) &&
+          (visited.get(l.source === id ? l.target : l.source) ?? 99) < depth,
+      );
+      const rel = link?.relation ?? 'related';
+      neighborLines.push(`- ${node.label} (via ${rel})`);
+    }
+
+    const lines: string[] = [
+      `Affected nodes: ${seedLabels}`,
+      'Connected to:',
+      ...neighborLines,
+    ];
+
+    return lines.join('\n').slice(0, 1500);
   }
 
   private buildPrompt(

@@ -1,20 +1,23 @@
 import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { join, resolve } from 'node:path';
 import { AgentRunner } from '../agents/AgentRunner.js';
-import { PlannerAgent } from '../agents/PlannerAgent.js';
-import { TriageAgent } from '../agents/TriageAgent.js';
 import { DependencyGraph } from './DependencyGraph.js';
-import type { AgentDomain, AgentResult, AgentTask, TriageResult } from '../types/index.js';
+import type { AgentDomain, AgentResult, AgentTask } from '../types/index.js';
+
+const DOMAIN_DEPENDENCIES: Record<AgentDomain, readonly AgentDomain[]> = {
+  coder: [],
+  'unit-tester': ['coder'],
+  'doc-writer': ['coder'],
+  devops: ['coder', 'unit-tester', 'doc-writer'],
+};
 
 export class Orchestrator {
   private readonly runner: AgentRunner;
-  private readonly planner: PlannerAgent;
-  private readonly triageAgent: TriageAgent;
+  private readonly contextDir: string;
 
   constructor(configPath: string, contextDir: string) {
     const resolvedConfig = resolve(configPath);
-    const resolvedContext = resolve(contextDir);
-    const projectRoot = resolve('.');
+    this.contextDir = resolve(contextDir);
 
     try {
       readFileSync(resolvedConfig, 'utf8');
@@ -23,69 +26,41 @@ export class Orchestrator {
     }
 
     this.runner = new AgentRunner(resolvedConfig);
-    this.planner = new PlannerAgent(this.runner, resolvedContext);
-    this.triageAgent = new TriageAgent(this.runner, resolvedContext, projectRoot);
   }
 
   /**
-   * Full pipeline: triage -> planAll -> execute -> review.
+   * Reads pre-written task_context_<domain>.md files from contextDir,
+   * builds the dependency graph, executes in topological order, then reviews.
    */
-  async run(task: string): Promise<AgentResult[]> {
-    const triageResult = await this.triage(task);
-    const { domains, reasoning } = triageResult;
-
+  async run(domains: AgentDomain[]): Promise<AgentResult[]> {
     if (domains.length === 0) {
-      process.stderr.write(`[orchestrator] warning: no domains matched for task: "${task}"\n`);
+      process.stderr.write('[orchestrator] no domains provided\n');
 
       return [];
     }
 
-    console.log(`[orchestrator] domains: ${[...domains].join(', ')}`);
-    console.log(`[orchestrator] reasoning: ${reasoning}`);
+    console.log(`[orchestrator] domains: ${domains.join(', ')}`);
 
-    const tasks = await this.planAll(task, [...domains]);
-    const results = await this.execute(tasks, task);
+    const tasks = this.buildTasks(domains);
+    const results = await this.execute(tasks);
     await this.review(results);
 
     return results;
   }
 
-  /**
-   * LLM-powered domain detection via TriageAgent.
-   * Uses llama3.1:8b to reason about task implications.
-   * Falls back to ['coder'] if the LLM call fails.
-   */
-  private async triage(task: string): Promise<TriageResult> {
-    return this.triageAgent.analyze(task);
-  }
-
-  /**
-   * Runs PlannerAgent.plan() for all domains concurrently.
-   * Uses Promise.allSettled so one failure does not abort others.
-   */
-  private async planAll(task: string, domains: AgentDomain[]): Promise<AgentTask[]> {
-    const settled = await Promise.allSettled(
-      domains.map(domain => this.planner.plan(task, domain)),
-    );
-
-    const tasks: AgentTask[] = [];
-
-    for (const result of settled) {
-      if (result.status === 'fulfilled') {
-        tasks.push(result.value);
-      } else {
-        process.stderr.write(`[orchestrator] plan failed: ${String(result.reason)}\n`);
-      }
-    }
-
-    return tasks;
+  private buildTasks(domains: AgentDomain[]): AgentTask[] {
+    return domains.map(domain => ({
+      domain,
+      dependencies: DOMAIN_DEPENDENCIES[domain],
+      contextFile: join(this.contextDir, `task_context_${domain}.md`),
+    }));
   }
 
   /**
    * Executes tasks level by level (dependency order).
    * Within each level, tasks run concurrently.
    */
-  private async execute(tasks: AgentTask[], _task: string): Promise<AgentResult[]> {
+  private async execute(tasks: AgentTask[]): Promise<AgentResult[]> {
     const graph = new DependencyGraph(tasks);
     const levels = graph.getLevels();
     const allResults: AgentResult[] = [];

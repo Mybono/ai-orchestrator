@@ -3,7 +3,8 @@
 All notable changes to ai-orchestrator.
 ## [unreleased]
 ### 2026-04-17
-- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`74de643`](https://github.com/Mybono/ai-orchestrator/commit/74de643cd6e6d4d090ae7bc568d80a3bcb3ce002) Update commit template with Conventional Commits
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`113cb45`](https://github.com/Mybono/ai-orchestrator/commit/113cb45a501209cbde49707b4f90288b891c4191) Simplify orchestrator run method
+- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`90c3f06`](https://github.com/Mybono/ai-orchestrator/commit/90c3f0681c4ea6bd2feab9d72c8784b4f833e9a5) Update commit template with Conventional Commits
 ### 2026-04-16
 - ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`0470543`](https://github.com/Mybono/ai-orchestrator/commit/0470543992f7aaf53df043ead52bbc5cc88c0089) Add triage agent for dynamic domain detection
 - ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`90c43d0`](https://github.com/Mybono/ai-orchestrator/commit/90c43d043f362f36009216736e8412ede4381300) Introduce AI orchestrator project with TypeScript

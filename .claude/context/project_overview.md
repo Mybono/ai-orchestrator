@@ -1,6 +1,6 @@
 # Project Overview
 
-_Last updated: 2026-04-16 by planner after task: replace keyword-based triage with LLM-powered TriageAgent using llama3.1:8b and graphify-out/ knowledge graph context_
+_Last updated: 2026-04-16 by planner after task: 4 improvements — BFS graph traversal in TriageAgent, delete PlannerAgent, pure-execution Orchestrator, graphify post-commit hook_
 
 ## Language(s)
 - Shell (Bash): `install.sh`, `call_ollama.sh`, `local-commit.sh`, `analyze_project.sh` — pure Bash + `jq` for orchestration — standarts: inferred from existing scripts (no dedicated standarts file)
@@ -14,7 +14,8 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 | File | Purpose |
 |------|---------|
 | `CLAUDE.md` | Global instructions injected into every Claude Code session — defines the pipeline, trigger rules, and available Ollama models |
-| `scripts/install.sh` | Installer: creates symlinks in `~/.claude/`, generates `settings.json` from template, adds shell aliases, optionally pulls Ollama models |
+| `scripts/install.sh` | Installer: creates symlinks in `~/.claude/`, generates `settings.json` from template, adds shell aliases, installs git hooks including post-commit graphify-update |
+| `scripts/graphify-update.sh` | Post-commit hook script: checks for graphify install and graph.json, runs `python3 -m graphify --update` on changed files; silent if graphify not present |
 | `agents/planner.md` | Authoritative source of project context — explores codebase, writes `.claude/context/task_context.md` and maintains `project_overview.md` |
 | `agents/coder.md` | Coding agent — reads context, generates code via `call_ollama.sh` (role: coder), applies changes |
 | `agents/reviewer.md` | Review agent — diffs changed files, invokes `call_ollama.sh` (role: reviewer), reports verdict |
@@ -29,7 +30,7 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 | `agents/qa-orchestrator.md` | QA orchestrator — coordinates test agents, analyzes CI failures, automates PR comment fixes |
 | `agents/ui-tester.md` | UI test agent — end-to-end journeys and visual regression via Playwright and Appium |
 | `agents/unit-tester.md` | Unit test agent — logic isolation, edge case detection, and dependency mocking |
-| `agents/triage-ts.md` | (new) LLM instruction for `triage` role — defines `## Domains` / `## Reasoning` output format consumed by `TriageAgent.parseResponse()` |
+| `agents/triage-ts.md` | LLM instruction for `triage` role — defines `## Domains` / `## Reasoning` output format consumed by `TriageAgent.parseResponse()` |
 | `scripts/call_ollama.sh` | Central LLM interface — handles prompt construction, context attachment, raw API calls via `curl`, and auto-tracks every call via `track_savings.sh` |
 | `scripts/local-commit.sh` | Local commit helper — stages changes, generates commit message via Ollama, prompts for confirmation |
 | `scripts/open-pr.sh` | PR creation helper — generates PR title/body via Ollama, optionally creates via `gh` CLI |
@@ -71,11 +72,11 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 | `src/types/index.ts` | All TypeScript domain types: `AgentDomain`, `AgentTask`, `AgentResult`, `RunResult`, `OrchestratorConfig`, `LlmConfig`, `TriageResult` |
 | `src/core/DependencyGraph.ts` | DAG class with Kahn's topological sort — `getLevels()` returns `AgentTask[][]` for parallel execution |
 | `src/agents/AgentRunner.ts` | Wraps `~/.claude/call_ollama.sh` via `child_process.spawn` — returns `RunResult` discriminated union |
-| `src/agents/PlannerAgent.ts` | Per-domain planner — writes `task_context_<domain>.md` and returns `AgentTask` with pre-wired dependencies |
-| `src/agents/TriageAgent.ts` | (new) LLM-powered triage — scans project structure, reads graphify-out/ if present, calls llama3.1:8b, parses response into `TriageResult` |
-| `src/core/Orchestrator.ts` | Main orchestrator class — async triage (via TriageAgent) → planAll (parallel) → execute (by levels) → review |
-| `src/index.ts` | CLI entry point — reads `process.argv[2]` as task, runs `Orchestrator.run()` |
+| `src/agents/TriageAgent.ts` | LLM-powered triage — scans project structure, does BFS traversal on `graphify-out/graph.json` (NetworkX node-link format, depth=2), calls triage role, parses response into `TriageResult` |
+| `src/core/Orchestrator.ts` | Pure execution engine — accepts pre-written domain list, reads `task_context_<domain>.md` files, builds dependency graph, executes by levels, reviews; no triage or planning logic |
+| `src/index.ts` | CLI entry point — parses `process.argv[2]` as comma-separated `AgentDomain` list, validates, runs `Orchestrator.run(domains)` |
 | `tsconfig.json` | TypeScript strict ESM config — target ES2022, module NodeNext, `noUncheckedIndexedAccess: true`, `exactOptionalPropertyTypes: true` |
+| `plugins/orchestrator/commands/implement.md` | `/implement` pipeline — Steps 0–6: triage → plan → multi-domain TS Orchestrator (Step 1.5) → pre-review → code → build → post-review → fix loop → finalize |
 
 ## Architecture & Conventions
 
@@ -83,11 +84,13 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 - All agents are Markdown files in `agents/` with a YAML front-matter block (`name`, `description`, `tools`) — no `model` field; models are defined exclusively in `llm-config.json`
 - All slash commands are Markdown files in `commands/` with no front-matter — they describe steps to orchestrate agents
 - Language standarts are in `skills/` and are named `<lang>-code-standarts.md` (note: "standarts" not "standards" — intentional spelling in filenames)
-- Context files produced during a task go to `.claude/context/`: `triage.md`, `triage_ts.md` (TriageAgent output), `task_context.md`, `pre_review.md`, `coder_output.md`, `review_fast_<file>.md`, `review_deep_<file>.md`, `fix_loop.md`, `project_overview.md`, `task_context_<domain>.md` (per-domain plans from TypeScript orchestrator)
+- Context files produced during a task go to `.claude/context/`: `triage.md`, `triage_ts.md` (TriageAgent output), `task_context.md`, `pre_review.md`, `coder_output.md`, `review_fast_<file>.md`, `review_deep_<file>.md`, `fix_loop.md`, `project_overview.md`, `task_context_<domain>.md` (per-domain plans written by Claude planner)
 - **Context Handoff Protocol**: orchestrator passes only file paths between steps — never full content; each agent reads its input files directly and writes its own structured output file
-- The full pipeline is: triage (TriageAgent → llama3.1:8b) → Claude plans → pre-review (Ollama, standards checklist) → coder (Ollama) → build check → tiered review (fast + deep, parallel, Ollama) → fix loop (max 3 rounds) → track_savings.sh
+- **Pipeline separation**: Claude (planner subagent) writes `task_context_<domain>.md`; TS Orchestrator only reads those files and executes Ollama calls — no planning in TypeScript
+- The full pipeline is: triage (TriageAgent → Ollama) → Claude plans per domain → multi-domain TS Orchestrator (`npm start "d1,d2"`) OR single-domain coder → pre-review → build check → tiered review → fix loop (max 3 rounds) → track_savings.sh
 - **TypeScript orchestrator layer** (`src/`): ESM modules (`"type": "module"`), all imports use `.js` extensions, strict mode + `noUncheckedIndexedAccess` + `exactOptionalPropertyTypes`. Shell bridge is `~/.claude/call_ollama.sh` via `child_process.spawn`. No new heavy dependencies — only `typescript` + `tsx` + `@types/node` as devDeps.
-- **TriageAgent pattern**: scan project (sync fs) → read graphify-out/ (sync fs, keyword match) → build prompt string → write to tmpDir → runner.run('triage', promptFile) → parse `## Domains` / `## Reasoning` sections with regex → fallback to `['coder']` on any failure → write `triage_ts.md`
+- **TriageAgent graph traversal**: reads `graphify-out/graph.json` (NetworkX node-link format), matches seed nodes by label keywords, runs BFS depth=2, formats "Affected nodes: X\nConnected to:\n- Y (via relation)" output truncated to 1500 chars
+- **DOMAIN_DEPENDENCIES** constant lives in `Orchestrator.ts` (not PlannerAgent — that file no longer exists)
 - **Zero Python dependency**: All agents call `scripts/call_ollama.sh` directly, which uses `curl` and `jq` for API interaction
 - `install.sh` uses symlinks, not file copies — a `git pull` updates everything without reinstall
 - New scripts must be added to both `SYMLINK_TARGETS` array and a `chmod +x` block in `scripts/install.sh`
@@ -98,7 +101,7 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 - Planner (Phase 0): reads `project_overview.md` first, runs `git status --short` + `git diff --name-only HEAD~1 HEAD` to mark stale files, re-reads [STALE] files fully in Phase 1
 - Token stats are persisted at `~/.claude/token_stats.json` with schema `{"runs": [...]}`
 - `track_savings.sh` supports two modes: (1) file-size mode using `--context-file`/`--output-file`, (2) direct mode using `--input-tokens`/`--output-tokens`; mode is auto-detected by whether both direct flags are present
-- `call_ollama.sh` auto-tracks every LLM call via `track_savings.sh` (best-effort, silent on failure); uses role name as the task label, falling back to model name if role is empty
+- `call_ollama.sh` auto-tracks every LLM call via `track_savings.sh` (best-effort, silent on failure)
 
 ## Do Not Touch
 
@@ -106,6 +109,7 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 - `docs/` (any path matching `/docs/`): same hook protection as README.md
 - `.claude/settings.json`: generated by `install.sh` from the template — do not edit directly on each machine
 - `skills/*-code-standarts.md` filenames: the "standarts" typo is load-bearing — all agents reference these exact filenames; renaming breaks detection
+- `src/agents/PlannerAgent.ts`: **deleted** — do not recreate; planning is done by Claude subagents writing context files, not by TypeScript
 
 ## Known Constraints
 
@@ -113,12 +117,14 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 - The `debug.md` agent file does not exist in `agents/` — it exists only as `commands/debug.md`
 - `quick-coder` uses `qwen2.5-coder:7b` — never use it for multi-file changes or new classes
 - The fix loop in `/implement` is capped at 3 rounds — after that, unresolved issues are reported to the user
-- `track_savings.sh` Step 5 in `/implement` is best-effort — skip silently if script not found (not yet installed)
+- `track_savings.sh` Step 6 in `/implement` is best-effort — skip silently if script not found (not yet installed)
 - Float arithmetic in bash scripts must use `jq -n` — bash `$(( ))` handles integers only
 - `call_ollama.sh` and `track_savings.sh` do NOT use `set -euo pipefail` — do not add it; callers depend on lenient error handling
 - `call_claude.sh` does NOT exist — the only shell LLM bridge is `~/.claude/call_ollama.sh`
 - TypeScript `src/` files must use `.js` import extensions even for `.ts` source — required by NodeNext ESM module resolution
 - `noUncheckedIndexedAccess: true` in tsconfig means array access returns `T | undefined` — guard all index access with `if (x === undefined) continue`
 - `exactOptionalPropertyTypes: true` in tsconfig means optional fields typed `string?` cannot be assigned `undefined` — always type optional fields as `string | undefined` explicitly
-- `graphify-out/` does not currently exist in the repo — `TriageAgent.readGraphifyContext()` handles this gracefully via `existsSync` check
+- `graphify-out/` may not exist — all graphify code guards with `existsSync` before reading
 - `TriageResult.graphifyContext` must be typed `string | undefined` (not `string?`) due to `exactOptionalPropertyTypes`
+- `Orchestrator.run()` now takes `AgentDomain[]`, not a task string — callers (index.ts, implement.md) must parse domains before calling
+- `readdirSync` is no longer imported in `TriageAgent.ts` — the BFS implementation reads only `graph.json` directly

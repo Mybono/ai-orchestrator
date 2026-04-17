@@ -37,11 +37,11 @@ Run [triage](./triage.md) first. It writes `.claude/context/triage.md` with:
 |---|---|
 | `direct-edit` | Make the edit immediately. Stop here. |
 | `quick-coder` | Spawn `quick-coder` only → build check. Stop here. |
-| `plugin-route` | **Skip planner.** Use plugin file as plan → Step 2 (coder) → Step 2.5 (build) → Step 3 (review). |
+| `plugin-route` | **Skip planner.** Use plugin file as plan → Step 3 (coder) → Step 3.5 (build) → Step 4 (review). |
 | `full-pipeline` | Continue to Step 1 (planner) below. |
 | `architect-first` | **You (Claude) perform architect analysis** → write `architect_review.md` → if `PROCEED` continue to Step 1. |
 
-For `plugin-route`: read `## Plugin Plan` from `.claude/context/triage.md` to get the plugin command file path. Load that file as the task plan. Pass it directly to the `coder` agent along with `## Constraints` from triage. Skip Step 1 and Step 1.5 entirely — the plugin file already defines what to do and how.
+For `plugin-route`: read `## Plugin Plan` from `.claude/context/triage.md` to get the plugin command file path. Load that file as the task plan. Pass it directly to the `coder` agent along with `## Constraints` from triage. Skip Step 1, Step 1.5, and Step 2 entirely — the plugin file already defines what to do and how.
 
 For `full-pipeline` and `architect-first`: read `.claude/context/triage.md` and keep it in context for all subsequent steps.
 
@@ -56,7 +56,31 @@ The planner is a Claude subagent following `agents/planner.md`. It reads the cod
 
 Wait for it to complete. Then read only the path `.claude/context/task_context.md` — do not carry full plan content in orchestrator context.
 
-### Step 1.5 — Pre-Review (Standards Compliance Check)
+### Step 1.5 — Multi-domain execution (TS Orchestrator)
+
+After planning completes, check how many domains triage detected. Read `## Domains` from `.claude/context/triage.md`.
+
+**Multiple domains (2 or more):**
+
+The TypeScript Orchestrator reads the context files Claude already wrote and executes them in dependency order:
+
+```bash
+npm start "<domain1>,<domain2>,..."
+```
+
+Pass the comma-separated domain list exactly as returned by triage (e.g. `"coder,unit-tester,doc-writer"`). The TS Orchestrator will:
+
+1. Read `task_context_<domain>.md` for each domain from `.claude/context/`.
+2. Build a dependency graph and execute in topological order (parallel where possible).
+3. Run the reviewer role for each completed domain.
+
+Wait for it to exit (non-zero exit means at least one domain failed — check stderr).
+
+**Single domain:**
+
+Skip this step. Spawn the `coder` subagent directly as described in Step 3 (Code) below.
+
+### Step 2 — Pre-Review (Standards Compliance Check)
 
 Before coding starts, spawn the agent with the **pre-reviewer** role. Pass two paths — the agent reads them itself:
 
@@ -98,12 +122,12 @@ Orchestrator reads only `## Verdict` line from this file to decide next step. Do
 
 **Verdict:**
 
-- `APPROACH APPROVED` → proceed to Step 2.
-- `APPROACH REJECTED` → return to planner with path to `pre_review.md`. Planner reads `## Issues` and rewrites the plan. Re-run Step 1.5 once. If still rejected, report to user and stop.
+- `APPROACH APPROVED` → proceed to Step 3.
+- `APPROACH REJECTED` → return to planner with path to `pre_review.md`. Planner reads `## Issues` and rewrites the plan. Re-run Step 2 once. If still rejected, report to user and stop.
 
 > Pre-review is cheap: it reads only the plan (~100–300 lines), not code. Catching a wrong approach here saves an entire fix loop.
 
-### Step 2 — Code
+### Step 3 — Code
 
 Spawn the `coder` agent. Pass only these paths — the agent reads them itself:
 
@@ -114,7 +138,7 @@ Do not pass file contents. The coder writes `.claude/context/coder_output.md` wh
 
 After coder completes, read only `## Changed Files` and `## Verdict` from `coder_output.md`. Do not carry the full coder output in context.
 
-### Step 2.5 — Build / Type check
+### Step 3.5 — Build / Type check
 
 Detect the project type and run the appropriate check:
 
@@ -143,7 +167,7 @@ If build/type check **fails** — classify per [error-coordinator](../../../agen
 
 Do NOT proceed to reviewer until build passes.
 
-### Step 3 — Post-Review (parallel if multiple files)
+### Step 4 — Post-Review (parallel if multiple files)
 
 Read `## Changed Files` from `.claude/context/coder_output.md` to get the list of files to review.
 
@@ -164,9 +188,9 @@ After all reviewers complete, read only `## Verdict` line from each review file.
 
 Overall verdict is **NEEDS CHANGES** if any `review_deep_*.md` contains `Verdict: NEEDS CHANGES`.
 
-> Post-review is now cheaper: the approach was pre-approved in Step 1.5, so reviewer focuses only on implementation correctness — not architecture.
+> Post-review is now cheaper: the approach was pre-approved in Step 2, so reviewer focuses only on implementation correctness — not architecture.
 
-### Step 4 — Fix loop (if needed)
+### Step 5 — Fix loop (if needed)
 
 Apply [error-coordinator](../../../agents/error-coordinator.md) recovery:
 
@@ -184,13 +208,13 @@ Apply [error-coordinator](../../../agents/error-coordinator.md) recovery:
 3. Capture diff for problem files only: `git diff HEAD -- <problem_file_1> <problem_file_2> ...` → append to `fix_loop.md` under `## Diff`.
 4. Spawn `coder` with only paths: `fix_loop.md` + `triage.md`. Coder reads both itself.
 5. After coder completes, read `## Changed Files` from `coder_output.md`. If any file appears there that was **not** in `## Problem Files`, add it to the review queue for Step 6.
-6. Re-run Step 2.5.
-7. Re-run Step 3 (post-review) — **only for files in `## Problem Files` plus any unexpected files from step 5**.
+6. Re-run Step 3.5.
+7. Re-run Step 4 (post-review) — **only for files in `## Problem Files` plus any unexpected files from step 5**.
 8. Repeat at most **3 times**.
 
 **Circuit breaker**: same error in 2 consecutive rounds → stop immediately, report to user.
 
-### Step 5 — Finalize
+### Step 6 — Finalize
 
 1. Collect changed files: `git diff --name-only HEAD`
 2. Track savings:

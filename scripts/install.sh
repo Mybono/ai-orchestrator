@@ -228,6 +228,20 @@ fi
 HOOK
     chmod +x "$HOOKS_DIR/post-merge"
     echo "  ✓ post-merge hook (git-cliff changelog sync)"
+
+    # post-commit: update graphify knowledge graph for changed files
+    POST_COMMIT_HOOK="$HOOKS_DIR/post-commit"
+    GRAPHIFY_LINE="bash \"$REPO_DIR/scripts/graphify-update.sh\""
+    if [ ! -f "$POST_COMMIT_HOOK" ]; then
+        printf '#!/bin/sh\n' > "$POST_COMMIT_HOOK"
+        chmod +x "$POST_COMMIT_HOOK"
+    fi
+    if ! grep -qF "graphify-update.sh" "$POST_COMMIT_HOOK"; then
+        printf '\n# graphify knowledge graph update\n%s\n' "$GRAPHIFY_LINE" >> "$POST_COMMIT_HOOK"
+        echo "  ✓ post-commit hook (graphify-update)"
+    else
+        echo "  ✓ post-commit hook already contains graphify-update"
+    fi
 fi
 
 echo ""

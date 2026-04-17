@@ -54,6 +54,9 @@ if [ -f .git/MERGE_HEAD ]; then
 fi
 # ──────────────────────────────────────────────────────────────────────────
 
+# Update knowledge graph BEFORE staging so graph.json is included in this commit
+[ -f "$SCRIPT_DIR/graphify-update.sh" ] && bash "$SCRIPT_DIR/graphify-update.sh" || true
+
 echo "Staging all changes (git add -A)..."
 git add -A
 
