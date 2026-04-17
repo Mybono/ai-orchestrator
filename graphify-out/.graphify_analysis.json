@@ -1,0 +1,640 @@
+{
+  "communities": {
+    "0": [
+      "agent_role_coder",
+      "agent_role_triage",
+      "analyze_hardware_sh",
+      "analyze_project_sh",
+      "analyze_soft_sh",
+      "bump_version_sh",
+      "call_ollama_sh",
+      "check_update_sh",
+      "claude_dir",
+      "cliff_toml",
+      "commit_msg_hook",
+      "concept_symlink_install",
+      "conventional_commits",
+      "git_cliff_tool",
+      "github_release",
+      "github_repo",
+      "install_sh",
+      "llm_config_json",
+      "markdown_review_sh",
+      "markdownlint_cli2",
+      "model_coder",
+      "model_commit",
+      "model_debugger",
+      "model_devops",
+      "model_embedding",
+      "model_llama31_8b",
+      "model_mxbai_embed_large",
+      "model_quick_coder",
+      "model_qwen25_coder_14b",
+      "model_reviewer",
+      "ollama_service",
+      "package_json",
+      "post_merge_hook",
+      "pre_commit_hook",
+      "rationale_pure_bash",
+      "release_sh",
+      "settings_json",
+      "settings_json_template",
+      "settings_local_json",
+      "ts_dist_dir",
+      "ts_src_dir",
+      "tsconfig_json",
+      "version_file"
+    ],
+    "1": [
+      "agent_coder",
+      "agent_context_manager",
+      "agent_error-coordinator",
+      "agent_performance-monitor",
+      "agent_planner",
+      "agent_quick-coder",
+      "agent_reviewer",
+      "agent_security_auditor",
+      "agent_test-agent",
+      "agent_ui-tester",
+      "agent_unit-tester",
+      "cmd_fix-vulnerability",
+      "cmd_implement",
+      "cmd_stats",
+      "cmd_triage",
+      "concept_analysis_delta_md",
+      "concept_aws_cdk",
+      "concept_aws_lambda",
+      "concept_dynamodb",
+      "concept_implement_pipeline",
+      "concept_llm_config",
+      "concept_ollama_api",
+      "concept_project_overview_md",
+      "concept_s3_event_processing",
+      "concept_shellcheck_tool",
+      "concept_token_stats",
+      "context_coder_output",
+      "context_task_context",
+      "context_triage",
+      "doc_claude_md",
+      "plugin_orchestrator",
+      "plugin_qa-tools",
+      "plugin_security-guidance",
+      "script_analyze_project",
+      "script_call_ollama",
+      "script_shellcheck",
+      "script_stats",
+      "script_track_savings",
+      "skill_aws_cloud_patterns",
+      "skill_bash_code_standarts",
+      "skill_security-hardening"
+    ],
+    "2": [
+      "concept_auth_middleware",
+      "concept_code_review_process",
+      "concept_csp",
+      "concept_csrf_protection",
+      "concept_dependency_audit",
+      "concept_fastapi",
+      "concept_input_validation",
+      "concept_jwt_auth",
+      "concept_jwt_security",
+      "concept_oauth2_pkce",
+      "concept_python_async",
+      "concept_python_pydantic",
+      "concept_python_type_hints",
+      "concept_rate_limiting",
+      "concept_rbac",
+      "concept_reconnecting_ws",
+      "concept_redis_pubsub",
+      "concept_review_feedback",
+      "concept_secrets_management",
+      "concept_socketio",
+      "concept_sql_injection",
+      "concept_sse",
+      "concept_ts_branded_types",
+      "concept_ts_generics",
+      "concept_ts_strict_mode",
+      "concept_ts_zod",
+      "concept_uv_pyproject",
+      "concept_websocket_server",
+      "plugin_api_architect",
+      "skill_authentication_patterns",
+      "skill_code_review",
+      "skill_python",
+      "skill_security_hardening",
+      "skill_typescript",
+      "skill_websocket_realtime"
+    ],
+    "3": [
+      "agents_md_agents_doc",
+      "architect_agent",
+      "architect_review_md",
+      "claude_md_orchestrator_guide",
+      "coder_agent",
+      "coder_output_md",
+      "coding_pipeline",
+      "commit_agent",
+      "context_budget_strategy",
+      "context_manager_agent",
+      "devops_agent",
+      "doc_writer_agent",
+      "implement_command",
+      "local_commit_sh",
+      "ollama_coder_role",
+      "ollama_commit_role",
+      "ollama_reviewer_role",
+      "open_pr_sh",
+      "owasp_top10",
+      "performance_monitor_agent",
+      "planner_agent",
+      "progressive_loading_strategy",
+      "reviewer_agent",
+      "security_auditor_agent",
+      "skill_api_design_patterns",
+      "skill_docker_best_practices",
+      "skill_humanizer",
+      "skill_kubernetes_operations",
+      "skill_microservices_design",
+      "triage_ts_agent",
+      "triage_ts_domain_coder",
+      "triage_ts_domain_devops",
+      "triage_ts_domain_doc_writer",
+      "triage_ts_domain_unit_tester"
+    ],
+    "4": [
+      "agentrunner_agentrunner",
+      "agentrunner_agentrunner_constructor",
+      "agentrunner_agentrunner_run",
+      "dependencygraph_dependencygraph",
+      "dependencygraph_dependencygraph_addtask",
+      "dependencygraph_dependencygraph_constructor",
+      "dependencygraph_dependencygraph_getlevels",
+      "index_main",
+      "orchestrator_orchestrator",
+      "orchestrator_orchestrator_constructor",
+      "orchestrator_orchestrator_execute",
+      "orchestrator_orchestrator_planall",
+      "orchestrator_orchestrator_review",
+      "orchestrator_orchestrator_run",
+      "orchestrator_orchestrator_triage",
+      "planneragent_planneragent",
+      "planneragent_planneragent_constructor",
+      "planneragent_planneragent_plan",
+      "src_agents_agentrunner_ts",
+      "src_agents_planneragent_ts",
+      "src_agents_triageagent_ts",
+      "src_core_dependencygraph_ts",
+      "src_core_orchestrator_ts",
+      "src_index_ts",
+      "triageagent_triageagent",
+      "triageagent_triageagent_analyze",
+      "triageagent_triageagent_buildprompt",
+      "triageagent_triageagent_constructor",
+      "triageagent_triageagent_parseresponse",
+      "triageagent_triageagent_readgraphifycontext",
+      "triageagent_triageagent_scanproject",
+      "triageagent_triageagent_writetriageoutput"
+    ],
+    "5": [
+      "agent_devops",
+      "cmd_debug-pod",
+      "cmd_optimize-dockerfile",
+      "committer_commit_cmd",
+      "committer_commit_push_cmd",
+      "committer_plugin",
+      "concept_changelog_md",
+      "concept_cliff_toml",
+      "concept_conventional_commits",
+      "concept_git_bisect",
+      "concept_git_cliff",
+      "concept_git_hooks",
+      "concept_git_recovery",
+      "concept_git_worktrees",
+      "concept_github_cli",
+      "concept_interactive_rebase",
+      "concept_markdown_review",
+      "concept_semver",
+      "plugin_docker-helper",
+      "plugin_k8s-helper",
+      "release_manager_bump_version_cmd",
+      "release_manager_plugin",
+      "release_manager_release_cmd",
+      "release_manager_update_changelog_cmd",
+      "script_bump_version",
+      "script_local_commit",
+      "script_open_pr",
+      "skill_docker-best-practices",
+      "skill_git_advanced",
+      "skill_kubernetes-operations",
+      "tool_git_cliff",
+      "tool_ollama"
+    ],
+    "6": [
+      "agent_debugger",
+      "agent_qa_orchestrator",
+      "agent_role_debugger",
+      "agent_unit_tester",
+      "ai_rules_doc",
+      "api_tester_agent",
+      "ci_debugger_script",
+      "circuit_breaker_pattern",
+      "concept_5_whys",
+      "concept_5whys",
+      "concept_local_first",
+      "concept_rca_countermeasures",
+      "concept_self_healing_ci",
+      "concept_token_savings",
+      "debugger_agent",
+      "error_coordinator_agent",
+      "exponential_backoff_pattern",
+      "five_whys_methodology",
+      "ollama_debugger_role",
+      "plugin_qa_tools",
+      "qa_orchestrator_agent",
+      "qa_tools_analyze_failures_cmd",
+      "qa_tools_fix_comments_cmd",
+      "qa_tools_generate_tests_cmd",
+      "qa_tools_plugin",
+      "qa_tools_seed_db_cmd",
+      "qa_tools_slack_notify_cmd",
+      "rationale_local_llm_delegation",
+      "skill_root_cause_analysis"
+    ],
+    "7": [
+      "ai_engineering_analyze_prompt_cmd",
+      "ai_engineering_optimize_prompt_cmd",
+      "ai_engineering_plugin",
+      "concept_chain_of_thought",
+      "concept_document_chunking",
+      "concept_few_shot",
+      "concept_llm_api_client",
+      "concept_llm_cost_optimization",
+      "concept_llm_streaming",
+      "concept_mcp_prompts",
+      "concept_mcp_resources",
+      "concept_mcp_tools",
+      "concept_mcp_transport",
+      "concept_modelcontextprotocol",
+      "concept_rag_pipeline",
+      "concept_system_prompt",
+      "concept_tool_use",
+      "skill_llm_integration",
+      "skill_mcp_development",
+      "skill_prompt_engineering"
+    ],
+    "8": [
+      "agent_api_tester",
+      "agent_architect",
+      "cmd_design-api",
+      "concept_cache_headers",
+      "concept_code_splitting",
+      "concept_core_web_vitals",
+      "concept_image_optimization",
+      "concept_virtual_list",
+      "database_tools_design_schema_cmd",
+      "database_tools_explain_plan_cmd",
+      "database_tools_generate_erd_cmd",
+      "database_tools_optimize_query_cmd",
+      "database_tools_plugin",
+      "plugin_api-architect",
+      "refactor_engine_extract_fn_cmd",
+      "refactor_engine_plugin",
+      "refactor_engine_simplify_cmd",
+      "skill_api-design-patterns",
+      "skill_first_principles",
+      "skill_performance_optimization"
+    ],
+    "9": [
+      "agent_runner_class",
+      "concept_context_file_handoff",
+      "concept_domain_dependencies",
+      "concept_graphify_integration",
+      "concept_pipeline_layers",
+      "concept_plugin_route",
+      "concept_triage_domain_routing",
+      "dependency_graph_class",
+      "index_orchestrator_entrypoint",
+      "orchestrator_class",
+      "planner_agent_class",
+      "rationale_context_verdict_only",
+      "triage_agent_class",
+      "types_agent_domain",
+      "types_agent_result",
+      "types_agent_task",
+      "types_run_result",
+      "types_triage_result"
+    ],
+    "10": [
+      "agent_doc_writer",
+      "concept_mypy",
+      "concept_pep8",
+      "concept_raii",
+      "documentation_generate_readme_cmd",
+      "documentation_plugin",
+      "plugin_python_expert",
+      "plugin_python_expert_refactor_py",
+      "plugin_python_expert_type_hints",
+      "skill_c_code_standarts",
+      "skill_doc_standarts",
+      "skill_flutter_code_standarts",
+      "skill_python_code_standarts",
+      "skill_swift_code_standarts",
+      "skill_ts_code_standarts"
+    ],
+    "11": [
+      "concept_argocd",
+      "concept_bash_ci_cd",
+      "concept_bash_error_handling",
+      "concept_bash_safety_header",
+      "concept_docker_multistage",
+      "concept_github_actions",
+      "concept_gitlab_ci",
+      "concept_gitops",
+      "concept_helm",
+      "concept_k8s_deployment",
+      "concept_prometheus",
+      "skill_bash",
+      "skill_ci_cd_pipelines",
+      "skill_devops_automation"
+    ],
+    "12": [
+      "pattern_api_gateway",
+      "pattern_cursor_pagination",
+      "pattern_docker_compose",
+      "pattern_event_driven",
+      "pattern_helm",
+      "pattern_hpa",
+      "pattern_multistage_build",
+      "pattern_openapi",
+      "pattern_saga",
+      "skill_api_design",
+      "skill_docker",
+      "skill_kubernetes",
+      "skill_microservices"
+    ],
+    "13": [
+      "agent_domain_type",
+      "agent_runner_ts",
+      "dependency_graph_ts",
+      "graphify_out_dir",
+      "model_triage",
+      "orchestrator_ts",
+      "planner_agent_ts",
+      "project_overview_md",
+      "task_context_md",
+      "triage_agent_ts",
+      "triage_result_type",
+      "types_index_ts"
+    ],
+    "14": [
+      "agent_role_devops",
+      "agent_role_reviewer",
+      "benchmarks_doc",
+      "bitbucket_integration_doc",
+      "bitbucket_review_script",
+      "concept_autofix_hygiene",
+      "concept_security_audit_contextual",
+      "model_qwen25_coder_7b",
+      "plugin_security_guidance",
+      "rationale_specialist_model_advantage"
+    ],
+    "15": [
+      "bitbucket_review_analyzevulnerability",
+      "bitbucket_review_getfixedcode",
+      "bitbucket_review_hastestfile",
+      "bitbucket_review_runbitbucketreview",
+      "bitbucket_review_runsecurityauditinternal",
+      "bitbucket_review_runtestcheckerinternal",
+      "bitbucket_review_shouldhavetest",
+      "scripts_bitbucket_review_js"
+    ],
+    "16": [
+      "ci_debugger_getsmartlog",
+      "ci_debugger_posttobitbucket",
+      "ci_debugger_posttogithub",
+      "ci_debugger_runcidebugger",
+      "scripts_ci_debugger_js"
+    ],
+    "17": [
+      "agent_ui_tester",
+      "concept_wcag",
+      "plugin_accessibility",
+      "plugin_accessibility_fix_aria",
+      "plugin_accessibility_test_sr"
+    ],
+    "18": [
+      "src_types_index_ts"
+    ],
+    "19": [
+      "types_llm_config"
+    ],
+    "20": [
+      "agent_role_planner"
+    ],
+    "21": [
+      "plugin_release_manager"
+    ],
+    "22": [
+      "plugin_reviewer"
+    ],
+    "23": [
+      "readme_doc"
+    ],
+    "24": [
+      "changelog_doc"
+    ],
+    "25": [
+      "contributing_doc"
+    ],
+    "26": [
+      "security_doc"
+    ],
+    "27": [
+      "architecture_doc"
+    ],
+    "28": [
+      "skills_doc"
+    ],
+    "29": [
+      "plugins_doc"
+    ]
+  },
+  "cohesion": {
+    "0": 0.07,
+    "1": 0.07,
+    "2": 0.07,
+    "3": 0.1,
+    "4": 0.09,
+    "5": 0.1,
+    "6": 0.07,
+    "7": 0.13,
+    "8": 0.13,
+    "9": 0.18,
+    "10": 0.16,
+    "11": 0.2,
+    "12": 0.15,
+    "13": 0.38,
+    "14": 0.2,
+    "15": 0.46,
+    "16": 0.7,
+    "17": 0.5,
+    "18": 1.0,
+    "19": 1.0,
+    "20": 1.0,
+    "21": 1.0,
+    "22": 1.0,
+    "23": 1.0,
+    "24": 1.0,
+    "25": 1.0,
+    "26": 1.0,
+    "27": 1.0,
+    "28": 1.0,
+    "29": 1.0
+  },
+  "gods": [
+    {
+      "id": "skill_security_hardening",
+      "label": "Skill: Security Hardening (OWASP)",
+      "degree": 19
+    },
+    {
+      "id": "llm_config_json",
+      "label": "LLM Model Config (llm-config.json)",
+      "degree": 18
+    },
+    {
+      "id": "doc_claude_md",
+      "label": "Documentation CLAUDE.md (Orchestrator Guide)",
+      "degree": 18
+    },
+    {
+      "id": "call_ollama_sh",
+      "label": "call_ollama.sh Shell Script",
+      "degree": 15
+    },
+    {
+      "id": "claude_md_orchestrator_guide",
+      "label": "AI Orchestrator Professional Guide",
+      "degree": 13
+    },
+    {
+      "id": "cmd_implement",
+      "label": "Implement Command",
+      "degree": 13
+    },
+    {
+      "id": "architect_agent",
+      "label": "Architect Agent",
+      "degree": 12
+    },
+    {
+      "id": "reviewer_agent",
+      "label": "Reviewer Agent",
+      "degree": 12
+    },
+    {
+      "id": "orchestrator_class",
+      "label": "Orchestrator Class",
+      "degree": 11
+    },
+    {
+      "id": "skill_root_cause_analysis",
+      "label": "Skill: Root Cause Analysis (5-Whys)",
+      "degree": 11
+    }
+  ],
+  "surprises": [
+    {
+      "source": "Orchestrator Class",
+      "target": "Multi-Layer Smart Pipeline (Triage->Plan->Code->Gate->Fix->Finalize)",
+      "source_files": [
+        "src/core/Orchestrator.ts",
+        "documentation/ARCHITECTURE.md"
+      ],
+      "confidence": "INFERRED",
+      "relation": "implements",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (code \u2194 doc); connects across different repos/directories; peripheral node `Multi-Layer Smart Pipeline (Triage->Plan->Code->Gate->Fix->Finalize)` unexpectedly reaches hub `Orchestrator Class`"
+    },
+    {
+      "source": "TriageAgent Class",
+      "target": "Triage Domain Auto-Routing",
+      "source_files": [
+        "src/agents/TriageAgent.ts",
+        "documentation/ARCHITECTURE.md"
+      ],
+      "confidence": "INFERRED",
+      "relation": "implements",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (code \u2194 doc); connects across different repos/directories; peripheral node `Triage Domain Auto-Routing` unexpectedly reaches hub `TriageAgent Class`"
+    },
+    {
+      "source": "Bitbucket Review Script",
+      "target": "Bitbucket Pipelines Integration Guide",
+      "source_files": [
+        "scripts/bitbucket-review.js",
+        "documentation/BITBUCKET_INTEGRATION.md"
+      ],
+      "confidence": "INFERRED",
+      "relation": "references",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (code \u2194 doc); connects across different repos/directories; peripheral node `Bitbucket Pipelines Integration Guide` unexpectedly reaches hub `Bitbucket Review Script`"
+    },
+    {
+      "source": ".claude/settings.local.json",
+      "target": "graphify-out/ Knowledge Graph Output Directory",
+      "source_files": [
+        ".claude/settings.local.json",
+        "src/agents/TriageAgent.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "crosses file types (code \u2194 doc); connects across different repos/directories; bridges separate communities; peripheral node `.claude/settings.local.json` unexpectedly reaches hub `graphify-out/ Knowledge Graph Output Directory`"
+    },
+    {
+      "source": "Orchestrator Class",
+      "target": "Context File Handoff Pattern (.claude/context/)",
+      "source_files": [
+        "src/core/Orchestrator.ts",
+        "documentation/ARCHITECTURE.md"
+      ],
+      "confidence": "INFERRED",
+      "relation": "implements",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (code \u2194 doc); connects across different repos/directories"
+    }
+  ],
+  "questions": [
+    {
+      "type": "ambiguous_edge",
+      "question": "What is the exact relationship between `Skill: TypeScript Mastery` and `Plugin: api-architect`?",
+      "why": "Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `call_ollama.sh Shell Script` connect `Community 0` to `Community 9`, `Community 3`, `Community 13`, `Community 6`?",
+      "why": "High betweenness centrality (0.177) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `Documentation CLAUDE.md (Orchestrator Guide)` connect `Community 1` to `Community 2`, `Community 5`, `Community 6`, `Community 7`, `Community 8`, `Community 11`?",
+      "why": "High betweenness centrality (0.173) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `Skill: Security Hardening (OWASP)` connect `Community 2` to `Community 1`, `Community 3`, `Community 14`, `Community 6`?",
+      "why": "High betweenness centrality (0.140) - this node is a cross-community bridge."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 5 inferred relationships involving `Skill: Security Hardening (OWASP)` (e.g. with `Authentication Patterns Skill` and `Code Review Excellence Skill`) actually correct?",
+      "why": "`Skill: Security Hardening (OWASP)` has 5 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 2 inferred relationships involving `LLM Model Config (llm-config.json)` (e.g. with `call_ollama.sh Shell Script` and `Ollama Local LLM Service`) actually correct?",
+      "why": "`LLM Model Config (llm-config.json)` has 2 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 2 inferred relationships involving `call_ollama.sh Shell Script` (e.g. with `LLM Model Config (llm-config.json)` and `Ollama Local LLM Service`) actually correct?",
+      "why": "`call_ollama.sh Shell Script` has 2 INFERRED edges - model-reasoned connections that need verification."
+    }
+  ]
+}

@@ -64,15 +64,16 @@ Agents communicate exclusively through files in `.claude/context/`. The orchestr
 
 | Layer | Stage | Agent | Reads | Writes |
 |---|---|---|---|---|
-| 0 | Triage | Claude | task description | `triage.md` |
-| 1 | Plan | Claude (orchestrator) | `triage.md` | `task_context.md` |
-| 1 | Pre-review | reviewer (Ollama) | `task_context.md` | `pre_review.md` |
-| 2 | Code | coder (Ollama) | `task_context.md`, `triage.md` | `coder_output.md` |
+| 0 | Triage | Claude + TriageAgent (TS) | task description, `graph.json` | `triage_ts.md` |
+| 1 | Plan | Claude (orchestrator) | `triage_ts.md` | `task_context_<domain>.md` |
+| 1.5 | TS Orchestrator | Ollama (per domain) | `task_context_<domain>.md` | `ollama_output_<domain>.md` |
+| 1 | Pre-review | reviewer (Ollama) | `task_context_<domain>.md` | `pre_review.md` |
+| 2 | Code | Claude coder | `ollama_output_<domain>.md` | `coder_output_<domain>.md` |
 | 2 | Build check | — | changed files | — |
-| 3 | Fast review | quick-coder (Ollama) | changed file, `triage.md` | `review_fast_<file>.md` |
-| 3 | Deep review | reviewer (Ollama) | changed file, `review_fast_<file>.md`, `triage.md` | `review_deep_<file>.md` |
-| 4 | Fix loop | coder (Ollama) | `fix_loop.md`, `triage.md` | `coder_output.md` |
-| 5 | Finalize | — | `coder_output.md` | — |
+| 3 | Fast review | quick-coder (Ollama) | changed file, `triage_ts.md` | `review_fast_<file>.md` |
+| 3 | Deep review | reviewer (Ollama) | changed file, `review_fast_<file>.md` | `review_deep_<file>.md` |
+| 4 | Fix loop | coder (Ollama) | `fix_loop.md` | `coder_output_<domain>.md` |
+| 5 | Finalize | — | `coder_output_<domain>.md` | — |
 
 **Context handoff rule**: orchestrator reads only the `## Verdict` line from each output file. Full content stays on disk, out of the orchestrator context.
 
@@ -107,6 +108,67 @@ Triage scans the task description for domain keywords and loads the matching plu
 | Code | coder (Ollama) | coder (Ollama) |
 | Review | fast + deep reviewer (Ollama) | fast + deep reviewer (Ollama) |
 | Token cost | Lower (planner skipped) | Standard |
+
+---
+
+## TypeScript orchestrator
+
+The TypeScript orchestrator runs at step 1.5 in the `/implement` flow, between the Claude planners and the Claude coders. It handles multi-domain tasks: reads the context files written by the planners, runs Ollama agents in dependency order, and writes the generated code output for Claude to apply.
+
+### Invocation
+
+```bash
+npm start "coder,unit-tester,doc-writer"
+```
+
+Valid domain names come from `KNOWN_DOMAINS` in `src/types/index.ts`. Any domain not in that list is silently dropped before execution starts.
+
+### Domain dependencies
+
+| Domain | Depends on |
+|--------|------------|
+| `coder` | (none) |
+| `unit-tester` | `coder` |
+| `doc-writer` | `coder` |
+| `devops` | `coder`, `unit-tester`, `doc-writer` |
+
+Domains at the same dependency level run concurrently via `Promise.all`. The order across levels follows Kahn's topological sort (`DependencyGraph.ts`).
+
+### Circuit breaker
+
+If a domain fails, all dependents are set to `status: blocked` and never run. The failed domain is added to an internal `failedDomains` set; each subsequent task checks that set before executing.
+
+`AgentResult.status` values:
+
+| Status | Meaning |
+|--------|---------|
+| `done` | Ollama call succeeded; output written to `ollama_output_<domain>.md` |
+| `skipped` | No context file found for this domain |
+| `failed` | Ollama call returned a non-zero exit code or timed out |
+| `blocked` | A dependency failed; this domain was never attempted |
+
+### Source layout
+
+```text
+src/
+  types/index.ts        AgentDomain, KNOWN_DOMAINS, Role, AgentTask,
+                        AgentResult, RunResult, TriageResult
+  agents/
+    AgentRunner.ts      Wraps call_ollama.sh via spawn; 5 min timeout;
+                        10 MB stdout+stderr limit; validates promptFile before spawn
+    TriageAgent.ts      BFS depth=2 on graph.json; writes triage_ts.md;
+                        CLI entry via import.meta.url
+  core/
+    DependencyGraph.ts  Kahn topological sort; throws on duplicate domains or cycles
+    Orchestrator.ts     Reads task_context_<domain>.md; runs agents level by level;
+                        reviews ollama_output_<domain>.md after all domains complete;
+                        mkdirSync for contextDir in constructor
+  index.ts              CLI entry: npm start "coder,unit-tester,doc-writer"
+```
+
+### Review step
+
+After all domains complete, `Orchestrator.review()` runs the `reviewer` role against each `ollama_output_<domain>.md` file concurrently. It reviews the generated code, not the plan file. Domains with status other than `done` are skipped.
 
 ---
 
@@ -180,9 +242,11 @@ Agents share state through files in `.claude/context/`:
 
 | File | Written by | Read by | Purpose |
 |---|---|---|---|
-| `triage.md` | triage (Layer 0) | planner, coder, reviewer | Complexity tier, domain, route, skills, agents, constraints |
-| `task_context.md` | planner | coder, reviewer | Full plan: signatures, patterns, file contents, domain standards |
-| `coder_output.md` | coder | — | Summary of what was implemented |
+| `triage_ts.md` | TriageAgent (TS, Layer 0) | planners, coders, reviewers | Detected domains, reasoning, graphify context used |
+| `task_context_<domain>.md` | Claude planner (Layer 1) | TS Orchestrator, Claude coder | Full plan per domain: signatures, patterns, domain standards |
+| `task_context.md` | Claude planner (fallback) | TS Orchestrator | Used when a domain-specific file is not present |
+| `ollama_output_<domain>.md` | TS Orchestrator (Layer 1.5) | Claude coder (Layer 2) | Ollama-generated code output for each domain |
+| `coder_output_<domain>.md` | Claude coder (Layer 2) | — | Summary of applied changes per domain |
 | `project_overview.md` | planner | planner | Cached project map; speeds up future planner runs |
 
 ---

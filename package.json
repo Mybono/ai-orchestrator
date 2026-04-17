@@ -2,9 +2,11 @@
   "name": "ai-orchestrator",
   "version": "1.0.15",
   "description": "A vendor-neutral, shell-based AI orchestration framework for local LLMs.",
-  "main": "scripts/install.sh",
+  "type": "module",
+  "main": "dist/index.js",
   "bin": {
-    "ai-orchestrator": "scripts/install.sh"
+    "ai-orchestrator": "scripts/install.sh",
+    "ai-orchestrator-ts": "dist/index.js"
   },
   "files": [
     "agents/*.md",
@@ -15,9 +17,15 @@
     ".claude/*.template",
     "llm-config.json",
     "VERSION",
-    "README.md"
+    "README.md",
+    "dist/**/*",
+    "src/**/*"
   ],
   "scripts": {
+    "build": "tsc",
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "typecheck": "tsc --noEmit",
     "postinstall": "echo \"Run 'ai-orchestrator-install' to set up the system.\""
   },
   "repository": {
@@ -37,5 +45,10 @@
   "bugs": {
     "url": "https://github.com/Mybono/ai-orchestrator/issues"
   },
-  "homepage": "https://github.com/Mybono/ai-orchestrator#readme"
+  "homepage": "https://github.com/Mybono/ai-orchestrator#readme",
+  "devDependencies": {
+    "@types/node": "^22.19.17",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
 }
