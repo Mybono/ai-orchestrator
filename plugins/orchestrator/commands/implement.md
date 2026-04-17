@@ -10,11 +10,10 @@ Run the full plan → code → review pipeline for a coding task.
 
 | Step | Agent writes | Next step reads |
 |---|---|---|
-| Triage | `triage.md` | Planner, Coder, Reviewer |
-| Planner | `task_context_<domain>.md` | Coder |
-| TS Orchestrator | `ollama_output_<domain>.md` | Claude coder subagents (Step 2) |
+| Triage | `triage.md` | Planner, DeveloperAgent, Reviewer |
+| Planner | `task_context_<domain>.md` | DeveloperAgent |
 | Pre-review | `pre_review.md` | Orchestrator (verdict only) |
-| Coder | `coder_output.md` | Reviewer, Fix loop |
+| DeveloperAgent | `developer_output_<domain>.md` | Reviewer, Fix loop |
 | Reviewer (per file) | `review_<filename>.md` | Fix loop |
 | Fix loop | `fix_loop.md` | Next fix iteration |
 
@@ -107,64 +106,31 @@ Wait for **all** planner subagents to complete before proceeding to Step 1.5.
 
 Do not carry plan content in orchestrator context — pass only paths to subsequent steps.
 
-### Step 1.5 — Multi-domain execution (TS Orchestrator)
+### Step 1.5 — DeveloperAgent (code generation + file writes)
 
-After planning completes, check how many domains triage detected. Read `## Domains` from `.claude/context/triage.md`.
+After planning completes, read `## Domains` from `.claude/context/triage.md`.
 
-**Multiple domains (2 or more):**
-
-The TypeScript Orchestrator reads the context files Claude already wrote and executes them in dependency order:
+Run the DeveloperAgent:
 
 ```bash
 ~/.claude/ts-orchestrator.sh "<domain1>,<domain2>,..."
 ```
 
-Pass the comma-separated domain list exactly as returned by triage (e.g. `"coder,unit-tester,doc-writer"`). The TS Orchestrator will:
+Pass the comma-separated domain list exactly as returned by triage (e.g. `"coder,unit-tester,doc-writer"`). The DeveloperAgent will:
 
-1. Read `task_context_<domain>.md` for each domain from `.claude/context/` (falls back to `task_context.md` with a stderr warning if the domain-specific file is absent).
-2. Build a dependency graph and execute in topological order (parallel where possible).
-3. Write Ollama output for each domain to `.claude/context/ollama_output_<domain>.md`.
-4. Run the reviewer role for each completed domain.
+1. Read `task_context_<domain>.md` for each domain from `.claude/context/`.
+2. Build a dependency graph and execute domains in topological order (parallel where dependencies allow):
+   - `coder` — no dependencies, runs first
+   - `unit-tester`, `doc-writer` — depend on `coder`, run in parallel after it
+   - `devops` — depends on all, runs last
+3. For each domain: call Ollama to generate code, then **write the resulting files directly to the project**.
+4. Write `.claude/context/developer_output_<domain>.md` with the list of changed files and verdict.
 
 Wait for it to exit (non-zero exit means at least one domain failed — check stderr).
 
-**Single domain:**
+**Single domain:** same command with one domain name. No dependency graph needed.
 
-Skip this step. Proceed directly to Step 2.
-
-### Step 2 — Apply Ollama Output
-
-Spawn **one Claude `coder` subagent per domain**, all in a **single message** (parallel). Spawn with `model: haiku` — this step is mechanical (read Ollama output → apply edits), Haiku is sufficient and saves tokens. Each subagent receives only these paths — the agent reads them itself:
-
-- `.claude/context/ollama_output_<domain>.md` — the Ollama-generated code for this domain
-- `.claude/context/task_context_<domain>.md` — the plan for this domain (provides file list and context)
-- `.claude/context/triage.md` — for domain constraints
-
-Each coder subagent:
-
-1. Reads `ollama_output_<domain>.md` in full.
-2. Identifies every file the output instructs to create or modify.
-3. Applies all changes using its Edit and Write tools.
-4. Writes `.claude/context/coder_output_<domain>.md` with:
-
-```markdown
-## Domain
-<domain>
-
-## Changed Files
-- <file1>
-- <file2>
-
-## Verdict
-DONE | PARTIAL | FAILED
-
-## Notes
-<any issues encountered>
-```
-
-Wait for all coder subagents to complete. Merge all `## Changed Files` lists from every `coder_output_<domain>.md` into one unified list for Steps 2.5 and 3.
-
-### Step 2.5 — Pre-Review (Standards Compliance Check)
+### Step 2 — Pre-Review (Standards Compliance Check)
 
 Before coding starts, spawn the agent with the **pre-reviewer** role. Pass two paths — the agent reads them itself:
 
@@ -211,18 +177,7 @@ Orchestrator reads only `## Verdict` line from this file to decide next step. Do
 
 > Pre-review is cheap: it reads only the plan (~100–300 lines), not code. Catching a wrong approach here saves an entire fix loop.
 
-### Step 3 — Code
-
-Spawn the `coder` agent. Pass only these paths — the agent reads them itself:
-
-- `.claude/context/task_context.md`
-- `.claude/context/triage.md` (for domain constraints)
-
-Do not pass file contents. The coder writes `.claude/context/coder_output.md` when done.
-
-After coder completes, read only `## Changed Files` and `## Verdict` from `coder_output.md`. Do not carry the full coder output in context.
-
-### Step 3.5 — Build / Type check
+### Step 3 — Build / Type check
 
 Detect the project type and run the appropriate check:
 
@@ -253,7 +208,7 @@ Do NOT proceed to reviewer until build passes.
 
 ### Step 4 — Post-Review (parallel if multiple files)
 
-Read `## Changed Files` from `.claude/context/coder_output.md` to get the list of files to review.
+Read `## Changed Files` from `.claude/context/developer_output_<domain>.md` (merge all domains) to get the list of files to review.
 
 **Tiered review:**
 
@@ -291,7 +246,7 @@ Apply [error-coordinator](../../../agents/error-coordinator.md) recovery:
 2. Collect issues: read `## Issues` from those same files → append to `fix_loop.md` under `## Issues`.
 3. Capture diff for problem files only: `git diff HEAD -- <problem_file_1> <problem_file_2> ...` → append to `fix_loop.md` under `## Diff`.
 4. Spawn `coder` with only paths: `fix_loop.md` + `triage.md`. Coder reads both itself.
-5. After coder completes, read `## Changed Files` from `coder_output.md`. If any file appears there that was **not** in `## Problem Files`, add it to the review queue for Step 6.
+5. After coder completes, read `## Changed Files` from `developer_output_<domain>.md`. If any file appears there that was **not** in `## Problem Files`, add it to the review queue for Step 6.
 6. Re-run Step 3.5.
 7. Re-run Step 4 (post-review) — **only for files in `## Problem Files` plus any unexpected files from step 5**.
 8. Repeat at most **3 times**.
