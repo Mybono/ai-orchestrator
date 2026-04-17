@@ -134,7 +134,7 @@ Skip this step. Proceed directly to Step 2.
 
 ### Step 2 — Apply Ollama Output
 
-Spawn **one Claude `coder` subagent per domain**, all in a **single message** (parallel). Each subagent receives only these paths — the agent reads them itself:
+Spawn **one Claude `coder` subagent per domain**, all in a **single message** (parallel). Spawn with `model: haiku` — this step is mechanical (read Ollama output → apply edits), Haiku is sufficient and saves tokens. Each subagent receives only these paths — the agent reads them itself:
 
 - `.claude/context/ollama_output_<domain>.md` — the Ollama-generated code for this domain
 - `.claude/context/task_context_<domain>.md` — the plan for this domain (provides file list and context)

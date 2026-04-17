@@ -32,5 +32,40 @@ CHANGED_FILES=$(echo "$CHANGED_FILES" | grep -v '^graphify-out/' || true)
 [ -n "$CHANGED_FILES" ] || exit 0
 
 echo "📊 Updating knowledge graph..."
-# shellcheck disable=SC2086
-python3 -m graphify "$REPO_DIR" --update $CHANGED_FILES 2>/dev/null || true
+
+# Resolve correct interpreter (same pattern as graphify skill)
+GRAPHIFY_PYTHON="python3"
+if [ -f "$REPO_DIR/graphify-out/.graphify_python" ]; then
+    GRAPHIFY_PYTHON=$(cat "$REPO_DIR/graphify-out/.graphify_python")
+fi
+
+# shellcheck disable=SC2016
+"$GRAPHIFY_PYTHON" -c "
+import sys, json
+from graphify.detect import detect_incremental, save_manifest
+from graphify.extract import collect_files, extract
+from graphify.build import build_from_json
+from graphify.export import to_json
+from pathlib import Path
+
+repo = Path(sys.argv[1])
+result = detect_incremental(repo)
+new_total = result.get('new_total', 0)
+if new_total == 0:
+    sys.exit(0)
+
+new_files = result.get('new_files', {})
+all_changed = [repo / f for files in new_files.values() for f in files]
+
+code_files = []
+for f in all_changed:
+    code_files.extend(collect_files(f) if f.is_dir() else [f])
+
+if code_files:
+    extraction = extract(code_files)
+    G = build_from_json(extraction)
+    to_json(G, {}, str(repo / 'graphify-out' / 'graph.json'))
+    print(f'Updated graph: {G.number_of_nodes()} nodes, {G.number_of_edges()} edges')
+
+save_manifest(result.get('files', {}))
+" "$REPO_DIR" 2>/dev/null || true

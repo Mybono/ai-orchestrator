@@ -306,7 +306,8 @@ export class TriageAgent {
 }
 
 // CLI entry point: npx tsx src/agents/TriageAgent.ts "<task>"
-if (process.argv[1]?.endsWith('TriageAgent.ts') || process.argv[1]?.endsWith('TriageAgent.js')) {
+const isMain = import.meta.url === `file://${process.argv[1]}`;
+if (isMain) {
   const task = process.argv[2];
   if (!task) {
     process.stderr.write('Usage: npx tsx src/agents/TriageAgent.ts "<task description>"\n');

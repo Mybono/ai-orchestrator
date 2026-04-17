@@ -1,6 +1,6 @@
 # Project Overview
 
-_Last updated: 2026-04-16 by planner after task: fix 3 bugs — Ollama output written to disk, buildTasks() fallback for missing context files, implement.md parallel planning + Step 2 apply output_
+_Last updated: 2026-04-16 by planner after task: fix graphify-update.sh Python invocation, TriageAgent CLI ESM guard, and implement.md Step 2 model hint_
 
 ## Language(s)
 - Shell (Bash): `install.sh`, `call_ollama.sh`, `local-commit.sh`, `analyze_project.sh` — pure Bash + `jq` for orchestration — standarts: inferred from existing scripts (no dedicated standarts file)
@@ -15,7 +15,7 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 |------|---------|
 | `CLAUDE.md` | Global instructions injected into every Claude Code session — defines the pipeline, trigger rules, and available Ollama models |
 | `scripts/install.sh` | Installer: creates symlinks in `~/.claude/`, generates `settings.json` from template, adds shell aliases, installs git hooks including post-commit graphify-update |
-| `scripts/graphify-update.sh` | Post-commit hook script: checks for graphify install and graph.json, runs `python3 -m graphify --update` on changed files; silent if graphify not present |
+| `scripts/graphify-update.sh` | Post-commit hook: checks for graphify install and graph.json, calls `detect_incremental`+`extract`+`build_from_json`+`to_json`+`save_manifest` via Python inline script; resolves interpreter from `graphify-out/.graphify_python`; silent if graphify not present |
 | `agents/planner.md` | Authoritative source of project context — explores codebase, writes `.claude/context/task_context.md` and maintains `project_overview.md` |
 | `agents/coder.md` | Coding agent — reads context, generates code via `call_ollama.sh` (role: coder), applies changes |
 | `agents/reviewer.md` | Review agent — diffs changed files, invokes `call_ollama.sh` (role: reviewer), reports verdict |
@@ -72,11 +72,11 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 | `src/types/index.ts` | All TypeScript domain types: `AgentDomain`, `AgentTask`, `AgentResult`, `RunResult`, `OrchestratorConfig`, `LlmConfig`, `TriageResult` |
 | `src/core/DependencyGraph.ts` | DAG class with Kahn's topological sort — `getLevels()` returns `AgentTask[][]` for parallel execution |
 | `src/agents/AgentRunner.ts` | Wraps `~/.claude/call_ollama.sh` via `child_process.spawn` — returns `RunResult` discriminated union |
-| `src/agents/TriageAgent.ts` | LLM-powered triage — scans project structure, does BFS traversal on `graphify-out/graph.json` (NetworkX node-link format, depth=2), calls triage role, parses response into `TriageResult` |
+| `src/agents/TriageAgent.ts` | LLM-powered triage — scans project structure, does BFS traversal on `graphify-out/graph.json` (NetworkX node-link format, depth=2), calls triage role, parses response into `TriageResult`; CLI entry-point guard uses `import.meta.url === \`file://${process.argv[1]}\`` |
 | `src/core/Orchestrator.ts` | Pure execution engine — accepts pre-written domain list, reads `task_context_<domain>.md` files (falls back to `task_context.md` with warning), executes by levels, writes `ollama_output_<domain>.md` after each Ollama call, then reviews |
 | `src/index.ts` | CLI entry point — parses `process.argv[2]` as comma-separated `AgentDomain` list, validates, runs `Orchestrator.run(domains)` |
 | `tsconfig.json` | TypeScript strict ESM config — target ES2022, module NodeNext, `noUncheckedIndexedAccess: true`, `exactOptionalPropertyTypes: true` |
-| `plugins/orchestrator/commands/implement.md` | `/implement` pipeline — Steps 0–6: triage → parallel planning per domain (Step 1) → multi-domain TS Orchestrator (Step 1.5) → apply Ollama output via Claude coders (Step 2) → pre-review (Step 2.5) → code → build → post-review → fix loop → finalize |
+| `plugins/orchestrator/commands/implement.md` | `/implement` pipeline — Steps 0–6: triage → parallel planning per domain (Step 1) → multi-domain TS Orchestrator (Step 1.5) → apply Ollama output via Claude coder subagents with `model: haiku` (Step 2) → pre-review (Step 2.5) → code → build → post-review → fix loop → finalize |
 
 ## Architecture & Conventions
 
@@ -90,6 +90,7 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 - The full pipeline is: triage (TriageAgent → Ollama) → Claude plans per domain → multi-domain TS Orchestrator (`npm start "d1,d2"`) OR single-domain coder → pre-review → build check → tiered review → fix loop (max 3 rounds) → track_savings.sh
 - **TypeScript orchestrator layer** (`src/`): ESM modules (`"type": "module"`), all imports use `.js` extensions, strict mode + `noUncheckedIndexedAccess` + `exactOptionalPropertyTypes`. Shell bridge is `~/.claude/call_ollama.sh` via `child_process.spawn`. No new heavy dependencies — only `typescript` + `tsx` + `@types/node` as devDeps.
 - **TriageAgent graph traversal**: reads `graphify-out/graph.json` (NetworkX node-link format), matches seed nodes by label keywords, runs BFS depth=2, formats "Affected nodes: X\nConnected to:\n- Y (via relation)" output truncated to 1500 chars
+- **TriageAgent CLI guard**: uses `import.meta.url === \`file://${process.argv[1]}\`` (ESM-correct, NodeNext) — not `process.argv[1]?.endsWith(...)`
 - **DOMAIN_DEPENDENCIES** constant lives in `Orchestrator.ts` (not PlannerAgent — that file no longer exists)
 - **Zero Python dependency**: All agents call `scripts/call_ollama.sh` directly, which uses `curl` and `jq` for API interaction
 - `install.sh` uses symlinks, not file copies — a `git pull` updates everything without reinstall
@@ -102,6 +103,7 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 - Token stats are persisted at `~/.claude/token_stats.json` with schema `{"runs": [...]}`
 - `track_savings.sh` supports two modes: (1) file-size mode using `--context-file`/`--output-file`, (2) direct mode using `--input-tokens`/`--output-tokens`; mode is auto-detected by whether both direct flags are present
 - `call_ollama.sh` auto-tracks every LLM call via `track_savings.sh` (best-effort, silent on failure)
+- **graphify-update.sh Python API**: never use `python3 -m graphify` CLI; always call the Python API directly (`graphify.detect.detect_incremental`, `graphify.extract.collect_files`+`extract`, `graphify.build.build_from_json`, `graphify.export.to_json`, `graphify.detect.save_manifest`); pass shell vars as `sys.argv` arguments, not embedded in the `-c` string
 
 ## Do Not Touch
 
@@ -128,3 +130,4 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 - `TriageResult.graphifyContext` must be typed `string | undefined` (not `string?`) due to `exactOptionalPropertyTypes`
 - `Orchestrator.run()` now takes `AgentDomain[]`, not a task string — callers (index.ts, implement.md) must parse domains before calling
 - `readdirSync` is no longer imported in `TriageAgent.ts` — the BFS implementation reads only `graph.json` directly
+- Step 2 coder subagents in `implement.md` use `model: haiku` — mechanical apply-edits work, no deep reasoning needed
