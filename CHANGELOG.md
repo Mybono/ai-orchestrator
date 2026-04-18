@@ -2,8 +2,10 @@
 
 All notable changes to ai-orchestrator.
 ## [unreleased]
+### 2026-04-18
+- ![fix](https://img.shields.io/badge/fix-d73a4a?style=flat-square) [`8963745`](https://github.com/Mybono/ai-orchestrator/commit/8963745c652228afa18151774c8219dd042e8a65) Update script and agent configuration to support project root
 ### 2026-04-17
-- ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`0756ccf`](https://github.com/Mybono/ai-orchestrator/commit/0756ccf0d40bc0e5d7f4f00e1532b4b535c13957) Implement file writing for generated code
+- ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`68ca40f`](https://github.com/Mybono/ai-orchestrator/commit/68ca40f0197555a4079c4ba61f7c17f2aab74c0b) Implement file writing for generated code
 - ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`fe93868`](https://github.com/Mybono/ai-orchestrator/commit/fe938682169ae13f3c9b254de167ea252e1e297d) Update layout and improve usability
 
 ## v1.0.16 — 2026-04-17

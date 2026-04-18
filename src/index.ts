@@ -2,9 +2,9 @@ import { resolve } from 'node:path';
 import { Orchestrator } from './core/Orchestrator.js';
 import { KNOWN_DOMAINS } from './types/index.js';
 import type { AgentDomain } from './types/index.js';
+const DEFAULT_PROJECT_ROOT = process.env['PROJECT_ROOT'] ?? process.cwd();
 const DEFAULT_CONFIG = resolve('llm-config.json');
-const DEFAULT_CONTEXT_DIR = resolve('.claude/context');
-const DEFAULT_PROJECT_ROOT = process.cwd();
+const DEFAULT_CONTEXT_DIR = resolve(DEFAULT_PROJECT_ROOT, '.claude/context');
 
 async function main(): Promise<void> {
   const arg = process.argv[2];

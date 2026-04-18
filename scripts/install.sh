@@ -95,7 +95,9 @@ done
 TRIAGE_WRAPPER="$CLAUDE_DIR/triage-agent.sh"
 cat > "$TRIAGE_WRAPPER" <<WRAPPER
 #!/bin/bash
-cd "$REPO_DIR" && npx tsx src/agents/TriageAgent.ts "\$@"
+PROJECT_ROOT="\$(pwd)"
+cd "$REPO_DIR"
+PROJECT_ROOT="\$PROJECT_ROOT" npx tsx src/agents/TriageAgent.ts "\$@"
 WRAPPER
 chmod +x "$TRIAGE_WRAPPER"
 echo "  ✓ triage-agent.sh (wraps $REPO_DIR)"
@@ -103,7 +105,9 @@ echo "  ✓ triage-agent.sh (wraps $REPO_DIR)"
 TS_ORCH_WRAPPER="$CLAUDE_DIR/ts-orchestrator.sh"
 cat > "$TS_ORCH_WRAPPER" <<WRAPPER
 #!/bin/bash
-cd "$REPO_DIR" && npm start "\$@"
+PROJECT_ROOT="\$(pwd)"
+cd "$REPO_DIR"
+PROJECT_ROOT="\$PROJECT_ROOT" npm start "\$@"
 WRAPPER
 chmod +x "$TS_ORCH_WRAPPER"
 echo "  ✓ ts-orchestrator.sh (wraps $REPO_DIR)"

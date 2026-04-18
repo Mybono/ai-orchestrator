@@ -1,4 +1,4 @@
-<svg width="680" height="750" viewBox="0 0 680 750" xmlns="http://www.w3.org/2000/svg">
+<svg width="680" height="766" viewBox="0 0 680 766" xmlns="http://www.w3.org/2000/svg">
 <defs>
   <style>
     .c-gray-fill    { fill: #21262d; stroke: #30363d; }
@@ -20,6 +20,7 @@
     .t-pass   { fill: #3fb950; font-family: -apple-system, system-ui, sans-serif; font-size: 10px; font-weight: 600; }
     .t-domain { fill: #a5b4fc; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 9px; font-weight: 600; }
     .t-par    { fill: #6e40c9; font-family: -apple-system, system-ui, sans-serif; font-size: 9px; font-weight: 700; }
+    .t-seq    { fill: #1f6feb; font-family: -apple-system, system-ui, sans-serif; font-size: 9px; font-weight: 700; }
 
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(10px); }
@@ -60,8 +61,7 @@
     .arr-7 { opacity:0; stroke-dasharray:30; stroke-dashoffset:30; animation: drawLine .4s ease forwards; animation-delay:5.8s; }
 
     .flow-ok {
-      stroke: #3fb950; stroke-width: 1.5; stroke-dasharray: 4 6;
-      opacity: 0;
+      stroke: #3fb950; stroke-width: 1.5; stroke-dasharray: 4 6; opacity: 0;
       animation: dashFlow 1s linear infinite, fadeIn .3s ease forwards;
     }
   </style>
@@ -76,12 +76,12 @@
     <path d="M2 1L8 5L2 9" fill="none" stroke="#3fb950" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
   </marker>
   <marker id="arrowB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-    <path d="M2 1L8 5L2 9" fill="none" stroke="#1f6feb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#1f6feb" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
   </marker>
 </defs>
 
 <!-- background -->
-<rect width="680" height="750" fill="#0d1117" rx="12"/>
+<rect width="680" height="766" fill="#0d1117" rx="12"/>
 <rect x="0" y="0" width="680" height="3" fill="#6e40c9" rx="2"/>
 
 <!-- title -->
@@ -96,25 +96,23 @@
   <text x="340" y="108" text-anchor="middle" class="t-muted" font-size="10">slash command · Claude Code</text>
 </g>
 
-<!-- arrow 1 -->
 <line x1="340" y1="118" x2="340" y2="136" stroke="#30363d" stroke-width="1.2" class="arr-1" marker-end="url(#arrowW)"/>
 <line x1="340" y1="120" x2="340" y2="134" class="flow-ok" style="animation-delay:0.8s;"/>
 
 <!-- ══ TRIAGE ══ -->
 <g class="g-triage">
   <rect x="180" y="136" width="320" height="52" rx="8" class="c-indigo-fill" stroke-width="1"/>
-  <text x="340" y="157" text-anchor="middle" class="t-white">⚖️  Triage agent</text>
+  <text x="340" y="157" text-anchor="middle" class="t-white">Triage agent</text>
   <text x="340" y="175" text-anchor="middle" class="t-muted">detects domains · selects plugins</text>
 </g>
 
-<!-- arrow 2 -->
 <line x1="340" y1="188" x2="340" y2="206" stroke="#30363d" stroke-width="1.2" class="arr-2" marker-end="url(#arrowW)"/>
 <line x1="340" y1="190" x2="340" y2="204" class="flow-ok" style="animation-delay:1.6s;"/>
 
-<!-- ══ PLANNER (parallel domains) ══ -->
+<!-- ══ PLANNER (parallel) ══ -->
 <g class="g-planner">
   <rect x="180" y="206" width="320" height="96" rx="8" class="c-purple-fill" stroke-width="1"/>
-  <text x="340" y="225" text-anchor="middle" class="t-white">🗺  Planner agents</text>
+  <text x="340" y="225" text-anchor="middle" class="t-white">Planner agents</text>
   <text x="340" y="241" text-anchor="middle" class="t-muted">parallel planning · one per domain</text>
 
   <rect x="194" y="250" width="64" height="26" rx="5" class="c-purple-inner" stroke-width="0.8"/>
@@ -129,26 +127,25 @@
   <rect x="404" y="250" width="64" height="26" rx="5" class="c-purple-inner" stroke-width="0.8"/>
   <text x="436" y="267" text-anchor="middle" class="t-domain">docs</text>
 
+  <!-- fan-out: parallel indicator -->
   <line x1="340" y1="244" x2="226" y2="250" stroke="#6e40c9" stroke-width="0.7" stroke-dasharray="2 1" opacity="0.6"/>
   <line x1="340" y1="244" x2="296" y2="250" stroke="#6e40c9" stroke-width="0.7" stroke-dasharray="2 1" opacity="0.6"/>
   <line x1="340" y1="244" x2="366" y2="250" stroke="#6e40c9" stroke-width="0.7" stroke-dasharray="2 1" opacity="0.6"/>
   <line x1="340" y1="244" x2="436" y2="250" stroke="#6e40c9" stroke-width="0.7" stroke-dasharray="2 1" opacity="0.6"/>
-
-  <text x="171" y="270" text-anchor="end" class="t-par">∥</text>
+  <text x="171" y="270" text-anchor="end" class="t-par">&#8214;</text>
 </g>
 
-<!-- arrow 3 -->
 <line x1="340" y1="302" x2="340" y2="320" stroke="#30363d" stroke-width="1.2" class="arr-3" marker-end="url(#arrowW)"/>
 <line x1="340" y1="304" x2="340" y2="318" class="flow-ok" style="animation-delay:2.6s;"/>
 
-<!-- ══ PRE-REVIEW ══ -->
+<!-- ══ PRE-REVIEWER ══ -->
 <g class="g-pre-review">
   <rect x="180" y="320" width="320" height="52" rx="8" class="c-teal-fill" stroke-width="1"/>
-  <text x="340" y="341" text-anchor="middle" class="t-white">🛡  Pre-Reviewer</text>
+  <text x="340" y="341" text-anchor="middle" class="t-white">Pre-Reviewer</text>
   <text x="340" y="359" text-anchor="middle" class="t-muted">plan vs. domain standards · compliance checklist</text>
 </g>
 
-<!-- fail loop (Pre-Review → Planner) -->
+<!-- fail loop (Pre-Review -> Planner) -->
 <g class="g-fail-plan">
   <path d="M180 346 L155 346 L155 240 L180 240"
         fill="none" stroke="#f85149" stroke-width="1.2" stroke-dasharray="4 2"
@@ -157,92 +154,95 @@
   <text x="145" y="293" text-anchor="middle" class="t-fail" transform="rotate(-90,145,293)">refine plan</text>
 </g>
 
-<!-- arrow 4 -->
 <line x1="340" y1="372" x2="340" y2="390" stroke="#30363d" stroke-width="1.2" class="arr-4" marker-end="url(#arrowW)"/>
 <line x1="340" y1="374" x2="340" y2="388" class="flow-ok" style="animation-delay:3.2s;"/>
 
-<!-- ══ DEVELOPER AGENT ══ -->
+<!-- ══ DEVELOPER AGENT (dependency-ordered) ══ -->
 <g class="g-devagent">
-  <rect x="180" y="390" width="320" height="90" rx="8" class="c-blue-fill" stroke-width="1"/>
-  <text x="340" y="409" text-anchor="middle" class="t-white">⚒️  DeveloperAgent</text>
+  <rect x="180" y="390" width="320" height="96" rx="8" class="c-blue-fill" stroke-width="1"/>
+  <text x="340" y="409" text-anchor="middle" class="t-white">DeveloperAgent</text>
   <text x="340" y="425" text-anchor="middle" class="t-muted">Ollama · generates code · writes files</text>
 
-  <!-- dependency chain: coder → [unit-tester, doc-writer] → devops -->
-  <!-- box: coder -->
-  <rect x="194" y="434" width="62" height="32" rx="5" class="c-blue-inner" stroke-width="0.8"/>
-  <text x="225" y="448" text-anchor="middle" class="t-domain">coder</text>
-  <text x="225" y="460" text-anchor="middle" fill="#4a7ab5" font-family="monospace" font-size="8">no deps</text>
+  <!-- box 1: coder -->
+  <rect x="194" y="434" width="64" height="26" rx="5" class="c-blue-inner" stroke-width="0.8"/>
+  <text x="226" y="451" text-anchor="middle" class="t-domain">coder</text>
 
-  <!-- arrow → -->
-  <line x1="258" y1="450" x2="270" y2="450" stroke="#1f6feb" stroke-width="1" marker-end="url(#arrowB)" opacity="0.7"/>
+  <!-- arrow -> -->
+  <line x1="260" y1="447" x2="263" y2="447" stroke="#1f6feb" stroke-width="1" marker-end="url(#arrowB)" opacity="0.8"/>
 
-  <!-- box: unit-tester + doc-writer (parallel group) -->
-  <rect x="272" y="434" width="92" height="32" rx="5" class="c-blue-inner" stroke-width="0.8"/>
-  <text x="318" y="448" text-anchor="middle" class="t-domain">unit-tester</text>
-  <text x="318" y="460" text-anchor="middle" class="t-domain">doc-writer  ∥</text>
+  <!-- box 2: unit-tester -->
+  <rect x="264" y="434" width="64" height="26" rx="5" class="c-blue-inner" stroke-width="0.8"/>
+  <text x="296" y="451" text-anchor="middle" class="t-domain">unit-tester</text>
 
-  <!-- arrow → -->
-  <line x1="366" y1="450" x2="378" y2="450" stroke="#1f6feb" stroke-width="1" marker-end="url(#arrowB)" opacity="0.7"/>
+  <!-- arrow -> -->
+  <line x1="330" y1="447" x2="333" y2="447" stroke="#1f6feb" stroke-width="1" marker-end="url(#arrowB)" opacity="0.8"/>
 
-  <!-- box: devops -->
-  <rect x="380" y="434" width="62" height="32" rx="5" class="c-blue-inner" stroke-width="0.8"/>
-  <text x="411" y="448" text-anchor="middle" class="t-domain">devops</text>
-  <text x="411" y="460" text-anchor="middle" fill="#4a7ab5" font-family="monospace" font-size="8">after all</text>
+  <!-- box 3: doc-writer -->
+  <rect x="334" y="434" width="64" height="26" rx="5" class="c-blue-inner" stroke-width="0.8"/>
+  <text x="366" y="451" text-anchor="middle" class="t-domain">doc-writer</text>
+
+  <!-- arrow -> -->
+  <line x1="400" y1="447" x2="403" y2="447" stroke="#1f6feb" stroke-width="1" marker-end="url(#arrowB)" opacity="0.8"/>
+
+  <!-- box 4: devops -->
+  <rect x="404" y="434" width="64" height="26" rx="5" class="c-blue-inner" stroke-width="0.8"/>
+  <text x="436" y="451" text-anchor="middle" class="t-domain">devops</text>
+
+  <!-- dependency indicator -->
+  <text x="171" y="454" text-anchor="end" class="t-seq">&#8594;</text>
 </g>
 
-<!-- arrow 5 -->
-<line x1="340" y1="480" x2="340" y2="498" stroke="#30363d" stroke-width="1.2" class="arr-5" marker-end="url(#arrowW)"/>
-<line x1="340" y1="482" x2="340" y2="496" class="flow-ok" style="animation-delay:4.4s;"/>
+<line x1="340" y1="486" x2="340" y2="504" stroke="#30363d" stroke-width="1.2" class="arr-5" marker-end="url(#arrowW)"/>
+<line x1="340" y1="488" x2="340" y2="502" class="flow-ok" style="animation-delay:4.4s;"/>
 
 <!-- ══ BUILD CHECK ══ -->
 <g class="g-build">
-  <rect x="180" y="498" width="320" height="52" rx="8" class="c-amber-fill" stroke-width="1"/>
-  <text x="340" y="519" text-anchor="middle" class="t-white">🔨  Build check</text>
-  <text x="340" y="537" text-anchor="middle" class="t-muted">compile · lint · syntax</text>
+  <rect x="180" y="504" width="320" height="52" rx="8" class="c-amber-fill" stroke-width="1"/>
+  <text x="340" y="525" text-anchor="middle" class="t-white">Build check</text>
+  <text x="340" y="543" text-anchor="middle" class="t-muted">compile · lint · syntax</text>
 </g>
 
-<!-- fail loop (Build → DeveloperAgent) -->
+<!-- fail loop (Build -> DeveloperAgent) -->
 <g class="g-fail-build">
-  <path d="M180 524 L155 524 L155 435 L180 435"
+  <path d="M180 530 L155 530 L155 438 L180 438"
         fill="none" stroke="#f85149" stroke-width="1.2" stroke-dasharray="4 2"
         marker-end="url(#arrowR)"
         style="animation: dashFlow 0.8s linear infinite; animation-delay:4.8s;"/>
-  <text x="145" y="480" text-anchor="middle" class="t-fail" transform="rotate(-90,145,480)">fix syntax</text>
+  <text x="145" y="484" text-anchor="middle" class="t-fail" transform="rotate(-90,145,484)">fix syntax</text>
 </g>
 
-<!-- pass arrow (Build → Reviewer) -->
+<!-- pass arrow (Build -> Reviewer) -->
 <g class="arr-6" style="opacity:0">
-  <line x1="340" y1="550" x2="340" y2="568" stroke="#3fb950" stroke-width="1.2" marker-end="url(#arrowG)"
+  <line x1="340" y1="556" x2="340" y2="574" stroke="#3fb950" stroke-width="1.2" marker-end="url(#arrowG)"
         style="stroke-dasharray:20; stroke-dashoffset:20; animation: drawLine .4s ease forwards; animation-delay:5.0s;"/>
-  <text x="356" y="562" class="t-pass">pass</text>
+  <text x="356" y="568" class="t-pass">pass</text>
 </g>
-<line x1="340" y1="552" x2="340" y2="566" class="flow-ok" style="stroke:#3fb950; animation-delay:5.2s;"/>
+<line x1="340" y1="558" x2="340" y2="572" class="flow-ok" style="stroke:#3fb950; animation-delay:5.2s;"/>
 
 <!-- ══ REVIEWER ══ -->
 <g class="g-review">
-  <rect x="180" y="568" width="320" height="52" rx="8" class="c-teal-fill" stroke-width="1"/>
-  <text x="340" y="589" text-anchor="middle" class="t-white">🔍  Reviewer agent</text>
-  <text x="340" y="607" text-anchor="middle" class="t-muted">checks standards · security check</text>
+  <rect x="180" y="574" width="320" height="52" rx="8" class="c-teal-fill" stroke-width="1"/>
+  <text x="340" y="595" text-anchor="middle" class="t-white">Reviewer agent</text>
+  <text x="340" y="613" text-anchor="middle" class="t-muted">checks standards · security check</text>
 </g>
 
-<!-- fail loop (Reviewer → DeveloperAgent) -->
+<!-- fail loop (Reviewer -> DeveloperAgent) -->
 <g class="g-fail-rev">
-  <path d="M180 594 L125 594 L125 435 L180 435"
+  <path d="M180 600 L125 600 L125 438 L180 438"
         fill="none" stroke="#f85149" stroke-width="1.2" stroke-dasharray="4 2"
         marker-end="url(#arrowR)"
         style="animation: dashFlow 0.8s linear infinite; animation-delay:5.6s;"/>
-  <text x="115" y="515" text-anchor="middle" class="t-fail" transform="rotate(-90,115,515)">needs changes</text>
+  <text x="115" y="519" text-anchor="middle" class="t-fail" transform="rotate(-90,115,519)">needs changes</text>
 </g>
 
-<!-- arrow 7 -->
-<line x1="340" y1="620" x2="340" y2="638" stroke="#30363d" stroke-width="1.2" class="arr-7" marker-end="url(#arrowW)"/>
-<line x1="340" y1="622" x2="340" y2="636" class="flow-ok" style="animation-delay:6.0s;"/>
+<line x1="340" y1="626" x2="340" y2="644" stroke="#30363d" stroke-width="1.2" class="arr-7" marker-end="url(#arrowW)"/>
+<line x1="340" y1="628" x2="340" y2="642" class="flow-ok" style="animation-delay:6.0s;"/>
 
 <!-- ══ COMMIT ══ -->
 <g class="g-commit">
-  <rect x="180" y="638" width="320" height="52" rx="8" class="c-green-fill" stroke-width="1"/>
-  <text x="340" y="659" text-anchor="middle" class="t-white">✅  Commit agent</text>
-  <text x="340" y="677" text-anchor="middle" class="t-muted">stages · message · git commit</text>
+  <rect x="180" y="644" width="320" height="52" rx="8" class="c-green-fill" stroke-width="1"/>
+  <text x="340" y="665" text-anchor="middle" class="t-white">Commit agent</text>
+  <text x="340" y="683" text-anchor="middle" class="t-muted">stages · message · git commit</text>
 </g>
 
 <!-- ══ MODEL BADGES ══ -->
@@ -256,38 +256,38 @@
   <rect x="510" y="333" width="130" height="20" rx="10" fill="#051f1a" stroke="#1b7a6e" stroke-width="0.8"/>
   <text x="575" y="347" text-anchor="middle" class="t-mono" fill="#56d364">coder:7b</text>
 
-  <rect x="510" y="424" width="130" height="20" rx="10" fill="#0c1a2e" stroke="#1f6feb" stroke-width="0.8"/>
-  <text x="575" y="438" text-anchor="middle" class="t-mono" fill="#58a6ff">Ollama · TS</text>
+  <rect x="510" y="430" width="130" height="20" rx="10" fill="#0c1a2e" stroke="#1f6feb" stroke-width="0.8"/>
+  <text x="575" y="444" text-anchor="middle" class="t-mono" fill="#58a6ff">14B-GGUF:IQ4_XS</text>
 
-  <rect x="510" y="581" width="130" height="20" rx="10" fill="#051f1a" stroke="#1b7a6e" stroke-width="0.8"/>
-  <text x="575" y="595" text-anchor="middle" class="t-mono" fill="#56d364">coder:7b</text>
+  <rect x="510" y="587" width="130" height="20" rx="10" fill="#051f1a" stroke="#1b7a6e" stroke-width="0.8"/>
+  <text x="575" y="601" text-anchor="middle" class="t-mono" fill="#56d364">coder:7b</text>
 
-  <rect x="510" y="651" width="130" height="20" rx="10" fill="#0a1f0a" stroke="#238636" stroke-width="0.8"/>
-  <text x="575" y="665" text-anchor="middle" class="t-mono" fill="#3fb950">coder:7b</text>
+  <rect x="510" y="657" width="130" height="20" rx="10" fill="#0a1f0a" stroke="#238636" stroke-width="0.8"/>
+  <text x="575" y="671" text-anchor="middle" class="t-mono" fill="#3fb950">coder:7b</text>
 
   <path d="M500 159 H510" stroke="#d97706" stroke-width="0.8" stroke-dasharray="2 1"/>
   <path d="M500 256 H510" stroke="#d97706" stroke-width="0.8" stroke-dasharray="2 1"/>
   <path d="M500 346 H510" stroke="#1b7a6e" stroke-width="0.8" stroke-dasharray="2 1"/>
-  <path d="M500 435 H510" stroke="#1f6feb" stroke-width="0.8" stroke-dasharray="2 1"/>
-  <path d="M500 594 H510" stroke="#1b7a6e" stroke-width="0.8" stroke-dasharray="2 1"/>
-  <path d="M500 661 H510" stroke="#238636" stroke-width="0.8" stroke-dasharray="2 1"/>
+  <path d="M500 438 H510" stroke="#1f6feb" stroke-width="0.8" stroke-dasharray="2 1"/>
+  <path d="M500 600 H510" stroke="#1b7a6e" stroke-width="0.8" stroke-dasharray="2 1"/>
+  <path d="M500 670 H510" stroke="#238636" stroke-width="0.8" stroke-dasharray="2 1"/>
 </g>
 
 <!-- ══ FOOTER ══ -->
 <g class="g-badges" style="animation-delay:6.6s">
-  <rect x="180" y="716" width="110" height="34" rx="6" fill="#161b22" stroke="#30363d" stroke-width="0.8" stroke-dasharray="3 2"/>
-  <text x="235" y="730" text-anchor="middle" fill="#8b949e" font-family="sans-serif" font-size="9">powered by</text>
-  <text x="235" y="744" text-anchor="middle" fill="#79c0ff" font-family="monospace" font-size="10" font-weight="600">call_ollama.sh</text>
+  <rect x="180" y="722" width="110" height="34" rx="6" fill="#161b22" stroke="#30363d" stroke-width="0.8" stroke-dasharray="3 2"/>
+  <text x="235" y="736" text-anchor="middle" fill="#8b949e" font-family="sans-serif" font-size="9">powered by</text>
+  <text x="235" y="750" text-anchor="middle" fill="#79c0ff" font-family="monospace" font-size="10" font-weight="600">call_ollama.sh</text>
 
-  <rect x="300" y="716" width="80" height="34" rx="6" fill="#161b22" stroke="#30363d" stroke-width="0.8" stroke-dasharray="3 2"/>
-  <text x="340" y="730" text-anchor="middle" fill="#8b949e" font-family="sans-serif" font-size="9">config</text>
-  <text x="340" y="744" text-anchor="middle" fill="#79c0ff" font-family="monospace" font-size="10" font-weight="600">llm-config.json</text>
+  <rect x="300" y="722" width="80" height="34" rx="6" fill="#161b22" stroke="#30363d" stroke-width="0.8" stroke-dasharray="3 2"/>
+  <text x="340" y="736" text-anchor="middle" fill="#8b949e" font-family="sans-serif" font-size="9">config</text>
+  <text x="340" y="750" text-anchor="middle" fill="#79c0ff" font-family="monospace" font-size="10" font-weight="600">llm-config.json</text>
 
-  <rect x="390" y="716" width="110" height="34" rx="6" fill="#161b22" stroke="#30363d" stroke-width="0.8" stroke-dasharray="3 2"/>
-  <text x="445" y="730" text-anchor="middle" fill="#8b949e" font-family="sans-serif" font-size="9">core logic</text>
-  <text x="445" y="744" text-anchor="middle" fill="#79c0ff" font-family="monospace" font-size="10" font-weight="600">Bash + TS + jq</text>
+  <rect x="390" y="722" width="110" height="34" rx="6" fill="#161b22" stroke="#30363d" stroke-width="0.8" stroke-dasharray="3 2"/>
+  <text x="445" y="736" text-anchor="middle" fill="#8b949e" font-family="sans-serif" font-size="9">core logic</text>
+  <text x="445" y="750" text-anchor="middle" fill="#79c0ff" font-family="monospace" font-size="10" font-weight="600">Bash + TS + jq</text>
 </g>
 
-<text x="340" y="758" text-anchor="middle" fill="#3d444d" font-family="sans-serif" font-size="10">github.com/Mybono/ai-orchestrator</text>
+<text x="340" y="762" text-anchor="middle" fill="#3d444d" font-family="sans-serif" font-size="10">github.com/Mybono/ai-orchestrator</text>
 
 </svg>
