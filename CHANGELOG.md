@@ -3,7 +3,8 @@
 All notable changes to ai-orchestrator.
 ## [unreleased]
 ### 2026-04-19
-- ![fix](https://img.shields.io/badge/fix-d73a4a?style=flat-square) [`992cf96`](https://github.com/Mybono/ai-orchestrator/commit/992cf9627dc793c5ee0ad346c87a84db85a17e78) Handle null response from Ollama
+- ![fix](https://img.shields.io/badge/fix-d73a4a?style=flat-square) [`4c45d3a`](https://github.com/Mybono/ai-orchestrator/commit/4c45d3a1708cdcaf4be6f65ca87d029f27094293) Update markdown linting rules and fixes
+- ![fix](https://img.shields.io/badge/fix-d73a4a?style=flat-square) [`992f7d6`](https://github.com/Mybono/ai-orchestrator/commit/992f7d6c4194019f654d091d8a29d4da9e2628cd) Handle null response from Ollama
 ### 2026-04-18
 - ![fix](https://img.shields.io/badge/fix-d73a4a?style=flat-square) [`35ff5a8`](https://github.com/Mybono/ai-orchestrator/commit/35ff5a8786950b2c46537b9b3e022347d75edecd) Update script and agent configuration to support project root
 ### 2026-04-17

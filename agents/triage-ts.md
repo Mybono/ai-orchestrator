@@ -30,7 +30,7 @@ Given a task description and project context, decide which agent domains need to
 
 Output exactly this structure. No other text before or after.
 
-```
+```text
 ## Domains
 - coder
 - unit-tester
@@ -45,7 +45,7 @@ Input task: "Add retry logic to AgentRunner when Ollama returns a 500 error"
 
 Output:
 
-```
+```text
 ## Domains
 - coder
 - unit-tester

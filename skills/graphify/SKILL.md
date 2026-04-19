@@ -10,7 +10,7 @@ Turn any folder of files into a navigable knowledge graph with community detecti
 
 ## Usage
 
-```
+```text
 /graphify                                             # full pipeline on current directory → Obsidian vault
 /graphify <path>                                      # full pipeline on specific path
 /graphify <path> --mode deep                          # thorough extraction, richer INFERRED edges
@@ -98,7 +98,7 @@ print(json.dumps(result))
 
 Replace INPUT_PATH with the actual path the user provided. Do NOT cat or print the JSON - read it silently and present a clean summary instead:
 
-```
+```text
 Corpus: X files · ~Y words
   code:     N files (.py .ts .go ...)
   docs:     N files (.md .txt ...)
@@ -247,7 +247,7 @@ Call the Agent tool multiple times IN THE SAME RESPONSE - one call per chunk. Th
 
 Concrete example for 3 chunks:
 
-```
+```text
 [Agent tool call 1: files 1-15, subagent_type="general-purpose"]
 [Agent tool call 2: files 16-30, subagent_type="general-purpose"]
 [Agent tool call 3: files 31-45, subagent_type="general-purpose"]
@@ -257,7 +257,7 @@ All three in one message. Not three separate messages.
 
 Each subagent receives this exact prompt (substitute FILE_LIST, CHUNK_NUM, TOTAL_CHUNKS, and DEEP_MODE):
 
-```
+```text
 You are a graphify extraction subagent. Read the files listed and extract a knowledge graph fragment.
 Output ONLY valid JSON matching the schema below - no explanation, no markdown fences, no preamble.
 
@@ -754,7 +754,7 @@ rm -f graphify-out/.needs_update 2>/dev/null || true
 
 Tell the user (omit the obsidian line unless --obsidian was given):
 
-```
+```text
 Graph complete. Outputs in PATH_TO_DIR/graphify-out/
 
   graph.html            - interactive graph, open in browser
