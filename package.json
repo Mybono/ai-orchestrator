@@ -1,6 +1,6 @@
 {
   "name": "ai-orchestrator",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "A vendor-neutral, shell-based AI orchestration framework for local LLMs.",
   "type": "module",
   "main": "dist/index.js",
