@@ -19,6 +19,7 @@ export type AgentResult = {
   readonly domain: AgentDomain;
   readonly output: string;
   readonly contextFile: string | undefined;
+  readonly changedFiles: readonly string[];
   readonly status: 'done' | 'skipped' | 'failed' | 'blocked';
 };
 

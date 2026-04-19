@@ -91,6 +91,27 @@ for item in "${SYMLINK_TARGETS[@]}"; do
   echo "  ✓ $target_name"
 done
 
+# Generate TS orchestrator wrapper scripts (embed absolute REPO_DIR path)
+TRIAGE_WRAPPER="$CLAUDE_DIR/triage-agent.sh"
+cat > "$TRIAGE_WRAPPER" <<WRAPPER
+#!/bin/bash
+PROJECT_ROOT="\$(pwd)"
+cd "$REPO_DIR"
+PROJECT_ROOT="\$PROJECT_ROOT" npx tsx src/agents/TriageAgent.ts "\$@"
+WRAPPER
+chmod +x "$TRIAGE_WRAPPER"
+echo "  ✓ triage-agent.sh (wraps $REPO_DIR)"
+
+TS_ORCH_WRAPPER="$CLAUDE_DIR/ts-orchestrator.sh"
+cat > "$TS_ORCH_WRAPPER" <<WRAPPER
+#!/bin/bash
+PROJECT_ROOT="\$(pwd)"
+cd "$REPO_DIR"
+PROJECT_ROOT="\$PROJECT_ROOT" npm start "\$@"
+WRAPPER
+chmod +x "$TS_ORCH_WRAPPER"
+echo "  ✓ ts-orchestrator.sh (wraps $REPO_DIR)"
+
 # Generate settings.json from template (substitutes __HOME__ with real $HOME)
 SETTINGS_TEMPLATE="$REPO_DIR/.claude/settings.json.template"
 SETTINGS_DEST="$CLAUDE_DIR/settings.json"

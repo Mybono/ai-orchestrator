@@ -109,7 +109,7 @@ MESSAGE=$(echo "$MESSAGE" | sed '/^```/d')
 
 rm -f "$TMP_DIFF"
 
-if [ -z "$MESSAGE" ] || [[ "$MESSAGE" == *"Error"* ]]; then
+if [ -z "$MESSAGE" ] || [ "$MESSAGE" = "null" ]; then
     echo "❌ Failed to call Ollama. Error output:"
     echo "$MESSAGE"
     exit 1

@@ -118,15 +118,16 @@ rm -f /tmp/.doc_writer_active
   - Use a natural, varied rhythm. Avoid "AI-isms" like *testament*, *pivotal*, *vibrant*, *delve*, *unlocking*, *tapestry*
   - No marketing fluff, no sycophantic tone
 - **English only, NO EMOJIS anywhere**
-- **Markdown Perfection (Mandatory)**:
+- **Markdown Perfection (Mandatory)** — rules mirror `.markdownlint-cli2.jsonc`:
+  - **Heading Style (MD003)**: Use ATX-style headings only (`##`, not underline style)
+  - **Heading Uniqueness (MD024)**: Duplicate heading names are only allowed among siblings, not across the full document
   - **No Multiple Blanks (MD012)**: Never use more than one consecutive blank line
-  - **Heading Spacing (MD022/32)**: Every heading must have exactly one blank line above and below it
+  - **Heading Spacing (MD022/MD032)**: Every heading must have exactly one blank line above and below it
   - **Code Block Spacing (MD031)**: Every fenced code block must have exactly one blank line above and below it
   - **List Spacing (MD032)**: Every list must have a blank line before it
-  - **No Bold-as-Heading (MD036)**: Never use bold text as a section heading — use `##` or `###`
-  - **Language Declaration (MD040)**: Every fenced code block must declare a language: ` ```bash `, ` ```json `, ` ```text `. Never use a bare ` ``` `
-  - **Trailing Newline (MD047)**: Every file must end with exactly one single newline character
-  - **Indentation (MD007)**: List markers must not have extra leading whitespace (0 or 2 spaces max)
-  - Rules to ignore: MD013 (line length), MD033 (inline HTML), MD041 (first heading), MD060
+  - **Language Declaration (MD040)**: Every fenced code block must declare a language: ` ```bash `, ` ```json `, ` ```text `, ` ```typescript `, etc. Never use a bare ` ``` `
+  - **Trailing Newline (MD047)**: Every file must end with exactly one newline character
+  - **Indentation (MD007)**: List markers must not have extra leading whitespace
+  - Disabled rules (do NOT enforce): MD013 (line length), MD033 (inline HTML), MD036 (bold-as-heading), MD041 (first heading), MD060
 - After writing any `.md` file, run `markdownlint-cli2 "<file>"` to verify — fix any errors before reporting done
 - Do not rewrite sections that were not part of the task

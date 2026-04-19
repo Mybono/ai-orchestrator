@@ -323,7 +323,7 @@ if (isMain) {
   const { AgentRunner } = await import('./AgentRunner.js');
   const { resolve } = await import('node:path');
 
-  const projectRoot = process.cwd();
+  const projectRoot = process.env['PROJECT_ROOT'] ?? process.cwd();
   const contextDir = resolve(projectRoot, '.claude/context');
 
   const runner = new AgentRunner();

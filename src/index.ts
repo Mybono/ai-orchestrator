@@ -2,8 +2,9 @@ import { resolve } from 'node:path';
 import { Orchestrator } from './core/Orchestrator.js';
 import { KNOWN_DOMAINS } from './types/index.js';
 import type { AgentDomain } from './types/index.js';
+const DEFAULT_PROJECT_ROOT = process.env['PROJECT_ROOT'] ?? process.cwd();
 const DEFAULT_CONFIG = resolve('llm-config.json');
-const DEFAULT_CONTEXT_DIR = resolve('.claude/context');
+const DEFAULT_CONTEXT_DIR = resolve(DEFAULT_PROJECT_ROOT, '.claude/context');
 
 async function main(): Promise<void> {
   const arg = process.argv[2];
@@ -24,13 +25,16 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  const orchestrator = new Orchestrator(DEFAULT_CONFIG, DEFAULT_CONTEXT_DIR);
+  const orchestrator = new Orchestrator(DEFAULT_CONFIG, DEFAULT_CONTEXT_DIR, DEFAULT_PROJECT_ROOT);
   const results = await orchestrator.run(domains);
 
-  console.log(`\n[orchestrator] completed ${results.length} agent(s)`);
+  console.log(`\n[developer-agent] completed ${results.length} domain(s)`);
 
   for (const result of results) {
-    console.log(`  ${result.domain} [${result.status}]: ${result.contextFile ?? '(no context file)'}`);
+    const files = result.changedFiles.length > 0
+      ? result.changedFiles.join(', ')
+      : '(no files written)';
+    console.log(`  ${result.domain} [${result.status}]: ${files}`);
   }
 }
 
