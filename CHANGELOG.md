@@ -2,8 +2,10 @@
 
 All notable changes to ai-orchestrator.
 ## [unreleased]
+### 2026-04-19
+- ![fix](https://img.shields.io/badge/fix-d73a4a?style=flat-square) [`992cf96`](https://github.com/Mybono/ai-orchestrator/commit/992cf9627dc793c5ee0ad346c87a84db85a17e78) Handle null response from Ollama
 ### 2026-04-18
-- ![fix](https://img.shields.io/badge/fix-d73a4a?style=flat-square) [`8963745`](https://github.com/Mybono/ai-orchestrator/commit/8963745c652228afa18151774c8219dd042e8a65) Update script and agent configuration to support project root
+- ![fix](https://img.shields.io/badge/fix-d73a4a?style=flat-square) [`35ff5a8`](https://github.com/Mybono/ai-orchestrator/commit/35ff5a8786950b2c46537b9b3e022347d75edecd) Update script and agent configuration to support project root
 ### 2026-04-17
 - ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`68ca40f`](https://github.com/Mybono/ai-orchestrator/commit/68ca40f0197555a4079c4ba61f7c17f2aab74c0b) Implement file writing for generated code
 - ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`fe93868`](https://github.com/Mybono/ai-orchestrator/commit/fe938682169ae13f3c9b254de167ea252e1e297d) Update layout and improve usability

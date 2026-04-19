@@ -56,7 +56,7 @@ Description:
 MESSAGE=$("$OLLAMA_SCRIPT" --role reviewer --prompt "$PROMPT" --context-file "$TMP_CONTEXT")
 rm -f "$TMP_CONTEXT"
 
-if [ -z "$MESSAGE" ] || [[ "$MESSAGE" == *"Error"* ]]; then
+if [ -z "$MESSAGE" ] || [ "$MESSAGE" = "null" ]; then
     echo "❌ Failed to call Ollama. Error output:"
     echo "$MESSAGE"
     exit 1
