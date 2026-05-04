@@ -2,15 +2,9 @@
 
 All notable changes to ai-orchestrator.
 ## [unreleased]
-### 2026-04-19
-- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`c528f87`](https://github.com/Mybono/ai-orchestrator/commit/c528f879ffd38766bda9e0cf9a44dc82ad4b4503) Bump version to 1.0.17
-- ![fix](https://img.shields.io/badge/fix-d73a4a?style=flat-square) [`e077eab`](https://github.com/Mybono/ai-orchestrator/commit/e077eab57c70d4e78801718c8e17a3726ff31da8) Update markdown linting rules and fixes
-- ![fix](https://img.shields.io/badge/fix-d73a4a?style=flat-square) [`992f7d6`](https://github.com/Mybono/ai-orchestrator/commit/992f7d6c4194019f654d091d8a29d4da9e2628cd) Handle null response from Ollama
-### 2026-04-18
-- ![fix](https://img.shields.io/badge/fix-d73a4a?style=flat-square) [`35ff5a8`](https://github.com/Mybono/ai-orchestrator/commit/35ff5a8786950b2c46537b9b3e022347d75edecd) Update script and agent configuration to support project root
-### 2026-04-17
-- ![feat](https://img.shields.io/badge/feat-0075ca?style=flat-square) [`68ca40f`](https://github.com/Mybono/ai-orchestrator/commit/68ca40f0197555a4079c4ba61f7c17f2aab74c0b) Implement file writing for generated code
-- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`fe93868`](https://github.com/Mybono/ai-orchestrator/commit/fe938682169ae13f3c9b254de167ea252e1e297d) Update layout and improve usability
+### 2026-05-04
+- ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`616ea13`](https://github.com/Mybono/ai-orchestrator/commit/616ea13e77323a0f12bb6c3fa1cd4a62921b2cb1) Remove trailing newline
+- ![chore](https://img.shields.io/badge/chore-cfd3d7?style=flat-square) [`44cc9cf`](https://github.com/Mybono/ai-orchestrator/commit/44cc9cfbc9e8b95f137f0fabfb4e02c4262133bf) Sync changelog after merge
 
 ## v1.0.17 — 2026-04-17
 ### 2026-04-17
