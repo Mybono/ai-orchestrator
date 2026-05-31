@@ -172,6 +172,7 @@ for cmd_script in local-commit open-pr analyze_project stats; do
 done
 
 # Add ~/.local/bin to PATH — both .zshrc (interactive) and .zprofile (login)
+# shellcheck disable=SC2016  # $HOME/$PATH intentionally unexpanded — resolves at shell startup
 PATH_LINE='export PATH="$HOME/.local/bin:$PATH"'
 for rc_file in "$HOME/.zshrc" "$HOME/.zprofile" "$HOME/.bashrc"; do
   # Create .zprofile if missing (macOS login shells need it)

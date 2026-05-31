@@ -95,10 +95,9 @@ for file in $STAGED_MD_FILES; do
     npx --no-install markdownlint-cli2 --fix "$file" > /dev/null 2>&1 || true
     git add "$file"
 
-    # 2. Check for remaining errors after auto-fix
-    LINT_ERRORS=$(npx --no-install markdownlint-cli2 "$file" 2>&1 || true)
-
-    if [ -n "$LINT_ERRORS" ]; then
+    # 2. Check for remaining errors after auto-fix (use exit code, not output)
+    if ! npx --no-install markdownlint-cli2 "$file" > /dev/null 2>&1; then
+        LINT_ERRORS=$(npx --no-install markdownlint-cli2 "$file" 2>&1 || true)
         echo "  Remaining errors in $file:"
         echo "$LINT_ERRORS"
 

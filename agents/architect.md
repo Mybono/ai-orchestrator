@@ -54,7 +54,7 @@ When the triage route is `architect-first`, the orchestrator runs a structured d
 
 Produce exactly these sections — no others:
 
-```
+```markdown
 ## Design Decision
 <one paragraph: the approach being evaluated or proposed>
 
