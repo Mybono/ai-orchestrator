@@ -132,7 +132,7 @@ rm -f /tmp/.doc_writer_active
 - After writing any `.md` file, run `markdownlint-cli2 "<file>"` to verify — fix any errors before reporting done
 - Do not rewrite sections that were not part of the task
 
-
 ## Required Skills
+
 - skills/humanizer.md
 - skills/doc-standarts.md

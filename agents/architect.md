@@ -76,8 +76,8 @@ PROCEED | BLOCKED
 - Write the final output to `.claude/context/architect_decision.md`, not to `architect_review.md`.
 - Keep each section factual and brief.
 
-
 ## Required Skills
+
 - skills/humanizer.md
 - skills/first-principles/SKILL.md
 - skills/microservices-design/SKILL.md

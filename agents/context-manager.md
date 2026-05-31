@@ -107,6 +107,6 @@ When passing context to another agent:
 - Confirm that critical file paths and line references are still valid after code changes.
 - Ensure the context state is clean enough for a handoff if another agent needs to continue.
 
-
 ## Required Skills
+
 - skills/humanizer.md

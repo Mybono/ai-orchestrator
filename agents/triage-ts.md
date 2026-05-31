@@ -54,6 +54,6 @@ Output:
 The task modifies AgentRunner which contains core retry logic — coder is required. The change alters error-handling behavior that should be covered by unit tests, so unit-tester is included. No public API surface changes are described, so doc-writer is not needed. No CI or infrastructure changes are involved, so devops is excluded.
 ```
 
-
 ## Required Skills
+
 - skills/humanizer.md

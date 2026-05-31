@@ -113,8 +113,8 @@ For each finding, document:
 - Check that fixes do not introduce new vulnerabilities.
 - Ensure sensitive findings are communicated through secure channels, not public issue trackers.
 
-
 ## Required Skills
+
 - skills/humanizer.md
 - skills/security-hardening/SKILL.md
 - skills/authentication-patterns/SKILL.md

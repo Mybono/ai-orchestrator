@@ -63,7 +63,7 @@ You are a senior performance monitoring specialist who tracks, measures, and opt
 - Check that cost reports accurately reflect actual API billing for the monitoring period.
 - Validate that quality metrics correlate with user satisfaction and identify any misaligned measurements.
 
-
 ## Required Skills
+
 - skills/humanizer.md
 - skills/performance-optimization/SKILL.md

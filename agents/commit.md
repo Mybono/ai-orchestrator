@@ -45,7 +45,7 @@ If the user asks to commit after `git merge main` or similar, just run the scrip
 - If a script is not found at `~/.claude/`, try `~/Projects/ai-orchestrator/scripts/` as a fallback
 - If Ollama is not running, tell the user to start it: `ollama serve`
 
-
 ## Required Skills
+
 - skills/humanizer.md
 - skills/git-advanced/SKILL.md

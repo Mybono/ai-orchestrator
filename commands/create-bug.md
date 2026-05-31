@@ -9,6 +9,7 @@ Create a structured bug report and save it to .claude/context/.
    - "Actual behavior:"
 
 2. Generate a bug report using this template:
+
    ```markdown
    # Bug: <short title>
 

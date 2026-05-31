@@ -30,6 +30,6 @@ Use specialized tools and commands:
 
 Preference durable selectors (test-ids, aria-labels) over fragile CSS classes or XPath structures.
 
-
 ## Required Skills
+
 - skills/humanizer.md

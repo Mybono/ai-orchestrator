@@ -78,6 +78,7 @@ When two agents return conflicting verdicts (e.g., `architect` returns BLOCKED w
    - Each agent must either confirm their verdict stands or reverse it with explanation
 3. Maximum 1 resolution round. If both agents still conflict after the round, escalate to the user with a structured summary.
 4. Record every conflict and its outcome to `.claude/context/conflict_log.md`:
+
    ```markdown
    ## Conflict [timestamp]
    - Agent A: [name] — [verdict]
@@ -85,6 +86,7 @@ When two agents return conflicting verdicts (e.g., `architect` returns BLOCKED w
    - Resolution round result: [resolved/escalated]
    - Final verdict: [verdict or "escalated to user"]
    ```
+
 5. Never silently pick one verdict over another — always log and (if unresolved) escalate.
 
 ## Before Completing a Task
@@ -94,7 +96,7 @@ When two agents return conflicting verdicts (e.g., `architect` returns BLOCKED w
 - Confirm that error contexts are captured with sufficient detail for debugging.
 - Validate that cascading failure prevention mechanisms (timeouts, circuit breakers, bulkheads) are configured and active.
 
-
 ## Required Skills
+
 - skills/humanizer.md
 - skills/root-cause-analysis/SKILL.md

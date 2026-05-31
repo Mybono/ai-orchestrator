@@ -5,6 +5,7 @@ Create a structured user story and save it to .claude/context/.
 1. Ask the user: "Describe the feature in one sentence (who needs it and why):"
 
 2. Based on the answer, generate a user story using this template:
+
    ```markdown
    # Story: <short title>
 

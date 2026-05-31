@@ -98,6 +98,6 @@ Keep each entry to one line. Do not include code snippets or diffs in this file.
 - Keep generated code minimal — no extra docstrings, no over-engineering
 - When constructing Ollama prompts, paste file contents from the context file directly into the bash PROMPT variable — no escaping issues
 
-
 ## Required Skills
+
 - skills/humanizer.md

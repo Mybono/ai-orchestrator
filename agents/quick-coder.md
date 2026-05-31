@@ -48,6 +48,6 @@ If Ollama is not running: `ollama serve > /dev/null 2>&1 & sleep 3`
 - If the task turns out to be larger than expected, stop and suggest using `/implement` instead
 - Never redefine types from `agents/types.py`
 
-
 ## Required Skills
+
 - skills/humanizer.md

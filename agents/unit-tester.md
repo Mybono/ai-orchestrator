@@ -30,6 +30,6 @@ Use the following commands from **`plugins/qa-tools`** when appropriate:
 
 Never generate "happy path only" tests. Every test suite must include at least one failure/error scenario.
 
-
 ## Required Skills
+
 - skills/humanizer.md

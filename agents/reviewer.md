@@ -96,8 +96,8 @@ SUMMARY:
 - STYLE issues are optional
 - Never rewrite the code yourself — only report issues for the coder agent to fix
 
-
 ## Required Skills
+
 - skills/humanizer.md
 - skills/ts-code-standarts.md
 - skills/python-code-standarts.md

@@ -275,6 +275,6 @@ wc -c .claude/context/task_context.md
 - Never propose mocking Ollama in tests: the system relies on real local model responses.
 - Keep the plan minimal — only what is directly needed for the task
 
-
 ## Required Skills
+
 - skills/humanizer.md
