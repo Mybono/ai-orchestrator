@@ -82,9 +82,15 @@ if [ -n "$TRIAGE_FILE" ] && [ -f "$TRIAGE_FILE" ]; then
     echo "" >> "$TMP_CONTEXT"
 fi
 
-# ─── 4. Language standards ───────────────────────────────────────────────────
+# ─── 4. Language standards — определяем по задаче, не только по проекту ──────
 STANDARDS_FILE=""
-if [ -f "$PROJECT_ROOT/tsconfig.json" ]; then
+TASK_LOWER=$(echo "$TASK" | tr '[:upper:]' '[:lower:]')
+
+# Если задача явно о bash/shell скрипте — берём bash стандарты
+if echo "$TASK_LOWER" | grep -qE '\.sh|bash script|shell script'; then
+    STANDARDS_FILE="$HOME/.claude/skills/bash-code-standarts.md"
+    echo "=== BASH/SHELL STANDARDS ===" >> "$TMP_CONTEXT"
+elif [ -f "$PROJECT_ROOT/tsconfig.json" ] && ! echo "$TASK_LOWER" | grep -qE '\.py|python'; then
     STANDARDS_FILE="$HOME/.claude/skills/ts-code-standarts.md"
     echo "=== TYPESCRIPT STANDARDS ===" >> "$TMP_CONTEXT"
 elif [ -f "$PROJECT_ROOT/pyproject.toml" ] || [ -f "$PROJECT_ROOT/requirements.txt" ]; then
@@ -100,36 +106,37 @@ if [ -n "$STANDARDS_FILE" ] && [ -f "$STANDARDS_FILE" ]; then
     echo "" >> "$TMP_CONTEXT"
 fi
 
-# ─── 5. Релевантные исходные файлы (grep по ключевым словам) ─────────────────
-SRC_DIR="$PROJECT_ROOT/src"
-if [ -d "$SRC_DIR" ] && [ -n "$KEYWORDS" ]; then
-    echo "=== RELEVANT SOURCE FILES ===" >> "$TMP_CONTEXT"
-    # Ищем файлы содержащие ключевые слова задачи
-    MATCHED_FILES=$(grep -rl -E "$KEYWORDS" "$SRC_DIR" \
-        --include="*.ts" --include="*.py" --include="*.js" 2>/dev/null | head -5)
-    for f in $MATCHED_FILES; do
-        echo "--- $f ---" >> "$TMP_CONTEXT"
-        head -80 "$f" >> "$TMP_CONTEXT"
-        echo "" >> "$TMP_CONTEXT"
-    done
-fi
+# ─── 5. Релевантные исходные файлы (src/ + scripts/) ─────────────────────────
+for SEARCH_DIR in "$PROJECT_ROOT/src" "$PROJECT_ROOT/scripts"; do
+    if [ -d "$SEARCH_DIR" ] && [ -n "$KEYWORDS" ]; then
+        echo "=== RELEVANT FILES IN $(basename "$SEARCH_DIR")/ ===" >> "$TMP_CONTEXT"
+        MATCHED_FILES=$(grep -rl -E "$KEYWORDS" "$SEARCH_DIR" \
+            --include="*.ts" --include="*.py" --include="*.js" --include="*.sh" \
+            2>/dev/null | head -4)
+        for f in $MATCHED_FILES; do
+            echo "--- $f ---" >> "$TMP_CONTEXT"
+            head -80 "$f" >> "$TMP_CONTEXT"
+            echo "" >> "$TMP_CONTEXT"
+        done
+    fi
+done
 
-# ─── 6. Промпт для LLM ───────────────────────────────────────────────────────
+# ─── 6. Промпт для LLM (heredoc с прямой подстановкой — без sed) ─────────────
 TMP_PROMPT=$(mktemp)
-cat > "$TMP_PROMPT" << 'PROMPT_EOF'
+cat > "$TMP_PROMPT" << PROMPT_EOF
 You are a senior software architect. Your job is to create a detailed implementation plan.
 
 Using the codebase context provided, write a task context file that will guide a code generator.
 
-TASK: TASK_PLACEHOLDER
-DOMAIN: DOMAIN_PLACEHOLDER
+TASK: ${TASK}
+DOMAIN: ${DOMAIN}
 
 Write the file in this exact format:
 
 # Task Context
 
 ## Language
-<detected language> — standards from `.claude/skills/<file>`
+<detected language and file type — be specific: "Bash script", "TypeScript", etc.>
 
 ## Key Standards for This Task
 <3-5 most relevant rules from the standards that apply to this task>
@@ -140,13 +147,12 @@ Write the file in this exact format:
 ## Plan
 - <step 1>
 - <step 2>
-...
 
 ## Files to Change
-- `<file_path>`: <what to change and why>
+- \`<file_path>\`: <what to write/change and why>
 
 ## Exact Signatures
-<for every function/method to add, write the exact signature>
+<for bash: key function signatures or the script's CLI interface; for TS: function signatures>
 
 ## Patterns to Follow
 <1-2 real code snippets from the codebase showing the exact style to follow>
@@ -159,12 +165,6 @@ Write the file in this exact format:
 
 Output ONLY the markdown file content. No explanations, no preamble.
 PROMPT_EOF
-
-# Подставляем задачу и домен в промпт
-sed -i '' "s/TASK_PLACEHOLDER/$TASK/g" "$TMP_PROMPT" 2>/dev/null || \
-sed -i "s/TASK_PLACEHOLDER/$TASK/g" "$TMP_PROMPT"
-sed -i '' "s/DOMAIN_PLACEHOLDER/$DOMAIN/g" "$TMP_PROMPT" 2>/dev/null || \
-sed -i "s/DOMAIN_PLACEHOLDER/$DOMAIN/g" "$TMP_PROMPT"
 
 # ─── 7. Вызов LLM: freellmapi → Claude (Ollama не используется для планнера) ──
 # Находим конфиг для free_api
