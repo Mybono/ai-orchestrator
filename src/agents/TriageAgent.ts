@@ -59,10 +59,14 @@ export class TriageAgent {
       const tmpDir = mkdtempSync(join(tmpdir(), 'triage-'));
       const promptFile = join(tmpDir, 'prompt.txt');
 
+      // Pass triage-ts.md as context so the LLM knows the required output format
+      const triageInstructionsPath = join(this.projectRoot, 'agents', 'triage-ts.md');
+      const contextFile = existsSync(triageInstructionsPath) ? triageInstructionsPath : undefined;
+
       let result;
       try {
         writeFileSync(promptFile, prompt, 'utf8');
-        result = await this.runner.run('triage', promptFile);
+        result = await this.runner.run('triage', promptFile, contextFile);
       } finally {
         rmSync(tmpDir, { recursive: true, force: true });
       }
