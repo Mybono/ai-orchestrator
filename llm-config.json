@@ -12,6 +12,7 @@
   },
   "free_api_url": "http://localhost:3001/v1/chat/completions",
   "free_api": {
+    "planner": "qwen/qwen3-32b",
     "coder": "qwen3-coder-next",
     "reviewer": "auto",
     "pre-reviewer": "auto",
