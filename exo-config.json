@@ -1,0 +1,32 @@
+{
+  "combined": false,
+  "exo": {
+    "model": "qwen3:32b-q4_K_M",
+    "gateway": { "host": "localhost", "port": 52415 }
+  },
+  "nodes": [
+    {
+      "name": "m4-main",
+      "host": "localhost",
+      "port": 11434,
+      "roles": {
+        "coder":       "qwen3:32b-q4_K_M",
+        "reviewer":    "qwen3:32b-q4_K_M",
+        "quick-coder": "qwen3:8b",
+        "commit":      "qwen2.5-coder:7b",
+        "triage":      "qwen3:8b"
+      }
+    },
+    {
+      "name": "m5-worker",
+      "host": "10.127.229.214",
+      "port": 11434,
+      "roles": {
+        "coder":       "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
+        "unit-tester": "gemma2:9b",
+        "doc-writer":  "mistral:7b",
+        "quick-coder": "qwen2.5-coder:7b"
+      }
+    }
+  ]
+}

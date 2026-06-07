@@ -1,6 +1,6 @@
 # Architecture
 
-[README](../README.md) · **Architecture** · [Agents](AGENTS.md) · [Skills & Commands](SKILLS.md)
+[README](../README.md) · **Architecture** · [Agents](AGENTS.md) · [Skills & Commands](SKILLS.md) · [Cluster](CLUSTER.md)
 
 ## Pipeline
 
@@ -271,4 +271,10 @@ Agents share state through files in `.claude/context/`:
 
 ---
 
-[README](../README.md) · **Architecture** · [Agents](AGENTS.md) · [Skills & Commands](SKILLS.md)
+## Cluster Mode
+
+See [Cluster Mode](CLUSTER.md) for full documentation on distributed and combined inference backends.
+
+---
+
+[README](../README.md) · **Architecture** · [Agents](AGENTS.md) · [Skills & Commands](SKILLS.md) · [Cluster](CLUSTER.md)

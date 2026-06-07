@@ -1,4 +1,4 @@
-[README](../README.md) · [Architecture](ARCHITECTURE.md) · [Agents](AGENTS.md) · [Skills & Commands](SKILLS.md) · [CLAUDE](CLAUDE.md) · **Plugins**
+[README](../README.md) · [Architecture](ARCHITECTURE.md) · [Agents](AGENTS.md) · [Skills & Commands](SKILLS.md) · [CLAUDE](CLAUDE.md) · **Plugins** · [Cluster](CLUSTER.md)
 
 ---
 
@@ -27,4 +27,4 @@ Plugins extend the orchestrator with domain-specific commands. Each plugin lives
 
 ---
 
-[README](../README.md) · [Architecture](ARCHITECTURE.md) · [Agents](AGENTS.md) · [Skills & Commands](SKILLS.md) · [CLAUDE](CLAUDE.md) · **Plugins**
+[README](../README.md) · [Architecture](ARCHITECTURE.md) · [Agents](AGENTS.md) · [Skills & Commands](SKILLS.md) · [CLAUDE](CLAUDE.md) · **Plugins** · [Cluster](CLUSTER.md)

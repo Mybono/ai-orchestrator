@@ -1,6 +1,6 @@
 # Project Overview
 
-_Last updated: 2026-05-31 by planner after task: fix triage route branching, DOMAIN_DEPENDENCIES pruning, typed fail loops, and SVG pipeline redesign_
+_Last updated: 2026-05-31 by planner after task: add distributed cluster support with combined/DistributedRunner mode switching_
 
 ## Language(s)
 - Shell (Bash): `install.sh`, `call_ollama.sh`, `local-commit.sh`, `analyze_project.sh` — pure Bash + `jq` for orchestration — standarts: `.claude/skills/bash-code-standarts.md`
@@ -69,16 +69,20 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 | `plugins/security-guidance/` | Security guidance plugin — vulnerability fixes and security audit commands |
 | `llm-config.json` | Centralized model role configuration — symlinked to `~/.claude/llm-config.json`; `"models"`: triage/pre-reviewer/quick-coder/devops → `qwen3:8b`, coder/reviewer/debugger → `qwen3:32b-q4_K_M`, commit → `qwen2.5-coder:7b`; `"fallback"`: heavy → `claude-sonnet-4-6`, light → `claude-haiku-4-5-20251001` |
 | `.claude/settings.json.template` | Template for `settings.json` — contains `PreToolUse` hook that blocks direct edits to `README.md` and `docs/` files; uses `__HOME__` placeholder replaced by `install.sh` |
-| `src/types/index.ts` | All TypeScript domain types: `AgentDomain`, `AgentTask`, `AgentResult`, `RunResult`, `OrchestratorConfig`, `LlmConfig`, `TriageResult`, `TriageRoute`, `ReviewOutcome`, `OrchestratorResult` |
+| `src/types/index.ts` | All TypeScript domain types: `AgentDomain`, `AgentTask`, `AgentResult`, `RunResult`, `OrchestratorConfig`, `LlmConfig`, `TriageResult`, `TriageRoute`, `ReviewOutcome`, `OrchestratorResult`, `ExoGateway`, `ClusterNode`, `ClusterConfig` |
 | `src/core/DependencyGraph.ts` | DAG class with Kahn's topological sort — `getLevels()` returns `AgentTask[][]` for parallel execution |
 | `src/agents/AgentRunner.ts` | Wraps `~/.claude/call_ollama.sh` via `child_process.spawn` — returns `RunResult` discriminated union |
+| `src/core/ExoConfigLoader.ts` | Loads and validates `exo-config.json` from the project root — exports `loadClusterConfig(projectRoot): ClusterConfig | null`; validates `combined` boolean, `exo.model`, `exo.gateway`, and `nodes[].roles`; never throws |
+| `src/core/ExoRunner.ts` | Exo HTTP inference client — constructor takes `{ model, gateway }` (the `exo` section of ClusterConfig); implements same `run(role, promptFile, contextFile?)` interface; uses built-in `fetch` with `AbortController` timeout |
+| `src/core/DistributedRunner.ts` | Distributed node runner — dispatches each role to the first cluster node that lists it in `roles`; falls back to `localhost:11434` + `llm-config.json` model when no node matches; same `run()` interface as AgentRunner/ExoRunner |
 | `src/agents/TriageAgent.ts` | LLM-powered triage — scans project structure, BFS traversal on `graphify-out/graph.json` (depth=2), route detection via `ARCHITECT_FIRST_KEYWORDS`, writes `triage_ts.md` with route + trigger reason; CLI entry-point guard uses `import.meta.url` |
-| `src/core/Orchestrator.ts` | Pure execution engine — accepts pre-written domain list, reads `task_context_<domain>.md` files, executes by levels, writes `ollama_output_<domain>.md`, fetches+compresses git diff via DiffCompressor before review; `run()` returns `OrchestratorResult`; `review()` returns `ReviewOutcome` (does not throw); `buildTasks()` prunes deps to active domain set |
+| `src/core/Orchestrator.ts` | Pure execution engine — constructor loads `exo-config.json` via `loadClusterConfig`; if `combined=true` uses `ExoRunner(config.exo)`; if `combined=false` uses `DistributedRunner(config)`; else falls back to `AgentRunner`; runner field type: `AgentRunner | ExoRunner | DistributedRunner` |
 | `src/core/DiffCompressor.ts` | Git diff compressor — `compressDiff(diff)` strips lock-file hunks, collapses blank lines, truncates sections >500 lines; returns `CompressResult` with byte stats |
 | `src/core/FileWriter.ts` | Parses `%%FILE...%%ENDFILE` blocks from Ollama output and writes them to disk under projectRoot (path traversal guard included) |
-| `src/core/TriageRouter.ts` | Route reader — `readTriageRoute(contextDir)` parses `triage_ts.md` `## Route` section; returns `TriageRoute \| undefined`; never throws |
+| `src/core/TriageRouter.ts` | Route reader — `readTriageRoute(contextDir)` parses `triage_ts.md` `## Route` section; returns `TriageRoute | undefined`; never throws |
 | `src/core/BuildChecker.ts` | Build check — `runBuildCheck(projectRoot)` runs `npx tsc --noEmit`; returns module-local `BuildCheckResult` discriminated union; never throws |
 | `src/index.ts` | CLI entry point — parses domain list, reads triage route (exits early for `direct-edit`/`quick-coder`/`plugin-route`), runs `Orchestrator.run(domains)`, then `runBuildCheck`, exits with code 2 on build fail or code 3 on review fail |
+| `exo-config.json` | Cluster config — `combined: false` enables DistributedRunner (per-role node dispatch); `combined: true` enables ExoRunner (single Exo gateway); absent or invalid → AgentRunner (Ollama shell script) |
 | `tsconfig.json` | TypeScript strict ESM config — target ES2022, module NodeNext, `noUncheckedIndexedAccess: true`, `exactOptionalPropertyTypes: true` |
 | `plugins/orchestrator/commands/implement.md` | `/implement` pipeline — Steps 0–6: triage → parallel planning per domain (Step 1) → multi-domain TS Orchestrator (Step 1.5) → apply Ollama output via Claude coder subagents with `model: haiku` (Step 2) → pre-review (Step 2.5) → code → build → post-review → fix loop → finalize |
 | `documentation/ARCHITECTURE.md` | Full pipeline diagram, layer table, triage domain/route tables, TS orchestrator internals, context file registry |
@@ -92,10 +96,12 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 - Language standarts are in `skills/` and are named `<lang>-code-standarts.md` (note: "standarts" not "standards" — intentional spelling in filenames)
 - Context files produced during a task go to `.claude/context/`: `triage.md`, `triage_ts.md` (TriageAgent output), `architect_decision.md` (Tension Loop output), `task_context_<domain>.md` (per-domain plans, fallback `task_context.md`), `ollama_output_<domain>.md` (Ollama output written by TS Orchestrator), `developer_output_<domain>.md`, `review_prompt_<domain>.md`, `pre_review.md`, `coder_output.md`, `coder_output_<domain>.md`, `review_fast_<file>.md`, `review_deep_<file>.md`, `fix_loop.md`, `project_overview.md`
 - **Context Handoff Protocol**: orchestrator passes only file paths between steps — never full content; each agent reads its input files directly and writes its own structured output file
-- **Pipeline separation**: Claude planner subagents write `task_context_<domain>.md` (one per domain, in parallel); TS Orchestrator reads those files, executes Ollama calls, writes `ollama_output_<domain>.md`; Claude coder subagents read `ollama_output_<domain>.md` and apply changes to disk
+- **Pipeline separation**: Claude planner subagents write `task_context_<domain>.md` (one per domain, in parallel); TS Orchestrator reads those files, executes Ollama/Exo calls, writes `ollama_output_<domain>.md`; Claude coder subagents read `ollama_output_<domain>.md` and apply changes to disk
 - **architect-first route**: triggered when triage detects complexity=complex OR any of: refactor, redesign, new module, architecture, migrate, extract, split, rewrite; architect and planner debate up to 2 rounds; architect writes final verdict to `.claude/context/architect_decision.md`; planner reads this file in Phase 0 and stops on BLOCKED verdict
 - The full pipeline is: triage (TriageAgent → Ollama) → [Tension Loop if architect-first] → Claude plans per domain → multi-domain TS Orchestrator (`npm start "d1,d2"`) OR single-domain coder → pre-review → build check → tiered review → fix loop (max 3 rounds) → track_savings.sh
 - **TypeScript orchestrator layer** (`src/`): ESM modules (`"type": "module"`), all imports use `.js` extensions, strict mode + `noUncheckedIndexedAccess` + `exactOptionalPropertyTypes`. Shell bridge is `~/.claude/call_ollama.sh` via `child_process.spawn`. No new heavy dependencies — only `typescript` + `tsx` + `@types/node` as devDeps.
+- **Cluster backend**: when `exo-config.json` exists at project root, `Orchestrator` branches on `combined` flag: `true` → `ExoRunner` (HTTP fetch to Exo gateway); `false` → `DistributedRunner` (per-role first-match node dispatch to Ollama-compatible API). Both implement the same `run(role, promptFile, contextFile?)` returning `RunResult` interface. Absent or invalid config → `AgentRunner` (Ollama shell script).
+- **DistributedRunner node resolution**: iterates `nodes[]` in config order; first node whose `roles[role]` is defined wins; falls back to `localhost:11434` + `~/.claude/llm-config.json` models entry for that role.
 - **TriageAgent graph traversal**: reads `graphify-out/graph.json` (NetworkX node-link format), matches seed nodes by label keywords, runs BFS depth=2, formats "Affected nodes: X\nConnected to:\n- Y (via relation)" output truncated to 1500 chars
 - **TriageAgent CLI guard**: uses `import.meta.url === \`file://${process.argv[1]}\`` (ESM-correct, NodeNext)
 - **DOMAIN_DEPENDENCIES** constant lives in `Orchestrator.ts` — complete `Record<AgentDomain, readonly AgentDomain[]>`; `buildTasks()` prunes each domain's dep list to only include domains present in the caller's requested set
@@ -115,6 +121,9 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 - **DiffCompressor module**: `src/core/DiffCompressor.ts` — `CompressResult` type is local to that file and not in `src/types/index.ts`
 - **BuildChecker module**: `src/core/BuildChecker.ts` — `BuildCheckResult` type is local to that file, NOT in `src/types/index.ts` (same pattern as `CompressResult`)
 - **TriageRouter module**: `src/core/TriageRouter.ts` — `readTriageRoute(contextDir)` parses `triage_ts.md` `## Route` section using regex `/^## Route\s*\n([^\n]+)/m`; returns `undefined` on any failure
+- **ExoConfigLoader module**: `src/core/ExoConfigLoader.ts` — `loadClusterConfig(projectRoot)` reads `exo-config.json`, validates `combined` boolean + `exo.model` + `exo.gateway` + `nodes[].roles`; returns `ClusterConfig | null`; never throws
+- **ExoRunner module**: `src/core/ExoRunner.ts` — constructor takes `{ model: string; gateway: ExoGateway }` (the `exo` sub-object from `ClusterConfig`); uses Node.js built-in `fetch` (Node 18+); `AbortController` for timeout; reads system prompt from `~/.claude/agents/{role}.md` then `{projectRoot}/agents/{role}.md`
+- **DistributedRunner module**: `src/core/DistributedRunner.ts` — constructor takes full `ClusterConfig`; `resolveNode(role)` iterates nodes in order, returns first match; falls back to `readFallbackModel(role)` from `~/.claude/llm-config.json` + `localhost:11434`; same fetch/AbortController pattern as ExoRunner
 - **Orchestrator review flow**: after writing `developer_output_<domain>.md`, fetches git diff, compresses via `compressDiff`, writes combined `review_prompt_<domain>.md`, passes that to reviewer; returns `ReviewOutcome` discriminated union instead of throwing
 - **Exit codes from src/index.ts**: 0 = success or early-exit route; 1 = fatal/unexpected error; 2 = build check failed; 3 = review failed
 
@@ -125,6 +134,7 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 - `.claude/settings.json`: generated by `install.sh` from the template — do not edit directly on each machine
 - `skills/*-code-standarts.md` filenames: the "standarts" typo is load-bearing — all agents reference these exact filenames; renaming breaks detection
 - `src/agents/PlannerAgent.ts`: **deleted** — do not recreate; planning is done by Claude subagents writing context files, not by TypeScript
+- `src/agents/AgentRunner.ts`: the Ollama path — do not modify; only `Orchestrator.ts` changes which runner it instantiates
 
 ## Known Constraints
 
@@ -152,3 +162,8 @@ This is a **zero-dependency, Unix-native tooling repository**. All logic is hand
 - `ARCHITECT_FIRST_KEYWORDS` in `TriageAgent.ts` is a module-level `readonly string[]` constant — not a type, not an enum
 - `readTriageRoute` returns `undefined` for absent file, missing `## Route` section, or unrecognized value — callers treat `undefined` as `full-pipeline`
 - `runBuildCheck` in `BuildChecker.ts` is `async` for interface consistency even though `execSync` is synchronous internally — do not change to sync
+- `ClusterNode.port` is a required `number` (not `number | undefined`) — `parseNode` rejects any node missing a valid integer port
+- `ExoRunner` and `DistributedRunner` do not use `child_process` — they use only `node:fs`, `node:os`, `node:path`, and the global `fetch`; no new npm dependencies
+- `loadClusterConfig` returns `null` for absent file, invalid JSON, or any missing/wrong-type field — it does NOT check `enabled`; the `combined` boolean flag controls runner selection in Orchestrator
+- Old types `ExoNode` and `ExoConfig` are deleted — do not reference them anywhere; use `ClusterNode` and `ClusterConfig`
+- Old function `loadExoConfig` is renamed to `loadClusterConfig` — update all call sites

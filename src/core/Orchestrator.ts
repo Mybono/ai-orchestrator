@@ -2,6 +2,9 @@ import { execSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { AgentRunner } from '../agents/AgentRunner.js';
+import { loadClusterConfig } from './ExoConfigLoader.js';
+import { ExoRunner } from './ExoRunner.js';
+import { DistributedRunner } from './DistributedRunner.js';
 import { DependencyGraph } from './DependencyGraph.js';
 import { compressDiff } from './DiffCompressor.js';
 import { CODE_GEN_INSTRUCTIONS, parseFileBlocks, writeFilesToProject } from './FileWriter.js';
@@ -11,6 +14,7 @@ import type {
   AgentTask,
   OrchestratorResult,
   ReviewOutcome,
+  Role,
 } from '../types/index.js';
 
 const DOMAIN_DEPENDENCIES: Record<AgentDomain, readonly AgentDomain[]> = {
@@ -21,7 +25,7 @@ const DOMAIN_DEPENDENCIES: Record<AgentDomain, readonly AgentDomain[]> = {
 };
 
 export class Orchestrator {
-  private readonly runner: AgentRunner;
+  private readonly runner: AgentRunner | ExoRunner | DistributedRunner;
   private readonly contextDir: string;
   private readonly projectRoot: string;
 
@@ -37,7 +41,23 @@ export class Orchestrator {
     }
 
     mkdirSync(this.contextDir, { recursive: true });
-    this.runner = new AgentRunner();
+
+    const clusterConfig = loadClusterConfig(this.projectRoot);
+    if (clusterConfig !== null) {
+      if (clusterConfig.combined) {
+        process.stderr.write(
+          `[orchestrator] Exo backend active (combined) — gateway: ${clusterConfig.exo.gateway.host}:${clusterConfig.exo.gateway.port}, model: ${clusterConfig.exo.model}\n`,
+        );
+        this.runner = new ExoRunner(clusterConfig.exo, this.projectRoot);
+      } else {
+        process.stderr.write(
+          `[orchestrator] distributed backend active — ${clusterConfig.nodes.length} node(s)\n`,
+        );
+        this.runner = new DistributedRunner(clusterConfig, this.projectRoot);
+      }
+    } else {
+      this.runner = new AgentRunner();
+    }
   }
 
   /**
@@ -127,7 +147,11 @@ export class Orchestrator {
 
           // instructionFile = prompt (format instructions)
           // contextFile     = task plan (fed as --context-file)
-          const result = await this.runner.run('coder', instructionFile, agentTask.contextFile);
+          // DistributedRunner routes by role name — pass the domain so node lookup works.
+          // AgentRunner and ExoRunner always use 'coder' (role maps to model in llm-config).
+          const runRole: Role =
+            this.runner instanceof DistributedRunner ? (agentTask.domain as Role) : 'coder';
+          const result = await this.runner.run(runRole, instructionFile, agentTask.contextFile);
 
           if (!result.ok) {
             process.stderr.write(`[developer-agent] ${agentTask.domain} failed: ${result.error}\n`);

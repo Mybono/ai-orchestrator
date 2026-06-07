@@ -1,4 +1,4 @@
-[README](../README.md) · [Architecture](ARCHITECTURE.md) · **Agents** · [Skills & Commands](SKILLS.md)
+[README](../README.md) · [Architecture](ARCHITECTURE.md) · **Agents** · [Skills & Commands](SKILLS.md) · [Cluster](CLUSTER.md)
 
 ---
 

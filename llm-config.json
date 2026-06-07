@@ -10,6 +10,27 @@
     "triage": "qwen3:8b",
     "embedding": "mxbai-embed-large"
   },
+  "free_api_url": "http://localhost:3001/v1/chat/completions",
+  "free_api": {
+    "coder": "qwen3-coder-next",
+    "reviewer": "auto",
+    "pre-reviewer": "auto",
+    "debugger": "qwen3-coder-next",
+    "devops": "auto",
+    "quick-coder": "qwen3-coder-next",
+    "commit": "auto",
+    "triage": "auto"
+  },
+  "cerebras_api": {
+    "coder": "gpt-oss-120b",
+    "reviewer": "gpt-oss-120b",
+    "pre-reviewer": "gpt-oss-120b",
+    "debugger": "gpt-oss-120b",
+    "devops": "gpt-oss-120b",
+    "quick-coder": "gpt-oss-120b",
+    "commit": "gpt-oss-120b",
+    "triage": "gpt-oss-120b"
+  },
   "fallback": {
     "coder": "claude-sonnet-4-6",
     "reviewer": "claude-sonnet-4-6",

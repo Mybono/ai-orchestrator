@@ -35,16 +35,28 @@ Agents communicate through files in `.claude/context/`. Each step reads file pat
 
 ```text
 src/
-  types/index.ts        AgentDomain, KNOWN_DOMAINS, Role, AgentTask,
-                        AgentResult (done|skipped|failed|blocked), TriageResult
+  types/index.ts          AgentDomain, KNOWN_DOMAINS, Role, AgentTask,
+                          AgentResult (done|skipped|failed|blocked), TriageResult
   agents/
-    AgentRunner.ts      Wraps call_ollama.sh via spawn; 5 min timeout; 10 MB output limit
-    TriageAgent.ts      BFS depth=2 on graph.json; writes triage_ts.md; CLI via import.meta.url
+    AgentRunner.ts        Wraps call_ollama.sh via spawn; 5 min timeout; 10 MB output limit
+    TriageAgent.ts        BFS depth=2 on graph.json; writes triage_ts.md; CLI via import.meta.url
   core/
-    DependencyGraph.ts  Kahn topological sort; duplicate domain detection
-    Orchestrator.ts     Reads task_context_<domain>.md; circuit breaker for failed deps;
-                        reviews ollama_output_<domain>.md after all domains complete
-  index.ts              CLI entry point
+    DependencyGraph.ts    Kahn topological sort; duplicate domain detection
+    Orchestrator.ts       Reads task_context_<domain>.md; circuit breaker for failed deps;
+                          reviews ollama_output_<domain>.md after all domains complete
+    BuildChecker.ts       Runs npx tsc --noEmit; returns pass/fail with stderr
+    DiffCompressor.ts     Strips lock files, collapses blanks, truncates long hunks
+    FileWriter.ts         Parses %%FILE…%%ENDFILE blocks from Ollama output; writes to disk
+    TriageRouter.ts       Reads triage_ts.md and extracts the chosen TriageRoute
+  cli/
+    commit.ts             npm run ao-commit — calls local-commit.sh via spawn
+    review.ts             npm run ao-review — runs reviewer agent on current diff
+    stats.ts              npm run ao-stats  — prints token savings summary
+    update.ts             npm run ao-update — pulls latest orchestrator version
+  mcp/
+    server.ts             MCP HTTP server (default port 3456); exposes get_stats,
+                          triage_task, and run_ollama tools to Claude
+  index.ts                CLI entry point
 ```
 
 ## Domain dependencies
@@ -89,18 +101,31 @@ Model routing is controlled by `llm-config.json` in the repo root:
 ```json
 {
   "models": {
-    "coder":        "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
-    "reviewer":     "qwen2.5-coder:7b",
-    "pre-reviewer": "qwen2.5-coder:7b",
-    "quick-coder":  "qwen2.5-coder:7b",
+    "coder":        "qwen3:32b-q4_K_M",
+    "reviewer":     "qwen3:32b-q4_K_M",
+    "debugger":     "qwen3:32b-q4_K_M",
+    "pre-reviewer": "qwen3:8b",
+    "quick-coder":  "qwen3:8b",
+    "devops":       "qwen3:8b",
+    "triage":       "qwen3:8b",
     "commit":       "qwen2.5-coder:7b",
-    "triage":       "llama3.1:8b",
     "embedding":    "mxbai-embed-large"
+  },
+  "fallback": {
+    "coder":        "claude-sonnet-4-6",
+    "reviewer":     "claude-sonnet-4-6",
+    "debugger":     "claude-sonnet-4-6",
+    "pre-reviewer": "claude-haiku-4-5-20251001",
+    "quick-coder":  "claude-haiku-4-5-20251001",
+    "devops":       "claude-haiku-4-5-20251001",
+    "commit":       "claude-haiku-4-5-20251001",
+    "triage":       "claude-haiku-4-5-20251001",
+    "embedding":    ""
   }
 }
 ```
 
-Changing a model name takes effect immediately — no restart needed. See [Architecture](documentation/ARCHITECTURE.md#model-configuration) for details.
+Each role has an Ollama primary model and a Claude fallback used when Ollama is unavailable. Changing a model name takes effect immediately — no restart needed. See [Architecture](documentation/ARCHITECTURE.md#model-configuration) for details.
 
 ## Development
 
@@ -109,9 +134,13 @@ npm run build                                    # compile TypeScript
 npm run typecheck                                # tsc --noEmit, no output files
 npm start "coder,unit-tester"                    # run TS orchestrator for given domains
 npx tsx src/agents/TriageAgent.ts "<task>"       # run triage standalone
-```
 
-`local-commit` generates a commit message via Ollama and calls `scripts/graphify-update.sh` before staging, so the updated `graph.json` is included in the same commit.
+npm run ao-commit                                # generate commit message via Ollama and commit
+npm run ao-review                                # review current diff with reviewer agent
+npm run ao-stats                                 # print token savings (day/week/month)
+npm run ao-update                                # pull latest orchestrator version
+npm run ao-mcp                                   # start MCP server on port 3456
+```
 
 ## License
 

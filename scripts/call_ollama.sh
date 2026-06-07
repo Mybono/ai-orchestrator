@@ -6,6 +6,17 @@ MODEL_OVERRIDE=""
 PROMPT=""
 PROMPT_FILE=""
 CONTEXT_FILE=""
+# Load .env from project root (walk up from $PWD) — populates GROQ_API_KEY etc.
+_DIR="$PWD"
+while [ "$_DIR" != "/" ]; do
+    if [ -f "$_DIR/.env" ]; then
+        set -a; source "$_DIR/.env" 2>/dev/null || true; set +a
+        break
+    fi
+    _DIR=$(dirname "$_DIR")
+done
+unset _DIR
+
 # Find config: project-level first (walk up from $PWD), then global
 _DIR="$PWD"
 CONFIG_FILE="$HOME/.claude/llm-config.json"
@@ -101,9 +112,118 @@ OLLAMA_EXIT=$?
 # Extract response content from Ollama
 RESPONSE_CONTENT=$(echo "$RESPONSE" | jq -r '.message.content // empty')
 
-# --- Fallback to Claude API if Ollama failed or returned no content ---
-# Check disable flag first
-if [ "${OLLAMA_FALLBACK:-}" != "false" ] && { [ "$OLLAMA_EXIT" -ne 0 ] || [ -z "$RESPONSE_CONTENT" ]; }; then
+# --- Free API tier (between Ollama and Claude) ---
+# Providers: Google Gemini, Groq, Cerebras, SambaNova, Mistral, etc. via freellmapi proxy
+# Docs: https://github.com/tashfeenahmed/freellmapi
+# Set FREE_API_FALLBACK=false to skip. Configure free_api_url + free_api in llm-config.json
+if [ "${FREE_API_FALLBACK:-}" != "false" ] && { [ "$OLLAMA_EXIT" -ne 0 ] || [ -z "$RESPONSE_CONTENT" ]; }; then
+
+    _FREE_URL=""
+    if [ -n "${FREE_API_URL:-}" ]; then
+        _FREE_URL="$FREE_API_URL"
+    elif [ -f "$CONFIG_FILE" ]; then
+        _FREE_URL=$(jq -r '.free_api_url // empty' "$CONFIG_FILE")
+    fi
+    _FREE_URL="${_FREE_URL:-http://localhost:3001/v1/chat/completions}"
+
+    _FREE_MODEL=""
+    if [ -n "$ROLE" ] && [ -f "$CONFIG_FILE" ]; then
+        _FREE_MODEL=$(jq -r --arg role "$ROLE" '.free_api[$role] // empty' "$CONFIG_FILE")
+    fi
+
+    if [ -n "$_FREE_MODEL" ] && [ "$_FREE_MODEL" != "null" ]; then
+        TMP_FREE_PAYLOAD=$(mktemp)
+        jq -n \
+          --arg model "$_FREE_MODEL" \
+          --rawfile prompt "$TMP_PROMPT" \
+          --rawfile context "$TMP_CONTEXT" \
+          'if ($context | rtrimstr("\n") | length) > 0 then {
+            model: $model,
+            max_tokens: 4096,
+            messages: [
+              {role: "system", content: ("You are an expert AI assistant. Output ONLY the response requested.\n\n" + $context)},
+              {role: "user", content: $prompt}
+            ]
+          } else {
+            model: $model,
+            max_tokens: 4096,
+            messages: [
+              {role: "system", content: "You are an expert AI assistant. Output ONLY the response requested."},
+              {role: "user", content: $prompt}
+            ]
+          } end' > "$TMP_FREE_PAYLOAD"
+
+        FREE_RESPONSE=$(curl -s --max-time 120 -X POST "$_FREE_URL" \
+          -H "Content-Type: application/json" \
+          -H "Authorization: Bearer ${FREELLM_API_KEY:-${FREE_API_KEY:-free}}" \
+          -d @"$TMP_FREE_PAYLOAD")
+        FREE_EXIT=$?
+        rm -f "$TMP_FREE_PAYLOAD"
+
+        if [ "$FREE_EXIT" -eq 0 ]; then
+            RESPONSE_CONTENT=$(echo "$FREE_RESPONSE" | jq -r '.choices[0].message.content // empty')
+        fi
+
+        if [ -n "$RESPONSE_CONTENT" ]; then
+            echo "[free-api] ${_FREE_MODEL} — OK" >&2
+        else
+            echo "[free-api] no response from ${_FREE_URL} (${_FREE_MODEL}) — will try Claude" >&2
+        fi
+    fi
+fi
+
+# --- Cerebras tier (after Groq, before Claude) ---
+if [ -n "${CEREBRAS_API_KEY:-}" ] && [ -z "$RESPONSE_CONTENT" ]; then
+
+    _CER_MODEL=""
+    if [ -n "$ROLE" ] && [ -f "$CONFIG_FILE" ]; then
+        _CER_MODEL=$(jq -r --arg role "$ROLE" '.cerebras_api[$role] // empty' "$CONFIG_FILE")
+    fi
+    _CER_MODEL="${_CER_MODEL:-gpt-oss-120b}"
+
+    TMP_CER_PAYLOAD=$(mktemp)
+    jq -n \
+      --arg model "$_CER_MODEL" \
+      --rawfile prompt "$TMP_PROMPT" \
+      --rawfile context "$TMP_CONTEXT" \
+      'if ($context | rtrimstr("\n") | length) > 0 then {
+        model: $model,
+        max_tokens: 4096,
+        messages: [
+          {role: "system", content: ("You are an expert AI assistant. Output ONLY the response requested.\n\n" + $context)},
+          {role: "user", content: $prompt}
+        ]
+      } else {
+        model: $model,
+        max_tokens: 4096,
+        messages: [
+          {role: "system", content: "You are an expert AI assistant. Output ONLY the response requested."},
+          {role: "user", content: $prompt}
+        ]
+      } end' > "$TMP_CER_PAYLOAD"
+
+    CER_RESPONSE=$(curl -s --max-time 120 -X POST "https://api.cerebras.ai/v1/chat/completions" \
+      -H "Content-Type: application/json" \
+      -H "Authorization: Bearer ${CEREBRAS_API_KEY}" \
+      -d @"$TMP_CER_PAYLOAD")
+    CER_EXIT=$?
+    rm -f "$TMP_CER_PAYLOAD"
+
+    if [ "$CER_EXIT" -eq 0 ]; then
+        RESPONSE_CONTENT=$(echo "$CER_RESPONSE" | jq -r '.choices[0].message.content // empty')
+    fi
+
+    if [ -n "$RESPONSE_CONTENT" ]; then
+        echo "[cerebras] ${_CER_MODEL} — OK" >&2
+    else
+        echo "[cerebras] no response — will try Claude" >&2
+    fi
+fi
+# --- End free API tier ---
+
+# --- Fallback to Claude API (last resort — paid) ---
+# Only reached if both Ollama and free API failed
+if [ "${OLLAMA_FALLBACK:-}" != "false" ] && [ -z "$RESPONSE_CONTENT" ]; then
 
     # Resolve fallback model from config
     FALLBACK_MODEL=""
@@ -112,7 +232,7 @@ if [ "${OLLAMA_FALLBACK:-}" != "false" ] && { [ "$OLLAMA_EXIT" -ne 0 ] || [ -z "
     fi
 
     if [ -n "$FALLBACK_MODEL" ]; then
-        echo "[FALLBACK] Ollama unavailable, using Claude: $FALLBACK_MODEL" >&2
+        echo "[FALLBACK] using Claude (paid): $FALLBACK_MODEL" >&2
 
         # Check API key
         if [ -z "${ANTHROPIC_API_KEY:-}" ]; then

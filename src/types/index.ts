@@ -57,3 +57,21 @@ export type OrchestratorResult = {
   readonly agentResults: readonly AgentResult[];
   readonly reviewOutcome: ReviewOutcome;
 };
+
+export type ExoGateway = {
+  readonly host: string;
+  readonly port: number;
+};
+
+export type ClusterNode = {
+  readonly name: string;
+  readonly host: string;
+  readonly port: number;
+  readonly roles: Readonly<Record<string, string>>;
+};
+
+export type ClusterConfig = {
+  readonly combined: boolean;
+  readonly exo: { readonly model: string; readonly gateway: ExoGateway };
+  readonly nodes: readonly ClusterNode[];
+};
