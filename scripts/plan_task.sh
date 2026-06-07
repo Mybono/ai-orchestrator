@@ -75,6 +75,26 @@ if [ -f "$OVERVIEW" ]; then
     echo "" >> "$TMP_CONTEXT"
 fi
 
+# ─── 2b. Architecture docs ───────────────────────────────────────────────────
+for ARCH_FILE in \
+    "$PROJECT_ROOT/documentation/ARCHITECTURE.md" \
+    "$PROJECT_ROOT/ARCHITECTURE.md" \
+    "$PROJECT_ROOT/docs/ARCHITECTURE.md"; do
+    if [ -f "$ARCH_FILE" ]; then
+        echo "=== ARCHITECTURE ===" >> "$TMP_CONTEXT"
+        head -150 "$ARCH_FILE" >> "$TMP_CONTEXT"
+        echo "" >> "$TMP_CONTEXT"
+        break
+    fi
+done
+
+# ─── 2c. ~/.claude symlinks map (критично для скриптов знающих реальные пути) ─
+if [ -d "$HOME/.claude" ]; then
+    echo "=== ~/.claude SYMLINKS (real paths) ===" >> "$TMP_CONTEXT"
+    ls -la "$HOME/.claude/"*.sh 2>/dev/null | awk '{print $9, $10, $11}' >> "$TMP_CONTEXT" || true
+    echo "" >> "$TMP_CONTEXT"
+fi
+
 # ─── 3. Triage context (BFS graph traversal result) ─────────────────────────
 if [ -n "$TRIAGE_FILE" ] && [ -f "$TRIAGE_FILE" ]; then
     echo "=== TRIAGE ANALYSIS ===" >> "$TMP_CONTEXT"
@@ -106,20 +126,35 @@ if [ -n "$STANDARDS_FILE" ] && [ -f "$STANDARDS_FILE" ]; then
     echo "" >> "$TMP_CONTEXT"
 fi
 
-# ─── 5. Релевантные исходные файлы (src/ + scripts/) ─────────────────────────
-for SEARCH_DIR in "$PROJECT_ROOT/src" "$PROJECT_ROOT/scripts"; do
-    if [ -d "$SEARCH_DIR" ] && [ -n "$KEYWORDS" ]; then
-        echo "=== RELEVANT FILES IN $(basename "$SEARCH_DIR")/ ===" >> "$TMP_CONTEXT"
-        MATCHED_FILES=$(grep -rl -E "$KEYWORDS" "$SEARCH_DIR" \
-            --include="*.ts" --include="*.py" --include="*.js" --include="*.sh" \
-            2>/dev/null | head -4)
-        for f in $MATCHED_FILES; do
-            echo "--- $f ---" >> "$TMP_CONTEXT"
-            head -80 "$f" >> "$TMP_CONTEXT"
-            echo "" >> "$TMP_CONTEXT"
-        done
-    fi
-done
+# ─── 5. Релевантные исходные файлы ───────────────────────────────────────────
+TASK_LOWER=$(echo "$TASK" | tr '[:upper:]' '[:lower:]')
+IS_BASH=$(echo "$TASK_LOWER" | grep -cE '\.sh|bash script|shell script' || true)
+
+if [ "$IS_BASH" -gt 0 ] && [ -d "$PROJECT_ROOT/scripts" ]; then
+    # Для bash задач: включаем все .sh скрипты как паттерны стиля
+    echo "=== EXISTING BASH SCRIPTS (style patterns) ===" >> "$TMP_CONTEXT"
+    for f in "$PROJECT_ROOT/scripts/"*.sh; do
+        [ -f "$f" ] || continue
+        echo "--- $f ---" >> "$TMP_CONTEXT"
+        head -60 "$f" >> "$TMP_CONTEXT"
+        echo "" >> "$TMP_CONTEXT"
+    done
+else
+    # Для остальных: grep по ключевым словам
+    for SEARCH_DIR in "$PROJECT_ROOT/src" "$PROJECT_ROOT/scripts"; do
+        if [ -d "$SEARCH_DIR" ] && [ -n "$KEYWORDS" ]; then
+            echo "=== RELEVANT FILES IN $(basename "$SEARCH_DIR")/ ===" >> "$TMP_CONTEXT"
+            MATCHED_FILES=$(grep -rl -E "$KEYWORDS" "$SEARCH_DIR" \
+                --include="*.ts" --include="*.py" --include="*.js" --include="*.sh" \
+                2>/dev/null | head -4)
+            for f in $MATCHED_FILES; do
+                echo "--- $f ---" >> "$TMP_CONTEXT"
+                head -80 "$f" >> "$TMP_CONTEXT"
+                echo "" >> "$TMP_CONTEXT"
+            done
+        fi
+    done
+fi
 
 # ─── 6. Промпт для LLM (heredoc с прямой подстановкой — без sed) ─────────────
 TMP_PROMPT=$(mktemp)

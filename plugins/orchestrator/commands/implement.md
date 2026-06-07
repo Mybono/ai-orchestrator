@@ -1,5 +1,19 @@
 Run the full plan → code → review pipeline for a coding task.
 
+## Autonomous Pipeline (Preferred)
+
+If `scripts/run_pipeline.sh` exists in the project root, **always use it** instead of the manual steps below. It runs the entire pipeline autonomously without consuming Claude context:
+
+```bash
+bash scripts/run_pipeline.sh "<task description>"
+```
+
+Wait for it to finish, then show the user the output. Do not proceed to the manual steps below.
+
+If `scripts/run_pipeline.sh` does not exist, follow the manual pipeline below.
+
+---
+
 ## Context Handoff Protocol
 
 **Rule**: The orchestrator never carries agent output in its own context. Between every step:
@@ -27,11 +41,15 @@ Run the full plan → code → review pipeline for a coding task.
 
 **Step 0.1 — Get graph context (TriageAgent)**
 
-If `graphify-out/graph.json` exists, run:
+> **Note:** `graphify-out/` is optional — not every project has it. Always check before using. Read the graph of the **current project** (where implement was called), not any global path.
+
+If `graphify-out/graph.json` exists in the current project directory, run:
 
 ```bash
-~/.claude/triage-agent.sh "<task description>"
+PROJECT_ROOT="$(pwd)" bash ~/.claude/triage-agent.sh "<task description>"
 ```
+
+Passing `PROJECT_ROOT` explicitly ensures the agent reads `graphify-out/` from the correct project, not from wherever the script symlink lives.
 
 This writes `.claude/context/triage_ts.md` with:
 
@@ -41,7 +59,7 @@ This writes `.claude/context/triage_ts.md` with:
 
 Read only `## Domains` and `## Reasoning` from `.claude/context/triage_ts.md` — do not carry full content.
 
-If `graphify-out/graph.json` does not exist — skip this step.
+If `graphify-out/graph.json` does not exist in `$(pwd)` — skip this step entirely. Proceed to Step 0.2 using only the task description and project file scan.
 
 **Step 0.2 — Decide domains and route**
 
