@@ -1,6 +1,5 @@
 .claude/settings.json
-.claude/context/coder_output.md
-.claude/context/task_context.md
+.claude/context/
 .claude/llm-config.json
 /dist
 /node_modules
