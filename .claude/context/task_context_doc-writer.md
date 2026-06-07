@@ -1,124 +1,68 @@
-# Task: Create documentation/CLUSTER.md
+# Task Context
 
-Create a new file `documentation/CLUSTER.md` that fully documents the Cluster Mode feature.
+## Language
+Markdown documentation files (e.g., `README.md`, any `.md` under `docs/`)
 
-## Navigation header and footer (use exactly this)
+## Key Standards for This Task
+- **Documentation Standards Skill** – all generated docs must follow the project’s documentation style (section headings, code fences, links, and table of contents).
+- **Markdown linting** – no trailing spaces, proper heading hierarchy (`#`, `##`, `###`), and use of fenced code blocks with language identifiers.
+- **PreToolUse hook** – updates must be written via the doc‑writer agent; direct edits to `README.md` or any `docs/` path are blocked by `settings.json`.
 
+## Task
+Update the project documentation (README and any existing docs) to reflect the current state and recent changes.
+
+## Plan
+- Run the doc‑writer agent to scan the repository, collect change information, and generate updated markdown content.
+- Write the generated content back to the appropriate files (`README.md` and any `docs/*.md`), ensuring the files pass the markdown linting rules.
+
+## Files to Change
+- `README.md`: replace the existing content with a refreshed version that includes an updated project overview, usage examples, and a changelog summary.
+- `docs/architecture.md` (if present): refresh the architecture diagram description to match any recent structural changes.
+
+## Exact Signatures
+*No new functions are added.* The doc‑writer agent invokes the existing CLI:
+
+```bash
+~/.claude/call_ollama.sh \
+  --role doc-writer \
+  --prompt-file plugins/documentation/commands/generate-readme.md \
+  --context-dir .claude/context
 ```
-[README](../README.md) · [Architecture](ARCHITECTURE.md) · [Agents](AGENTS.md) · [Skills & Commands](SKILLS.md) · **Cluster**
-```
 
-Place this line at the very top, then `---`, then content, then `---`, then the same line at the very bottom.
+The agent reads the generated output blocks (`%%FILE ... %%ENDFILE`) via `FileWriter.parseFileBlocks` and writes them to disk.
 
-## Content to include
-
-### 1. Title: `# Cluster Mode`
-
-### 2. Overview table
-
-Three backends selected automatically from `exo-config.json`:
-
-| Condition | Backend | Description |
-|---|---|---|
-| File absent | `AgentRunner` | Local Ollama only (original behavior) |
-| `combined: false` | `DistributedRunner` | Each role routed to a specific Ollama node by IP |
-| `combined: true` | `ExoRunner` | Single model split across machines via Exo (pipeline parallelism) |
-
-### 3. Section: `## exo-config.json`
-
-Show full example config for both modes and explain every field:
-- `combined` — boolean, selects backend
-- `exo.model` — model for combined mode
-- `exo.gateway.host` / `exo.gateway.port` — Exo API endpoint (default 52415)
-- `nodes[].name` — label
-- `nodes[].host` — IP or `localhost`
-- `nodes[].port` — Ollama port (default 11434)
-- `nodes[].roles` — map of role → model; first matching node wins
-
-Example for `combined: false` (two Macs on same WiFi):
-```json
-{
-  "combined": false,
-  "exo": {
-    "model": "qwen3:32b-q4_K_M",
-    "gateway": { "host": "localhost", "port": 52415 }
-  },
-  "nodes": [
-    {
-      "name": "m4-main",
-      "host": "localhost",
-      "port": 11434,
-      "roles": {
-        "coder":       "qwen3:32b-q4_K_M",
-        "reviewer":    "qwen3:32b-q4_K_M",
-        "quick-coder": "qwen3:8b",
-        "commit":      "qwen2.5-coder:7b",
-        "triage":      "qwen3:8b"
-      }
-    },
-    {
-      "name": "m5-worker",
-      "host": "10.127.229.214",
-      "port": 11434,
-      "roles": {
-        "coder":       "hf.co/bartowski/Qwen2.5-Coder-14B-Instruct-GGUF:IQ4_XS",
-        "unit-tester": "gemma2:9b",
-        "doc-writer":  "mistral:7b",
-        "quick-coder": "qwen2.5-coder:7b"
-      }
-    }
-  ]
+## Patterns to Follow
+```ts
+// src/core/FileWriter.ts – writing files from LLM blocks
+export async function writeFilesToProject(
+  projectRoot: string,
+  fileBlocks: Record<string, string>,
+): Promise<void> {
+  for (const [relativePath, content] of Object.entries(fileBlocks)) {
+    const absolutePath = resolve(projectRoot, relativePath);
+    // guard against path traversal
+    if (!absolutePath.startsWith(projectRoot)) continue;
+    await writeFile(absolutePath, content, 'utf8');
+  }
 }
 ```
 
-### 4. Section: `## Distributed Mode (combined: false)`
+```md
+<!-- Example of a generated markdown block -->
+%%FILE README.md%%
+# Project Title
 
-Setup steps:
-1. On each worker: `OLLAMA_HOST=0.0.0.0 ollama serve`
-2. Find worker IP: `ipconfig getifaddr en0`
-3. Edit `exo-config.json` with the worker's IP and role→model mapping
-4. Run orchestrator normally — routing is automatic
+...
 
-Routing rule: iterates `nodes[]` in order, first node with the role wins. Falls back to `localhost:11434` + model from `llm-config.json`.
+%%ENDFILE%%
+```
 
-Role distribution table (example):
-| Role | Node | Model |
-|---|---|---|
-| `coder`, `reviewer` | m4-main | qwen3:32b-q4_K_M |
-| `unit-tester`, `doc-writer` | m5-worker | gemma2:9b / mistral:7b |
-| `quick-coder` | m4-main (fallback: m5-worker) | qwen3:8b |
+## Anti-patterns — Do NOT do this
+- Edit `README.md` or files under `docs/` directly in a shell script; always go through the doc‑writer agent so the PreToolUse hook can approve the change.
+- Insert raw HTML or non‑markdown elements that break the markdown linting rules.
+- Omit the required `%%FILE … %%ENDFILE` markers; without them the `FileWriter` will not write the output.
 
-### 5. Section: `## Combined Mode (combined: true)`
-
-When to use: models too large for one machine (e.g. 70B at Q8 quality). Exo splits model layers across machines.
-
-Setup:
-1. `pip install exo-explore` on both machines
-2. `exo` on each machine — auto-discovers peers via mDNS on same network
-3. Set `combined: true`, configure `exo.model` and `exo.gateway`
-4. Orchestrator hits `localhost:52415`; Exo handles layer distribution internally
-
-RAM planning:
-| Config | Available for model |
-|---|---|
-| M4 48GB alone | ~40 GB |
-| M5 24GB alone | ~18 GB |
-| Both combined | ~58 GB |
-
-### 6. Section: `## Source Files`
-
-| File | Purpose |
-|---|---|
-| `exo-config.json` | Cluster config (project root) |
-| `src/core/ExoConfigLoader.ts` | Loads and validates config; returns `ClusterConfig \| null` |
-| `src/core/DistributedRunner.ts` | Routes roles to Ollama nodes by IP |
-| `src/core/ExoRunner.ts` | Calls Exo OpenAI-compatible API (port 52415) |
-| `src/types/index.ts` | `ClusterConfig`, `ClusterNode`, `ExoGateway` types |
-
-## Output format
-
-Output exactly one %%FILE block. No text outside it.
-
-%%FILE documentation/CLUSTER.md
-<complete file content>
-%%ENDFILE
+## Edge Cases to Handle
+- If a `docs/` directory does not exist, the agent should create it before writing any `%%FILE docs/…%%ENDFILE` blocks.
+- When the repository already contains a `CHANGELOG.md`, the doc‑writer should prepend a concise “Latest updates” section rather than overwriting the whole file.
+- Respect the project’s `.gitignore` – never generate documentation files that would match an ignored pattern (e.g., temporary build artifacts).

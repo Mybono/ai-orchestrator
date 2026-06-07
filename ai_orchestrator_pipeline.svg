@@ -30,7 +30,7 @@
 
 <!-- ══ TITLE ══ -->
 <text x="295" y="34" text-anchor="middle" class="ttl mono" font-size="16" font-weight="700" fill="#e6edf3">/implement pipeline</text>
-<text x="295" y="52" text-anchor="middle" class="dsc" font-family="system-ui, sans-serif" fill="#8b949e">Claude Code · Ollama · TypeScript</text>
+<text x="295" y="52" text-anchor="middle" class="dsc" font-family="system-ui, sans-serif" fill="#8b949e">Claude Code · Free LLM · Ollama · TypeScript</text>
 
 <!-- ══ TRIGGER ══ -->
 <rect x="50" y="66" width="490" height="44" rx="6" fill="#161b22" stroke="#30363d" stroke-width="1"/>
@@ -71,7 +71,7 @@
 <text x="80" y="259" class="lbl" font-family="system-ui, sans-serif" fill="#3d444d">FULL-PIPELINE →</text>
 <rect x="372" y="248" width="130" height="17" rx="8" fill="#1a1040" stroke="#6e40c9" stroke-width="1"/>
 <text x="437" y="261" text-anchor="middle" class="par" font-family="system-ui, sans-serif" fill="#a5b4fc">‖ parallel per domain</text>
-<text x="295" y="278" text-anchor="middle" class="dsc" font-family="system-ui, sans-serif" fill="#8b949e">Planner agent · writes task_context_&lt;domain&gt;.md</text>
+<text x="295" y="278" text-anchor="middle" class="dsc" font-family="system-ui, sans-serif" fill="#8b949e">plan_task.sh · Free LLM → Claude fallback · writes task_context_&lt;domain&gt;.md</text>
 <text x="295" y="293" text-anchor="middle" class="note" font-family="system-ui, sans-serif" fill="#3d444d">each planner reads codebase independently — no shared state</text>
 <!-- Separator -->
 <line x1="70" y1="303" x2="530" y2="303" stroke="#30363d" stroke-width="1" stroke-dasharray="4 2"/>
@@ -83,8 +83,8 @@
 <text x="295" y="357" text-anchor="middle" class="dsc" font-family="system-ui, sans-serif" fill="#8b949e">R2 (if concerns): planner resolves → architect: RESOLVED / BLOCKED</text>
 <!-- Model badge: PLAN -->
 <line x1="540" y1="249" x2="560" y2="249" stroke="#30363d" stroke-width="1" stroke-dasharray="3 2"/>
-<rect x="560" y="238" width="116" height="22" rx="11" fill="#1a0e00" stroke="#d97706" stroke-width="1"/>
-<text x="618" y="253" text-anchor="middle" class="mono" font-size="10" fill="#f59e0b">Claude Sonnet</text>
+<rect x="560" y="238" width="116" height="22" rx="11" fill="#001824" stroke="#0ea5e9" stroke-width="1"/>
+<text x="618" y="253" text-anchor="middle" class="mono" font-size="10" fill="#38bdf8">qwen3-32b·free</text>
 
 <!-- Arrow: PLAN → ORCHESTRATE -->
 <line x1="295" y1="370" x2="295" y2="384" stroke="#30363d" stroke-width="1.5" marker-end="url(#aW)"/>
@@ -123,12 +123,12 @@
 <text x="295" y="547" text-anchor="middle" class="ttl" font-family="system-ui, sans-serif" fill="#e6edf3">Code</text>
 <rect x="370" y="536" width="104" height="17" rx="8" fill="#050e1e" stroke="#388bfd" stroke-width="1"/>
 <text x="422" y="549" text-anchor="middle" class="par" font-family="system-ui, sans-serif" fill="#79c0ff">‖ parallel per domain</text>
-<text x="295" y="567" text-anchor="middle" class="dsc" font-family="system-ui, sans-serif" fill="#8b949e">Claude coder applies ollama_output · writes coder_output_&lt;domain&gt;.md</text>
+<text x="295" y="567" text-anchor="middle" class="dsc" font-family="system-ui, sans-serif" fill="#8b949e">Ollama agents write files directly · developer_output_&lt;domain&gt;.md</text>
 <text x="295" y="582" text-anchor="middle" class="note" font-family="system-ui, sans-serif" fill="#3d444d">reads each domain's output independently — no shared state</text>
 <!-- Model badge: CODE -->
 <line x1="540" y1="555" x2="560" y2="555" stroke="#30363d" stroke-width="1" stroke-dasharray="3 2"/>
-<rect x="560" y="544" width="116" height="22" rx="11" fill="#1a0e00" stroke="#d97706" stroke-width="1"/>
-<text x="618" y="559" text-anchor="middle" class="mono" font-size="10" fill="#f59e0b">Claude Sonnet</text>
+<rect x="560" y="544" width="116" height="22" rx="11" fill="#0c1a2e" stroke="#1f6feb" stroke-width="1"/>
+<text x="618" y="559" text-anchor="middle" class="mono" font-size="10" fill="#58a6ff">qwen3:32b</text>
 
 <!-- Arrow: CODE → PRE-REVIEW -->
 <line x1="295" y1="596" x2="295" y2="610" stroke="#30363d" stroke-width="1.5" marker-end="url(#aW)"/>

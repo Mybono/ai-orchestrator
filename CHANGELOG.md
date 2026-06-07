@@ -1,6 +1,16 @@
 # Changelog
 
 All notable changes to ai-orchestrator.
+
+## v1.0.18 — 2026-06-07
+
+### 2026-06-07
+
+- feat: add scripts/run_pipeline.sh — autonomous triage → plan → code/build/review pipeline
+- feat: add agents/triage-ts.md — LLM instruction file for the TypeScript triage agent
+- feat: add scripts/plan_task.sh — LLM-based planning script with free API and Claude fallback
+- feat: add distributed cluster support (DistributedRunner, ExoRunner, combined mode)
+
 ## v1.0.18 — 2026-05-31
 ### 2026-05-31
 - ![refactor](https://img.shields.io/badge/refactor-e4e669?style=flat-square) [`ff4d786`](https://github.com/Mybono/ai-orchestrator/commit/ff4d786) Update project overview and documentation

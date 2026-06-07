@@ -189,6 +189,30 @@ src/
 
 After all domains complete, `Orchestrator.review()` runs the `reviewer` role against each `ollama_output_<domain>.md` file concurrently. It reviews the generated code, not the plan file. Domains with status other than `done` are skipped.
 
+### Autonomous pipeline script
+
+`scripts/run_pipeline.sh` wraps the full coding pipeline into a single non-interactive shell script. It accepts one argument — the task description — and runs triage, planning, and the TS orchestrator in sequence.
+
+```bash
+bash scripts/run_pipeline.sh "add retry logic to AgentRunner"
+```
+
+Internal flow:
+
+1. **Triage** — calls `triage-agent.sh`, reads the resulting `triage_ts.md` to extract domains and route.
+2. **Route check** — exits immediately (code 0) if the route is `direct-edit`, `quick-coder`, or `plugin-route`.
+3. **Plan** — runs `plan_task.sh` in parallel for each domain, waits for all planners, then verifies `task_context_<domain>.md` was written.
+4. **Orchestrate** — calls `ts-orchestrator.sh "$DOMAINS"` and maps its exit code: `0` = success, `2` = build failed, `3` = review failed.
+
+**`scripts/plan_task.sh`** generates `task_context_<domain>.md` for one domain. It assembles context from the knowledge graph wiki, project overview, architecture docs, language standards, and relevant source files, then sends the combined prompt to a free LLM API (configurable via `free_api_url` in `llm-config.json`). Falls back to Claude when the free API is unavailable. Arguments:
+
+| Flag | Required | Description |
+|---|---|---|
+| `--task` | yes | Task description |
+| `--domain` | no | Domain name (default: `coder`) |
+| `--triage` | no | Path to `triage_ts.md` for additional context |
+| `--project` | no | Project root (default: `$PWD`) |
+
 ---
 
 ## call_ollama.sh
@@ -271,9 +295,21 @@ Agents share state through files in `.claude/context/`:
 
 ---
 
-## Cluster Mode
+## Cluster mode
 
-See [Cluster Mode](CLUSTER.md) for full documentation on distributed and combined inference backends.
+The orchestrator supports three inference backends selected automatically based on whether `exo-config.json` is present in the project root.
+
+| Condition | Backend | Behavior |
+|---|---|---|
+| File absent | `AgentRunner` | Local Ollama at `localhost:11434` |
+| `combined: false` | `DistributedRunner` | Routes each role to the first cluster node that claims it |
+| `combined: true` | `ExoRunner` | Sends requests to an Exo gateway; model is split across machines |
+
+`DistributedRunner` reads `exo-config.json`, iterates `nodes[]`, and picks the first node whose `roles` map contains the requested role. When no node matches, it falls back to `localhost:11434` with the model from `llm-config.json`. The role passed to `DistributedRunner` is the domain name (e.g., `coder`, `unit-tester`), not a fixed string — this allows different nodes to serve different domains.
+
+`ExoRunner` wraps the Exo OpenAI-compatible API (`POST /v1/chat/completions` on port 52415 by default) and handles model layer distribution internally.
+
+See [Cluster Mode](CLUSTER.md) for configuration reference and setup instructions.
 
 ---
 

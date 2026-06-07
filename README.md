@@ -29,6 +29,8 @@ Step 5   Fix loop    Max 3 rounds, circuit breaker on repeat errors
 Step 6   Finalize    git diff + track savings
 ```
 
+`scripts/run_pipeline.sh` wraps steps 1–3 into a single non-interactive script. Pass a task description and it runs triage, parallel planning, and the TS orchestrator in sequence without any Claude interaction required.
+
 Agents communicate through files in `.claude/context/`. Each step reads file paths from the previous step, not the full content.
 
 ## Source layout
@@ -140,6 +142,8 @@ npm run ao-review                                # review current diff with revi
 npm run ao-stats                                 # print token savings (day/week/month)
 npm run ao-update                                # pull latest orchestrator version
 npm run ao-mcp                                   # start MCP server on port 3456
+
+bash scripts/run_pipeline.sh "<task description>"  # run full pipeline autonomously
 ```
 
 ## License
