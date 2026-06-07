@@ -15,6 +15,7 @@ PROJECT_ROOT="$PWD"
 _DIR="$PROJECT_ROOT"
 while [ "$_DIR" != "/" ]; do
     if [ -f "$_DIR/.env" ]; then
+        # shellcheck source=/dev/null
         set -a; source "$_DIR/.env" 2>/dev/null || true; set +a
         break
     fi
@@ -47,9 +48,11 @@ echo "[plan_task] domain=$DOMAIN task='$TASK'" >&2
 # ─── 1. Graph context ────────────────────────────────────────────────────────
 WIKI_DIR="$PROJECT_ROOT/graphify-out/wiki"
 if [ -f "$WIKI_DIR/WIKI_INDEX.md" ]; then
-    echo "=== KNOWLEDGE GRAPH INDEX ===" >> "$TMP_CONTEXT"
-    cat "$WIKI_DIR/WIKI_INDEX.md" >> "$TMP_CONTEXT"
-    echo "" >> "$TMP_CONTEXT"
+    {
+        echo "=== KNOWLEDGE GRAPH INDEX ==="
+        cat "$WIKI_DIR/WIKI_INDEX.md"
+        echo ""
+    } >> "$TMP_CONTEXT"
 
     # Найти релевантные community файлы по ключевым словам задачи
     # Берём слова длиннее 4 символов из описания задачи
@@ -57,12 +60,14 @@ if [ -f "$WIKI_DIR/WIKI_INDEX.md" ]; then
     if [ -n "$KEYWORDS" ]; then
         RELEVANT=$(grep -il -E "$KEYWORDS" "$WIKI_DIR"/community_*.md 2>/dev/null | head -4)
         if [ -n "$RELEVANT" ]; then
-            echo "=== RELEVANT CODEBASE COMMUNITIES ===" >> "$TMP_CONTEXT"
+            {
+            echo "=== RELEVANT CODEBASE COMMUNITIES ==="
             for f in $RELEVANT; do
-                echo "--- $(basename "$f") ---" >> "$TMP_CONTEXT"
-                cat "$f" >> "$TMP_CONTEXT"
-                echo "" >> "$TMP_CONTEXT"
+                echo "--- $(basename "$f") ---"
+                cat "$f"
+                echo ""
             done
+        } >> "$TMP_CONTEXT"
         fi
     fi
 fi
@@ -70,9 +75,11 @@ fi
 # ─── 2. Project overview ─────────────────────────────────────────────────────
 OVERVIEW="$PROJECT_ROOT/.claude/context/project_overview.md"
 if [ -f "$OVERVIEW" ]; then
-    echo "=== PROJECT OVERVIEW ===" >> "$TMP_CONTEXT"
-    cat "$OVERVIEW" >> "$TMP_CONTEXT"
-    echo "" >> "$TMP_CONTEXT"
+    {
+        echo "=== PROJECT OVERVIEW ==="
+        cat "$OVERVIEW"
+        echo ""
+    } >> "$TMP_CONTEXT"
 fi
 
 # ─── 2b. Architecture docs ───────────────────────────────────────────────────
@@ -81,18 +88,23 @@ for ARCH_FILE in \
     "$PROJECT_ROOT/ARCHITECTURE.md" \
     "$PROJECT_ROOT/docs/ARCHITECTURE.md"; do
     if [ -f "$ARCH_FILE" ]; then
-        echo "=== ARCHITECTURE ===" >> "$TMP_CONTEXT"
-        head -150 "$ARCH_FILE" >> "$TMP_CONTEXT"
-        echo "" >> "$TMP_CONTEXT"
+        {
+            echo "=== ARCHITECTURE ==="
+            head -150 "$ARCH_FILE"
+            echo ""
+        } >> "$TMP_CONTEXT"
         break
     fi
 done
 
 # ─── 2c. ~/.claude symlinks map (критично для скриптов знающих реальные пути) ─
 if [ -d "$HOME/.claude" ]; then
-    echo "=== ~/.claude SYMLINKS (real paths) ===" >> "$TMP_CONTEXT"
-    ls -la "$HOME/.claude/"*.sh 2>/dev/null | awk '{print $9, $10, $11}' >> "$TMP_CONTEXT" || true
-    echo "" >> "$TMP_CONTEXT"
+    {
+        echo "=== ~/.claude SYMLINKS (real paths) ==="
+        # shellcheck disable=SC2012
+        ls -la "$HOME/.claude/"*.sh 2>/dev/null | awk '{print $9, $10, $11}' || true
+        echo ""
+    } >> "$TMP_CONTEXT"
 fi
 
 # ─── 3. Triage context (BFS graph traversal result) ─────────────────────────
@@ -122,8 +134,10 @@ elif [ -f "$PROJECT_ROOT/pubspec.yaml" ]; then
 fi
 
 if [ -n "$STANDARDS_FILE" ] && [ -f "$STANDARDS_FILE" ]; then
-    head -120 "$STANDARDS_FILE" >> "$TMP_CONTEXT"
-    echo "" >> "$TMP_CONTEXT"
+    {
+        head -120 "$STANDARDS_FILE"
+        echo ""
+    } >> "$TMP_CONTEXT"
 fi
 
 # ─── 5. Релевантные исходные файлы ───────────────────────────────────────────
@@ -132,26 +146,30 @@ IS_BASH=$(echo "$TASK_LOWER" | grep -cE '\.sh|bash script|shell script' || true)
 
 if [ "$IS_BASH" -gt 0 ] && [ -d "$PROJECT_ROOT/scripts" ]; then
     # Для bash задач: включаем все .sh скрипты как паттерны стиля
-    echo "=== EXISTING BASH SCRIPTS (style patterns) ===" >> "$TMP_CONTEXT"
-    for f in "$PROJECT_ROOT/scripts/"*.sh; do
-        [ -f "$f" ] || continue
-        echo "--- $f ---" >> "$TMP_CONTEXT"
-        head -60 "$f" >> "$TMP_CONTEXT"
-        echo "" >> "$TMP_CONTEXT"
-    done
+    {
+        echo "=== EXISTING BASH SCRIPTS (style patterns) ==="
+        for f in "$PROJECT_ROOT/scripts/"*.sh; do
+            [ -f "$f" ] || continue
+            echo "--- $f ---"
+            head -60 "$f"
+            echo ""
+        done
+    } >> "$TMP_CONTEXT"
 else
     # Для остальных: grep по ключевым словам
     for SEARCH_DIR in "$PROJECT_ROOT/src" "$PROJECT_ROOT/scripts"; do
         if [ -d "$SEARCH_DIR" ] && [ -n "$KEYWORDS" ]; then
-            echo "=== RELEVANT FILES IN $(basename "$SEARCH_DIR")/ ===" >> "$TMP_CONTEXT"
             MATCHED_FILES=$(grep -rl -E "$KEYWORDS" "$SEARCH_DIR" \
                 --include="*.ts" --include="*.py" --include="*.js" --include="*.sh" \
                 2>/dev/null | head -4)
-            for f in $MATCHED_FILES; do
-                echo "--- $f ---" >> "$TMP_CONTEXT"
-                head -80 "$f" >> "$TMP_CONTEXT"
-                echo "" >> "$TMP_CONTEXT"
-            done
+            {
+                echo "=== RELEVANT FILES IN $(basename "$SEARCH_DIR")/ ==="
+                for f in $MATCHED_FILES; do
+                    echo "--- $f ---"
+                    head -80 "$f"
+                    echo ""
+                done
+            } >> "$TMP_CONTEXT"
         fi
     done
 fi

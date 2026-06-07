@@ -15,6 +15,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 _DIR="$PROJECT_ROOT"
 while [ "$_DIR" != "/" ]; do
     if [ -f "$_DIR/.env" ]; then
+        # shellcheck source=/dev/null
         set -a; source "$_DIR/.env" 2>/dev/null || true; set +a
         break
     fi
@@ -25,7 +26,8 @@ unset _DIR
 # ─── Find node/npx ───────────────────────────────────────────────────────────
 NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
 if [ -d "$NVM_DIR/versions/node" ]; then
-    LATEST_NODE=$(ls "$NVM_DIR/versions/node" | sort -V | tail -1)
+    LATEST_NODE=$(find "$NVM_DIR/versions/node" -maxdepth 1 -mindepth 1 -type d | sort -V | tail -1)
+    LATEST_NODE="${LATEST_NODE##*/}"
     export PATH="$NVM_DIR/versions/node/$LATEST_NODE/bin:$PATH"
 fi
 
@@ -84,7 +86,11 @@ for DOMAIN in "${DOMAIN_LIST[@]}"; do
     DOMAIN="${DOMAIN// /}"
     [ -z "$DOMAIN" ] && continue
     CTX="$CONTEXT_DIR/task_context_${DOMAIN}.md"
-    [ -f "$CTX" ] && log "  Ready: task_context_${DOMAIN}.md" || { fail "Missing: $CTX"; exit 1; }
+    if [ -f "$CTX" ]; then
+        log "  Ready: task_context_${DOMAIN}.md"
+    else
+        fail "Missing: $CTX"; exit 1
+    fi
 done
 
 # ════════════════════════════════════════════════════════════════════════════
