@@ -10,7 +10,7 @@ CONTEXT_FILE=""
 _DIR="$PWD"
 while [ "$_DIR" != "/" ]; do
     if [ -f "$_DIR/.env" ]; then
-        # shellcheck source=/dev/null
+        # shellcheck disable=SC1091
         set -a; source "$_DIR/.env" 2>/dev/null || true; set +a
         break
     fi

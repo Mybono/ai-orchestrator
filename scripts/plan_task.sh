@@ -15,7 +15,7 @@ PROJECT_ROOT="$PWD"
 _DIR="$PROJECT_ROOT"
 while [ "$_DIR" != "/" ]; do
     if [ -f "$_DIR/.env" ]; then
-        # shellcheck source=/dev/null
+        # shellcheck disable=SC1091
         set -a; source "$_DIR/.env" 2>/dev/null || true; set +a
         break
     fi
@@ -109,32 +109,36 @@ fi
 
 # ─── 3. Triage context (BFS graph traversal result) ─────────────────────────
 if [ -n "$TRIAGE_FILE" ] && [ -f "$TRIAGE_FILE" ]; then
-    echo "=== TRIAGE ANALYSIS ===" >> "$TMP_CONTEXT"
-    cat "$TRIAGE_FILE" >> "$TMP_CONTEXT"
-    echo "" >> "$TMP_CONTEXT"
+    {
+        echo "=== TRIAGE ANALYSIS ==="
+        cat "$TRIAGE_FILE"
+        echo ""
+    } >> "$TMP_CONTEXT"
 fi
 
 # ─── 4. Language standards — определяем по задаче, не только по проекту ──────
 STANDARDS_FILE=""
+STANDARDS_HEADER=""
 TASK_LOWER=$(echo "$TASK" | tr '[:upper:]' '[:lower:]')
 
 # Если задача явно о bash/shell скрипте — берём bash стандарты
 if echo "$TASK_LOWER" | grep -qE '\.sh|bash script|shell script'; then
     STANDARDS_FILE="$HOME/.claude/skills/bash-code-standarts.md"
-    echo "=== BASH/SHELL STANDARDS ===" >> "$TMP_CONTEXT"
+    STANDARDS_HEADER="=== BASH/SHELL STANDARDS ==="
 elif [ -f "$PROJECT_ROOT/tsconfig.json" ] && ! echo "$TASK_LOWER" | grep -qE '\.py|python'; then
     STANDARDS_FILE="$HOME/.claude/skills/ts-code-standarts.md"
-    echo "=== TYPESCRIPT STANDARDS ===" >> "$TMP_CONTEXT"
+    STANDARDS_HEADER="=== TYPESCRIPT STANDARDS ==="
 elif [ -f "$PROJECT_ROOT/pyproject.toml" ] || [ -f "$PROJECT_ROOT/requirements.txt" ]; then
     STANDARDS_FILE="$HOME/.claude/skills/python-code-standarts.md"
-    echo "=== PYTHON STANDARDS ===" >> "$TMP_CONTEXT"
+    STANDARDS_HEADER="=== PYTHON STANDARDS ==="
 elif [ -f "$PROJECT_ROOT/pubspec.yaml" ]; then
     STANDARDS_FILE="$HOME/.claude/skills/flutter-code-standarts.md"
-    echo "=== FLUTTER/DART STANDARDS ===" >> "$TMP_CONTEXT"
+    STANDARDS_HEADER="=== FLUTTER/DART STANDARDS ==="
 fi
 
 if [ -n "$STANDARDS_FILE" ] && [ -f "$STANDARDS_FILE" ]; then
     {
+        echo "$STANDARDS_HEADER"
         head -120 "$STANDARDS_FILE"
         echo ""
     } >> "$TMP_CONTEXT"
