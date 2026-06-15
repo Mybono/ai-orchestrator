@@ -1,0 +1,1 @@
+# append-only JSON Lines log — one outcome record per line; fields: date (ISO 8601), task, task_type, files_changed (int), verdict (APPROVED|NEEDS_CHANGES), model, reviewer_issues (array), duration_s (int)
