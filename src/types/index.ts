@@ -3,7 +3,7 @@ export const KNOWN_ROLES = {
   unit_tester:  'unit-tester',
   doc_writer:   'doc-writer',
   devops:       'devops',
-  reviewer:     'reviewer',
+  reviewer:    'reviewer',
   triage:       'triage',
   commit:       'commit',
   pre_reviewer: 'pre-reviewer',
@@ -108,4 +108,6 @@ export type Goal = {
   completedAt?: string;
   result?: string;
   error?: string;
+  readonly parentId?: string;
+  readonly dependsOn?: readonly string[];
 };

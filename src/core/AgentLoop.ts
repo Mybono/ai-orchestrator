@@ -55,14 +55,14 @@ export class AgentLoop {
 
   private async loop(): Promise<void> {
     while (this.active) {
-      const goal = this.queue.nextPending();
-      if (goal !== undefined) {
+      const goal = this.queue.nextReady();
+      if (goal !== null) {
         const claimed = this.queue.claim(goal.id);
         if (claimed !== undefined) {
           await this.processGoal(claimed);
         }
       } else {
-        process.stderr.write('[agent-loop] no pending goals — waiting\n');
+        process.stderr.write('[agent-loop] no ready goals — waiting\n');
         await sleep(this.pollMs);
       }
     }
@@ -179,3 +179,5 @@ export class AgentLoop {
     return [...result.domains];
   }
 }
+
+

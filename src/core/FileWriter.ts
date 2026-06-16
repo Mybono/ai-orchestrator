@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, normalize, resolve } from 'node:path';
 
 export type ParsedFile = {
@@ -37,6 +37,7 @@ export function parseFileBlocks(output: string): ParsedFile[] {
 /**
  * Write parsed files to disk under projectRoot.
  * Throws if any path would escape projectRoot (path traversal guard).
+ * Throws if generated content is suspiciously smaller than the existing file (stub guard).
  * Returns the list of relative paths that were written.
  */
 export function writeFilesToProject(files: ParsedFile[], projectRoot: string): string[] {
@@ -48,6 +49,28 @@ export function writeFilesToProject(files: ParsedFile[], projectRoot: string): s
 
     if (!absolutePath.startsWith(resolvedRoot + '/') && absolutePath !== resolvedRoot) {
       throw new Error(`FileWriter: path escapes project root: "${file.relativePath}"`);
+    }
+
+    // Stub guard: if the existing file is substantially larger than the new output,
+    // the model likely generated a stub instead of preserving existing code.
+    if (existsSync(absolutePath)) {
+      let existingContent: string | undefined;
+      try {
+        existingContent = readFileSync(absolutePath, 'utf8');
+      } catch {
+        // ignore read error — proceed with write
+      }
+      if (
+        existingContent !== undefined &&
+        existingContent.length > 300 &&
+        file.content.length < existingContent.length * 0.6
+      ) {
+        const pct = Math.round((file.content.length / existingContent.length) * 100);
+        throw new Error(
+          `[stub-guard] ${file.relativePath}: generated ${file.content.length} chars but existing file has ${existingContent.length} chars (${pct}% < 60%). ` +
+          `The model output is a stub — it must copy ALL existing code and only ADD new code.`,
+        );
+      }
     }
 
     mkdirSync(dirname(absolutePath), { recursive: true });
@@ -94,7 +117,7 @@ Rules:
  * Passed as --prompt-file; the task plan is passed as --context-file.
  */
 export const CODE_GEN_INSTRUCTIONS = `\
-You are a code implementation agent. Implement the plan described in the context.
+You are a code implementation agent. Your job is to ADD new code to existing files.
 
 CRITICAL: Output ONLY file blocks using this exact format. No text outside the blocks.
 
@@ -102,9 +125,18 @@ CRITICAL: Output ONLY file blocks using this exact format. No text outside the b
 <complete file content here>
 %%ENDFILE
 
+The context file contains a "## CURRENT FILE CONTENTS" section with the exact current state of
+each file you must modify. You MUST follow this workflow for every file:
+
+1. Copy the ENTIRE current file content into the %%FILE block verbatim
+2. Add the new code described in the plan (new types, functions, methods) at the appropriate place
+3. Your output MUST be longer than the current file — you are adding, not rewriting
+
 Rules:
+- NEVER remove, rename, or shorten any existing code — only ADD
+- If a function or type already exists, keep it exactly as-is and add the new ones beside it
 - Paths must be relative to the project root (e.g. src/foo.ts, not /absolute/path)
-- Output the COMPLETE file content — not diffs, not partial snippets
+- Output the COMPLETE file content including all existing + all new code
 - One %%FILE...%%ENDFILE block per file
 - Do NOT wrap content in markdown code fences inside the blocks
 - Do NOT output any explanation, preamble, or summary outside the blocks

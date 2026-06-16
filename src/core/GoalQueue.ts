@@ -3,6 +3,8 @@ import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import type { AgentDomain, Goal, GoalStatus } from '../types/index.js';
 
+type Result = { ok: boolean; error?: string };
+
 export class GoalQueue {
   private readonly queueFile: string;
 
@@ -68,6 +70,26 @@ export class GoalQueue {
     return count;
   }
 
+  pushMany(goals: readonly Goal[]): Result {
+    for (const g of goals) {
+      const res = this.push(g.description, g.domains);
+      if (!res.ok) return { ok: false, error: `failed to push goal ${g.id}: ${res.error}` };
+    }
+    return { ok: true };
+  }
+
+  nextReady(): Goal | null {
+    const goals = this.readAll();
+    for (const goal of goals) {
+      if (goal.status !== 'pending') continue;
+      if (goal.dependsOn && goal.dependsOn.some(dep => !this.isCompleted(dep, goals))) {
+        continue;
+      }
+      return goal;
+    }
+    return null;
+  }
+
   private patch(id: string, patch: Partial<Goal>): void {
     const goals = this.readAll();
     const idx = goals.findIndex(g => g.id === id);
@@ -90,5 +112,10 @@ export class GoalQueue {
 
   private writeAll(goals: Goal[]): void {
     writeFileSync(this.queueFile, JSON.stringify(goals, null, 2) + '\n', 'utf8');
+  }
+
+  private isCompleted(id: string, goals: Goal[]): boolean {
+    const goal = goals.find(g => g.id === id);
+    return goal !== undefined && goal.status === 'done';
   }
 }

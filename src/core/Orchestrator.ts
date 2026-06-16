@@ -168,7 +168,23 @@ export class Orchestrator {
           const promptFile = isReviewer ? reviewInstructionFile : instructionFile;
           const runRole: Role =
             this.runner instanceof DistributedRunner ? (agentTask.domain as Role) : (isReviewer ? KNOWN_ROLES.reviewer : KNOWN_ROLES.coder);
-          const result = await this.runner.run(runRole, promptFile, agentTask.contextFile);
+
+          // For coder tasks: augment context with current file contents so the model
+          // knows what already exists and can ADD to it rather than rewrite from scratch.
+          let effectiveContextFile = agentTask.contextFile;
+          if (!isReviewer && agentTask.contextFile !== undefined) {
+            const augmented = this.buildAugmentedContext(agentTask.contextFile);
+            if (augmented !== undefined) {
+              const augPath = join(this.contextDir, `task_context_augmented_${agentTask.domain}.md`);
+              writeFileSync(augPath, augmented, 'utf8');
+              effectiveContextFile = augPath;
+              process.stderr.write(
+                `[developer-agent] ${agentTask.domain}: context augmented with current file contents\n`,
+              );
+            }
+          }
+
+          const result = await this.runner.run(runRole, promptFile, effectiveContextFile);
 
           if (!result.ok) {
             process.stderr.write(`[developer-agent] ${agentTask.domain} failed: ${result.error}\n`);
@@ -331,6 +347,73 @@ export class Orchestrator {
         `[developer-agent] could not append feedback to ${contextFile}: ${String(err)}\n`,
       );
     }
+  }
+
+  /**
+   * Builds an augmented version of the context file that includes the current on-disk content
+   * of every file listed in "## Files to Change". This prevents the coder from generating
+   * stub replacements — it sees the existing code and must ADD to it.
+   */
+  private buildAugmentedContext(contextFile: string): string | undefined {
+    let context: string;
+    try {
+      context = readFileSync(contextFile, 'utf8');
+    } catch {
+      return undefined;
+    }
+
+    const paths = this.extractFilesToChange(context);
+    if (paths.length === 0) return undefined;
+
+    const sections: string[] = [];
+    for (const relPath of paths) {
+      const absPath = join(this.projectRoot, relPath);
+      if (!existsSync(absPath)) continue;
+      let content: string;
+      try {
+        content = readFileSync(absPath, 'utf8');
+      } catch {
+        continue;
+      }
+      sections.push(
+        `### Current content of \`${relPath}\` (${content.length} chars — MUST be preserved)\n\`\`\`\n${content}\n\`\`\``,
+      );
+    }
+
+    if (sections.length === 0) return undefined;
+
+    const header = [
+      '',
+      '---',
+      '',
+      '## CURRENT FILE CONTENTS (READ-ONLY REFERENCE)',
+      '',
+      'IMPORTANT: The sections below contain the EXACT current content of each file you must modify.',
+      'You MUST copy each file verbatim into your %%FILE output, then ADD the new code from the plan.',
+      'Do NOT remove, rewrite, or shorten any existing code. Your output must be longer than each current file.',
+      '',
+    ].join('\n');
+
+    return context + header + sections.join('\n\n');
+  }
+
+  /** Extracts file paths listed under the "## Files to Change" section of a task context. */
+  private extractFilesToChange(context: string): string[] {
+    const sectionMatch = /##\s+Files to Change([\s\S]*?)(?=\n##|\n---|\s*$)/.exec(context);
+    if (sectionMatch === null) return [];
+
+    const section = sectionMatch[1] ?? '';
+    const paths: string[] = [];
+    const re = /`([a-zA-Z0-9_./-]+\.[a-zA-Z0-9]+)`/g;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(section)) !== null) {
+      const p = m[1];
+      // Only relative paths that look like source file paths (contain a slash)
+      if (p !== undefined && !p.startsWith('/') && p.includes('/')) {
+        paths.push(p);
+      }
+    }
+    return [...new Set(paths)];
   }
 
   detectConflict(verdictA: string, agentA: string, verdictB: string, agentB: string): boolean {

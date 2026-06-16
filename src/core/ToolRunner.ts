@@ -1,6 +1,8 @@
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { resolve, relative, join } from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { randomUUID } from 'node:crypto';
+import type { AgentDomain, Goal, GoalStatus } from '../types/index.js';
 
 const MAX_FILE_BYTES = 60_000;
 const MAX_SEARCH_RESULTS = 80;
@@ -85,6 +87,20 @@ export const PLANNER_TOOLS: readonly ToolDefinition[] = [
       },
     },
   },
+  {
+    type: 'function',
+    function: {
+      name: 'decompose_goal',
+      description: 'Decompose a goal into multiple sub-goals. Return an array of sub-goal descriptions that will be executed in sequence or parallel depending on dependencies.',
+      parameters: {
+        type: 'object',
+        properties: {
+          goal: { type: 'string', description: 'The goal description to decompose' },
+        },
+        required: ['goal'],
+      },
+    },
+  },
 ];
 
 export class ToolRunner {
@@ -115,6 +131,8 @@ export class ToolRunner {
         return this.searchFiles(String(args['pattern'] ?? ''), String(args['directory'] ?? 'src'));
       case 'write_task_context':
         return this.writeTaskContext(String(args['content'] ?? ''));
+      case 'decompose_goal':
+        return this.decomposeGoal(args);
       default:
         return `[error] unknown tool: ${call.function.name}`;
     }
@@ -123,6 +141,43 @@ export class ToolRunner {
   /** Returns the task_context content written by write_task_context, or undefined. */
   getTaskContext(): string | undefined {
     return this.taskContextContent;
+  }
+
+  private decomposeGoal(args: Record<string, unknown>): string {
+    const goalDesc = String(args['goal'] ?? '');
+    if (!goalDesc.trim()) {
+      return JSON.stringify({ ok: false, error: 'goal description required' });
+    }
+    try {
+      const now = new Date().toISOString();
+      const baseGoal: Omit<Goal, 'id' | 'description'> = {
+        projectRoot: this.projectRoot,
+        status: 'pending' as GoalStatus,
+        createdAt: now,
+      };
+      const lines = goalDesc
+        .split('\n')
+        .map(l => l.trim())
+        .filter(Boolean);
+
+      const subGoals: Goal[] = [];
+      let previousId: string | undefined;
+      for (const description of lines) {
+        const id = randomUUID();
+        const goal: Goal = {
+          id,
+          description,
+          ...baseGoal,
+          ...(previousId ? { dependsOn: [previousId] } : {}),
+        };
+        subGoals.push(goal);
+        previousId = id;
+      }
+
+      return JSON.stringify({ ok: true, subGoals }, null, 2);
+    } catch (err) {
+      return JSON.stringify({ ok: false, error: err instanceof Error ? err.message : String(err) });
+    }
   }
 
   private safe(relPath: string): string | null {
@@ -200,3 +255,5 @@ export class ToolRunner {
     }
   }
 }
+
+

@@ -27,19 +27,27 @@ This file contains: the plan, which files to change, what functions to add, and 
 
 ## Step 2 — Generate Code via Ollama
 
+**Before calling Ollama**: for every file listed in `## Files to Change`, read its current content from disk. Include it verbatim in the prompt under `## Current File Content`. This is mandatory — without it the model will generate a stub replacement instead of an addition.
+
 For non-trivial code generation, use the local Ollama script (which handles large contexts safely):
 
+```bash
 # Build a focused prompt into a temporary file to avoid shell argument length limits
 TMP_PROMPT=$(mktemp)
 cat <<EOF > "$TMP_PROMPT"
 ## Your Task
 <one sentence description of what to implement>
 
-## Exact Signatures
-<paste signatures>
+## Exact Signatures to Add
+<paste signatures from the plan>
 
-## File Contents
-<paste context>
+## Current File Content (PRESERVE ALL OF THIS — only ADD new code)
+\`\`\`typescript
+<paste the ENTIRE current content of the file from disk>
+\`\`\`
+
+## What to Add
+<paste the specific new functions/types/methods from the plan>
 EOF
 
 # Call Ollama via role using the prompt file
@@ -93,6 +101,9 @@ Keep each entry to one line. Do not include code snippets or diffs in this file.
 ## Critical Rules
 
 - Read `.claude/context/task_context.md` FIRST — always
+- **Read every file listed in `## Files to Change` from disk before calling Ollama** — never rely on the plan's description of existing code alone
+- If context contains `## CURRENT FILE CONTENTS` — use those directly without re-reading from disk
+- The Ollama output MUST be longer than the current file — you are adding code, not rewriting
 - Never redefine types that exist in `agents/types.py`
 - Model is managed via `~/.claude/llm-config.json` (role: `coder`) — do not change it
 - Keep generated code minimal — no extra docstrings, no over-engineering

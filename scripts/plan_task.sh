@@ -147,9 +147,25 @@ if [ -n "$STANDARDS_FILE" ] && [ -f "$STANDARDS_FILE" ]; then
     } >> "$TMP_CONTEXT"
 fi
 
-# ─── 5. Релевантные исходные файлы ───────────────────────────────────────────
+# ─── 5. Исходные файлы — сначала явно упомянутые в задаче, потом по ключевым словам ──
 TASK_LOWER=$(echo "$TASK" | tr '[:upper:]' '[:lower:]')
 IS_BASH=$(echo "$TASK_LOWER" | grep -cE '\.sh|bash script|shell script' || true)
+
+# 5a. Файлы явно упомянутые в задаче (паттерн `src/...` или `scripts/...`) — полный контент
+{
+    echo "=== FILES EXPLICITLY MENTIONED IN TASK (full content) ==="
+    # Ищем пути вида src/foo/bar.ts или scripts/foo.sh в тексте задачи
+    MENTIONED=$(echo "$TASK" | grep -oE '`?(src|scripts|agents|commands)/[^` \n,)]+`?' \
+        | tr -d '`' | sort -u)
+    for rel in $MENTIONED; do
+        abs="$PROJECT_ROOT/$rel"
+        if [ -f "$abs" ]; then
+            echo "--- $abs ---"
+            cat "$abs"
+            echo ""
+        fi
+    done
+} >> "$TMP_CONTEXT"
 
 if [ "$IS_BASH" -gt 0 ] && [ -d "$PROJECT_ROOT/scripts" ]; then
     # Для bash задач: включаем все .sh скрипты как паттерны стиля
@@ -158,22 +174,22 @@ if [ "$IS_BASH" -gt 0 ] && [ -d "$PROJECT_ROOT/scripts" ]; then
         for f in "$PROJECT_ROOT/scripts/"*.sh; do
             [ -f "$f" ] || continue
             echo "--- $f ---"
-            head -60 "$f"
+            head -120 "$f"
             echo ""
         done
     } >> "$TMP_CONTEXT"
 else
-    # Для остальных: grep по ключевым словам
+    # Для остальных: grep по ключевым словам — полный контент (не head -80)
     for SEARCH_DIR in "$PROJECT_ROOT/src" "$PROJECT_ROOT/scripts"; do
         if [ -d "$SEARCH_DIR" ] && [ -n "$KEYWORDS" ]; then
             MATCHED_FILES=$(grep -rl -E "$KEYWORDS" "$SEARCH_DIR" \
                 --include="*.ts" --include="*.py" --include="*.js" --include="*.sh" \
-                2>/dev/null | head -4)
+                2>/dev/null | head -6)
             {
-                echo "=== RELEVANT FILES IN $(basename "$SEARCH_DIR")/ ==="
+                echo "=== RELEVANT FILES IN $(basename "$SEARCH_DIR")/ (full content) ==="
                 for f in $MATCHED_FILES; do
                     echo "--- $f ---"
-                    head -80 "$f"
+                    cat "$f"
                     echo ""
                 done
             } >> "$TMP_CONTEXT"
@@ -186,10 +202,17 @@ TMP_PROMPT=$(mktemp)
 cat > "$TMP_PROMPT" << PROMPT_EOF
 You are a senior software architect. Your job is to create a detailed implementation plan.
 
-Using the codebase context provided, write a task context file that will guide a code generator.
+The codebase context above contains the FULL CURRENT CONTENT of the relevant files.
+You MUST use the actual code from the context — never invent types, signatures, or patterns.
 
 TASK: ${TASK}
 DOMAIN: ${DOMAIN}
+
+CRITICAL RULES:
+- "Exact Signatures" must show what to ADD to the existing file — copy the surrounding real code
+- "Patterns to Follow" must be copy-pasted verbatim from the context files above
+- "Files to Change" must list existing files by their exact path — never create a new file if the task says to extend an existing one
+- The code generator will output the COMPLETE file content — so every section must describe additions/modifications to the existing code, not replacements
 
 Write the file in this exact format:
 
@@ -205,20 +228,21 @@ Write the file in this exact format:
 <one sentence description of what needs to be done>
 
 ## Plan
-- <step 1>
+- <step 1 — be specific about which function/type/line to change>
 - <step 2>
 
 ## Files to Change
-- \`<file_path>\`: <what to write/change and why>
+- \`<file_path>\`: <specifically what to ADD or MODIFY — reference current code by name>
 
 ## Exact Signatures
-<for bash: key function signatures or the script's CLI interface; for TS: function signatures>
+<copy the CURRENT function/type signature from the context, then show what to add/change>
 
 ## Patterns to Follow
-<1-2 real code snippets from the codebase showing the exact style to follow>
+<copy-paste 1-2 real snippets verbatim from the context files above — do NOT paraphrase>
 
 ## Anti-patterns — Do NOT do this
-<2-3 things that would be wrong based on the codebase conventions>
+- Do NOT replace the whole file — output complete file with existing code preserved
+- <2 more things that would be wrong based on the codebase conventions>
 
 ## Edge Cases to Handle
 <edge cases based on similar code in the codebase>
