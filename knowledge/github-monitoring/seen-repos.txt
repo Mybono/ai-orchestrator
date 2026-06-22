@@ -1,6 +1,6 @@
 framerslab/agentos	2026-06-22	ADOPT
 zzet/gortex	2026-06-22	WATCH
 DeusData/codebase-memory-mcp	2026-06-22	ADOPT
-justrach/codedb	2026-06-22	ADOPT
-griptape-ai/griptape	2026-06-22	WATCH
+griptape-ai/griptape	2026-06-22	ADOPT
 omnigent-ai/omnigent	2026-06-22	ADOPT
+justrach/codedb	2026-06-22	ADOPT
