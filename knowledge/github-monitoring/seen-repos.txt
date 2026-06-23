@@ -4,3 +4,4 @@ DeusData/codebase-memory-mcp	2026-06-22	ADOPT
 griptape-ai/griptape	2026-06-22	ADOPT
 omnigent-ai/omnigent	2026-06-22	ADOPT
 justrach/codedb	2026-06-22	ADOPT
+open-multi-agent/open-multi-agent	2026-06-23	ADOPT
