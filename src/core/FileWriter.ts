@@ -22,10 +22,13 @@ const FILE_BLOCK_RE = /^%%FILE ([^\n]+)\n([\s\S]*?)^%%ENDFILE/gm;
  * Returns an empty array if the model produced no file blocks.
  */
 export function parseFileBlocks(output: string): ParsedFile[] {
+  // Cerebras sometimes emits tool-call JSON on the same line as %%FILE.
+  // Ensure %%FILE is always at a line boundary so the ^%%FILE regex matches.
+  const normalized = output.replace(/([^\n])%%FILE/g, '$1\n%%FILE');
   const results: ParsedFile[] = [];
   FILE_BLOCK_RE.lastIndex = 0;
   let match: RegExpExecArray | null;
-  while ((match = FILE_BLOCK_RE.exec(output)) !== null) {
+  while ((match = FILE_BLOCK_RE.exec(normalized)) !== null) {
     const relativePath = (match[1] ?? '').trim();
     const content = match[2] ?? '';
     if (relativePath.length === 0) continue;
@@ -140,4 +143,8 @@ Rules:
 - One %%FILE...%%ENDFILE block per file
 - Do NOT wrap content in markdown code fences inside the blocks
 - Do NOT output any explanation, preamble, or summary outside the blocks
+- If the context contains a "## VERBATIM TICKET SPEC" section: it is the ONLY authoritative spec.
+  Implement EXACTLY those flag names, function names, jq filters, bash patterns, and code snippets.
+  The ## Plan and ## Exact Signatures sections above it may be wrong — the VERBATIM TICKET SPEC wins.
+  Do NOT invent alternative approaches, different flag names, or different function signatures.
 `;

@@ -216,7 +216,16 @@ CRITICAL RULES:
 - "Files to Change" must list existing files by their exact path — never create a new file if the task says to extend an existing one
 - The code generator will output the COMPLETE file content — so every section must describe additions/modifications to the existing code, not replacements
 - EVERY file mentioned in "## Plan" steps MUST also appear in "## Files to Change" — if a file is in the plan but not in Files to Change, the code generator will silently skip it
-- If the task description references a ticket file (e.g. tickets/012-foo.md), its content is in the context above — use its EXACT specifications (API names, parameter names, implementation details) verbatim, do NOT invent alternatives
+
+TICKET SPEC RULE (HIGHEST PRIORITY — read this carefully):
+If the context above contains a ticket file (section "=== FILES EXPLICITLY MENTIONED IN TASK ==="),
+you MUST treat it as the authoritative specification. Follow these steps:
+1. Find the ticket file in the context (it starts with "---" and the full path)
+2. Read its "## Scope" section carefully — it contains the EXACT implementation required
+3. Copy every flag name, function name, bash snippet, and jq filter from "## Scope" VERBATIM into your "## Exact Signatures" section
+4. Your "## Plan" must list the EXACT steps from the ticket's "## Scope", not a summary or reinterpretation
+5. Do NOT invent alternative approaches, different flag names, or different function signatures
+The task description is only a brief summary — the ticket file is the full spec. Ignore the summary if it conflicts with the ticket.
 
 Write the file in this exact format:
 
@@ -269,5 +278,33 @@ fi
 
 # ─── 8. Запись результата ─────────────────────────────────────────────────────
 echo "$RESULT" > "$OUTPUT_FILE"
+
+# ─── 9. Append verbatim ticket spec (prevents planner hallucination) ─────────
+# The planner LLM frequently ignores ticket details and summarizes the task description
+# instead. Appending the raw ticket ensures the coder sees the authoritative spec
+# regardless of what the planner wrote. The coder is instructed to treat this section
+# as the single source of truth (see CODE_GEN_INSTRUCTIONS in FileWriter.ts).
+TICKET_REL=""
+for _rel in $MENTIONED; do
+    case "$_rel" in
+        tickets/*) TICKET_REL="$_rel"; break ;;
+    esac
+done
+
+if [ -n "$TICKET_REL" ]; then
+    TICKET_ABS="$PROJECT_ROOT/$TICKET_REL"
+    if [ -f "$TICKET_ABS" ]; then
+        {
+            printf '\n---\n\n'
+            printf '## VERBATIM TICKET SPEC — authoritative source of truth\n\n'
+            printf '> **CODER**: Implement EXACTLY what is specified below.\n'
+            printf '> Every flag name, function name, jq filter, and code snippet is required verbatim.\n'
+            printf '> This section overrides the ## Plan and ## Exact Signatures above if they conflict.\n\n'
+            cat "$TICKET_ABS"
+        } >> "$OUTPUT_FILE"
+        echo "[plan_task] appended verbatim ticket spec from $TICKET_REL" >&2
+    fi
+fi
+
 echo "[plan_task] wrote $OUTPUT_FILE" >&2
 echo "$OUTPUT_FILE"
