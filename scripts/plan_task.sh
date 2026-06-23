@@ -155,8 +155,8 @@ IS_BASH=$(echo "$TASK_LOWER" | grep -cE '\.sh|bash script|shell script' || true)
 # 5a. Файлы явно упомянутые в задаче (паттерн `src/...` или `scripts/...`) — полный контент
 {
     echo "=== FILES EXPLICITLY MENTIONED IN TASK (full content) ==="
-    # Ищем пути вида src/foo/bar.ts или scripts/foo.sh в тексте задачи
-    MENTIONED=$(echo "$TASK" | grep -oE '`?(src|scripts|agents|commands)/[^` ,)]+`?' \
+    # Ищем пути вида src/foo/bar.ts, tickets/012-foo.md, agents/planner.md и т.д.
+    MENTIONED=$(echo "$TASK" | grep -oE '`?(src|scripts|agents|commands|tickets|plugins|skills|knowledge)/[^` ,):]+`?' \
         | tr -d '`' | sort -u)
     for rel in $MENTIONED; do
         abs="$PROJECT_ROOT/$rel"
@@ -214,6 +214,8 @@ CRITICAL RULES:
 - "Patterns to Follow" must be copy-pasted verbatim from the context files above
 - "Files to Change" must list existing files by their exact path — never create a new file if the task says to extend an existing one
 - The code generator will output the COMPLETE file content — so every section must describe additions/modifications to the existing code, not replacements
+- EVERY file mentioned in "## Plan" steps MUST also appear in "## Files to Change" — if a file is in the plan but not in Files to Change, the code generator will silently skip it
+- If the task description references a ticket file (e.g. tickets/012-foo.md), its content is in the context above — use its EXACT specifications (API names, parameter names, implementation details) verbatim, do NOT invent alternatives
 
 Write the file in this exact format:
 
@@ -251,73 +253,11 @@ Write the file in this exact format:
 Output ONLY the markdown file content. No explanations, no preamble.
 PROMPT_EOF
 
-# ─── 7. Вызов LLM: freellmapi → Claude (Ollama не используется для планнера) ──
-# Находим конфиг для free_api
-CONFIG_FILE="$HOME/.claude/llm-config.json"
-_D="$PROJECT_ROOT"
-while [ "$_D" != "/" ]; do
-    if [ -f "$_D/llm-config.json" ]; then CONFIG_FILE="$_D/llm-config.json"; break; fi
-    _D=$(dirname "$_D")
-done
-unset _D
+# ─── 7. Вызов LLM: Cerebras → Ollama → FreeLLM → Claude ─────────────────────
+OLLAMA_SCRIPT="$PROJECT_ROOT/scripts/call_ollama.sh"
+[ ! -f "$OLLAMA_SCRIPT" ] && OLLAMA_SCRIPT="$HOME/.claude/call_ollama.sh"
 
-FREE_URL=$(jq -r '.free_api_url // empty' "$CONFIG_FILE" 2>/dev/null)
-FREE_URL="${FREE_URL:-http://localhost:3001/v1/chat/completions}"
-FREE_MODEL=$(jq -r '.free_api.planner // "auto"' "$CONFIG_FILE" 2>/dev/null)
-FREE_MODEL="${FREE_MODEL:-auto}"
-
-TMP_FREE_PAYLOAD=$(mktemp)
-jq -n \
-  --arg model "$FREE_MODEL" \
-  --rawfile prompt "$TMP_PROMPT" \
-  --rawfile context "$TMP_CONTEXT" \
-  '{model: $model, max_tokens: 8192,
-    messages: [
-      {role: "system", content: ("You are a senior software architect. Use the codebase context below.\n\n" + $context)},
-      {role: "user", content: $prompt}
-    ]}' > "$TMP_FREE_PAYLOAD"
-
-echo "[plan_task] trying free LLM: $FREE_MODEL via $FREE_URL" >&2
-FREE_RESPONSE=$(curl -s --max-time 180 -X POST "$FREE_URL" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer ${FREELLM_API_KEY:-${FREE_API_KEY:-free}}" \
-  -d @"$TMP_FREE_PAYLOAD")
-rm -f "$TMP_FREE_PAYLOAD"
-
-RESULT=$(echo "$FREE_RESPONSE" | jq -r '.choices[0].message.content // empty' 2>/dev/null)
-
-# Если free LLM не сработал — используем Claude (как раньше)
-if [ -z "$RESULT" ]; then
-    echo "[plan_task] free LLM unavailable — falling back to Claude" >&2
-    FALLBACK_MODEL=$(jq -r '.fallback.planner // "claude-sonnet-4-6"' "$CONFIG_FILE" 2>/dev/null)
-    FALLBACK_MODEL="${FALLBACK_MODEL:-claude-sonnet-4-6}"
-
-    if [ -z "${ANTHROPIC_API_KEY:-}" ]; then
-        echo "[plan_task] ANTHROPIC_API_KEY not set — cannot fall back to Claude" >&2
-        rm -f "$TMP_PROMPT" "$TMP_CONTEXT"
-        exit 1
-    fi
-
-    TMP_CLAUDE_PAYLOAD=$(mktemp)
-    jq -n \
-      --arg model "$FALLBACK_MODEL" \
-      --rawfile prompt "$TMP_PROMPT" \
-      --rawfile context "$TMP_CONTEXT" \
-      '{model: $model, max_tokens: 8192,
-        system: [{type: "text", text: ("You are a senior software architect.\n\n" + $context), cache_control: {type: "ephemeral"}}],
-        messages: [{role: "user", content: $prompt}]}' > "$TMP_CLAUDE_PAYLOAD"
-
-    CLAUDE_RESPONSE=$(curl -s --max-time 180 -X POST https://api.anthropic.com/v1/messages \
-      -H "Content-Type: application/json" \
-      -H "x-api-key: ${ANTHROPIC_API_KEY}" \
-      -H "anthropic-version: 2023-06-01" \
-      -H "anthropic-beta: prompt-caching-2024-07-31" \
-      -d @"$TMP_CLAUDE_PAYLOAD")
-    rm -f "$TMP_CLAUDE_PAYLOAD"
-
-    RESULT=$(echo "$CLAUDE_RESPONSE" | jq -r '.content[0].text // empty' 2>/dev/null)
-    [ -n "$RESULT" ] && echo "[plan_task] Claude used as fallback ($FALLBACK_MODEL)" >&2
-fi
+RESULT=$(bash "$OLLAMA_SCRIPT" --role planner --prompt-file "$TMP_PROMPT" --context-file "$TMP_CONTEXT")
 
 rm -f "$TMP_PROMPT" "$TMP_CONTEXT"
 

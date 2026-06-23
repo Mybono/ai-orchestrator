@@ -76,6 +76,29 @@ export const PLANNER_TOOLS: readonly ToolDefinition[] = [
   {
     type: 'function',
     function: {
+      name: 'graph_query',
+      description:
+        'Search the codebase knowledge graph for functions, classes, and symbols. ' +
+        'Returns signatures and file locations. Much faster than reading files — use this first.',
+      parameters: {
+        type: 'object',
+        properties: {
+          query: {
+            type: 'string',
+            description: 'Natural-language search query (e.g. "goal queue push pending")',
+          },
+          project: {
+            type: 'string',
+            description: 'Project slug as registered in codebase-memory-mcp (usually the repo folder name)',
+          },
+        },
+        required: ['query', 'project'],
+      },
+    },
+  },
+  {
+    type: 'function',
+    function: {
       name: 'write_task_context',
       description: 'Write the completed task_context.md and signal that planning is done. Call this ONCE when the context file is complete.',
       parameters: {
@@ -114,7 +137,7 @@ export class ToolRunner {
   }
 
   /** Execute a tool call and return the result as a string. */
-  execute(call: ToolCall): string {
+  public execute(call: ToolCall): string {
     let args: Record<string, unknown>;
     try {
       args = JSON.parse(call.function.arguments) as Record<string, unknown>;
@@ -129,6 +152,8 @@ export class ToolRunner {
         return this.listDir(String(args['path'] ?? '.'));
       case 'search_files':
         return this.searchFiles(String(args['pattern'] ?? ''), String(args['directory'] ?? 'src'));
+      case 'graph_query':
+        return this.graphQuery(String(args['query'] ?? ''), String(args['project'] ?? ''));
       case 'write_task_context':
         return this.writeTaskContext(String(args['content'] ?? ''));
       case 'decompose_goal':
@@ -252,6 +277,46 @@ export class ToolRunner {
     }
 
     return lines.join('\n\n');
+  }
+
+  private graphQuery(query: string, project: string): string {
+    if (!query.trim() || !project.trim()) {
+      return '[error] graph_query requires query and project';
+    }
+
+    const payload = JSON.stringify({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'tools/call',
+      params: {
+        name: 'search_graph',
+        arguments: { query, project, limit: 20 },
+      },
+    });
+
+    const result = spawnSync(
+      'npx',
+      ['--yes', '@deus-data/codebase-memory-mcp'],
+      {
+        input: payload + '\n',
+        encoding: 'utf8',
+        timeout: 5_000,
+        cwd: this.projectRoot,
+      },
+    );
+
+    if (result.error || result.status !== 0) {
+      return '[graph_query unavailable — codebase-memory-mcp not found or timed out]';
+    }
+
+    try {
+      const parsed = JSON.parse(result.stdout) as {
+        result?: { content?: Array<{ text?: string }> };
+      };
+      return parsed.result?.content?.[0]?.text ?? '[no results]';
+    } catch {
+      return '[graph_query] could not parse MCP response';
+    }
   }
 
   private writeTaskContext(content: string): string {

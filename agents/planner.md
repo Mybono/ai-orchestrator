@@ -73,6 +73,21 @@ ls .claude/context/architect_decision.md 2>/dev/null
 
 **If `project_overview.md` MISSING** — proceed with full Phase 1 exploration as normal.
 
+### Phase 0.5 — Graph-first exploration (run before Glob/Grep)
+
+If `codebase-memory-mcp` is available in the current session, call it FIRST:
+
+1. `search_graph(query: "<task keywords>", project: "<repo name>")` — find relevant functions, classes, and routes by name. Collect their `qualified_name` values.
+2. `get_code_snippet(qualified_name, project)` — read exact source for each hit. This returns a precise line range, not the full file.
+3. `trace_path(function_name, project, direction: "both")` — if the task involves changing a function, trace its callers and callees to understand blast radius.
+
+Only fall back to Glob / Grep / read_file if:
+
+- The graph returns 0 results for all queries, OR
+- The project is not yet indexed (`index_status` returns "not indexed").
+
+Do not re-read files you already have snippets for from the graph.
+
 ### Phase 1 — Explore
 
 1. **Understand the task** — clarify what needs to be built or fixed
