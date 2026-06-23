@@ -20,6 +20,7 @@ to the current `uniq -c` behaviour (dependency on ticket 009).
 
 - `scripts/learn.sh` `process_task_type()` — after extracting `issues_json`, pass the list
   to a new helper `cluster_issues()`:
+
   ```bash
   cluster_issues() {
       # Input:  JSON array of issue strings on stdin
@@ -30,6 +31,7 @@ to the current `uniq -c` behaviour (dependency on ticket 009).
       # Falls back to passing the array through unchanged if call_ollama.sh fails.
   }
   ```
+
 - The clustered list is then piped into the existing `uniq -c | awk -v min=...` chain, so
   semantically equivalent issues count toward the same threshold
 - `cluster_issues()` must be idempotent — calling it twice on the same list returns the same

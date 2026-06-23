@@ -16,6 +16,7 @@ the exit code while still completing their own flow.
 ## Scope
 
 - `scripts/semantic-search.sh` line 47 — replace the hard-fail block:
+
   ```bash
   # before
   if ! curl -s --max-time 2 "$OLLAMA_URL/api/tags" >/dev/null 2>&1; then
@@ -28,6 +29,7 @@ the exit code while still completing their own flow.
       exit 0
   fi
   ```
+
 - `scripts/semantic-search.sh` — likewise guard the `embed_query` curl call: if the
   embedding request fails (empty response), emit a warning and exit 0 instead of letting
   `jq` fail on empty input

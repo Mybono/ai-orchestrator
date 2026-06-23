@@ -25,7 +25,7 @@ This applies to both execution paths:
 Add a **Phase 0.5 — Graph-first exploration** block immediately before Phase 1 Step 3
 ("Explore the codebase"):
 
-```
+```text
 #### Phase 0.5 — Graph-first exploration (run before Glob/Grep)
 
 If `codebase-memory-mcp` is available in the current session, call it FIRST:
@@ -42,7 +42,6 @@ Only fall back to Glob / Grep / read_file if:
 - The project is not yet indexed (index_status returns "not indexed").
 
 Do not re-read files you already have snippets for from the graph.
-```
 
 ### 2. `src/core/ToolRunner.ts` — Local LLM path (code change)
 
@@ -72,14 +71,12 @@ Do not re-read files you already have snippets for from the graph.
     },
   },
 },
-```
 
 **Add case to `execute()` switch:**
 
 ```typescript
 case 'graph_query':
   return this.graphQuery(String(args['query'] ?? ''), String(args['project'] ?? ''));
-```
 
 **Add private method `graphQuery()`:**
 
@@ -123,7 +120,6 @@ private graphQuery(query: string, project: string): string {
     return '[graph_query] could not parse MCP response';
   }
 }
-```
 
 > **Note:** `spawnSync` with `input` writes the JSON-RPC request to stdin and reads the
 > response from stdout. codebase-memory-mcp speaks the MCP stdio transport natively.
@@ -151,3 +147,6 @@ No whitelist change needed.
 - `agents/planner.md` — Phase 0.5 block (prompt-only change)
 - `src/core/ToolRunner.ts` — `PLANNER_TOOLS` entry + `execute()` case + `graphQuery()` method
 - `src/types/index.ts` — no change expected (graph_query uses only primitives)
+
+
+---

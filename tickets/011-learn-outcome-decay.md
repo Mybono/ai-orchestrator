@@ -17,11 +17,14 @@ deleted so history is not lost.
 ## Scope
 
 - `scripts/learn.sh` — add `--since DAYS` flag (default: `90`):
+
   ```bash
   --since)  SINCE_DAYS="$2"; shift 2 ;;
   ```
+
 - `guard_exit_if_no_data()` — count only records within the window
 - `process_task_type()` — update the `jq` filter to include a date guard:
+
   ```bash
   jq --arg t "$task_type" --arg since "$since_epoch" -r '
       select(.task_type == $t)
@@ -29,6 +32,7 @@ deleted so history is not lost.
       | .reviewer_issues[]?
   ' "$OUTCOMES_FILE"
   ```
+
   where `since_epoch` is computed as `date -d "-${SINCE_DAYS} days" +%s` (Linux) /
   `date -v-${SINCE_DAYS}d +%s` (macOS) before the loop
 - Add `--no-decay` flag to restore the current all-time behaviour (useful for initial

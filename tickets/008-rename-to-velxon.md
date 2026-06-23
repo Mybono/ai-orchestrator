@@ -11,22 +11,27 @@ Rename every occurrence of `ai-orchestrator` / `AI Orchestrator` / `ai_orchestra
 ## Scope
 
 ### 1. Repository & directory
+
 - [ ] Rename GitHub repo: `ai-orchestrator` → `velxon`
 - [ ] Rename local directory: `/Users/user/Projects/ai-orchestrator` → `/Users/user/Projects/velxon`
 - [ ] Update git remote URL after repo rename
 
 ### 2. `package.json`
+
 - [ ] `"name": "ai-orchestrator"` → `"velxon"`
 - [ ] `"description"` — replace product name
 - [ ] `"bin"` keys: `"ai-orchestrator"` → `"velxon"`, `"ai-orchestrator-ts"` → `"velxon-ts"`
 
 ### 3. Scripts (`scripts/`)
+
 - [ ] `install.sh` — references to `ai-orchestrator` CLI name
 - [ ] `check-update.sh` — package name check
 - [ ] `stats.sh` — display name
 
 ### 4. Documentation (`*.md`)
+
 Files containing `ai-orchestrator` or `AI Orchestrator`:
+
 - [ ] `README.md`
 - [ ] `CHANGELOG.md`
 - [ ] `CONTRIBUTING.md`
@@ -43,6 +48,7 @@ Files containing `ai-orchestrator` or `AI Orchestrator`:
 - [ ] `agents/commit.md`
 
 ### 5. Config files
+
 - [ ] `mcp-config.json` — any path or name references
 - [ ] `.claude/settings.json` — path references
 - [ ] `.claude/settings.local.json` — path references
@@ -50,15 +56,18 @@ Files containing `ai-orchestrator` or `AI Orchestrator`:
 - [ ] `.claude/context/review_prompt_devops.md`
 
 ### 6. Global CLAUDE.md (`~/.claude/CLAUDE.md`)
+
 - [ ] Update working directory reference from `ai-orchestrator` to `velxon`
 - [ ] Update memory path reference
 
 ### 7. Claude memory
+
 - [ ] Memory is stored at `~/.claude/projects/-Users-user-Projects-ai-orchestrator/`
 - [ ] After directory rename, Claude will auto-create a new memory dir at `-Users-user-Projects-velxon/`
 - [ ] Manually copy memory files to new path OR symlink old path → new path
 
 ### 8. SVG / visual assets
+
 - [ ] `ai_orchestrator_pipeline.svg` — rename file, update any title text inside
 
 ## Acceptance criteria

@@ -76,7 +76,7 @@ Also as a pre-commit hook: runs only on staged `agents/`, `skills/`, `scripts/` 
 
 ### Output
 
-```
+```text
 knowledge/safety-audits/
   2026-06-22.md
   2026-06-29.md

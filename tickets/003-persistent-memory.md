@@ -3,6 +3,7 @@
 ## Problem
 
 Every goal starts from zero. The agent does not remember:
+
 - Which patterns caused reviewer failures in the past
 - Project-specific constraints discovered during previous tasks
 - Which LLM candidates were slow or unreliable
@@ -13,6 +14,7 @@ not learned behavior rules.
 ## Goal
 
 After each completed or failed goal, the agent updates a persistent memory store with:
+
 - What worked / what the reviewer rejected and why
 - New constraints discovered (e.g. "never mock the DB in this project")
 - LLM candidate performance metrics

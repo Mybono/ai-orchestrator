@@ -3,6 +3,7 @@
 ## Problem
 
 Папка `.claude/context/` содержит два принципиально разных типа файлов:
+
 - **временные** — создаются на каждый таск и могут быть удалены без потерь
 - **постоянные** — накапливают знания между тасками; удаление ломает planner, reviewer и pipeline
 
@@ -26,45 +27,57 @@
 ## Scope
 
 ### 1. Переместить файлы
+
 - [ ] Переместить существующие файлы из `.claude/context/` → `knowledge/`
 - [ ] Обновить `.gitignore` / `.clineignore` если нужно (временный контекст не должен коммититься, knowledge — должен)
 
 ### 2. `scripts/plan_task.sh`
+
 - [ ] `OVERVIEW="$PROJECT_ROOT/.claude/context/project_overview.md"` → `"$PROJECT_ROOT/knowledge/project_overview.md"`
 
 ### 3. `scripts/research-oss.sh`
+
 - [ ] `PROJECT_OVERVIEW="$REPO_DIR/.claude/context/project_overview.md"` → `"$REPO_DIR/knowledge/project_overview.md"`
 
 ### 4. `scripts/analyze_project.sh`
+
 - [ ] `DELTA_FILE="$CONTEXT_DIR/analysis_delta.md"` → писать в `$REPO_DIR/knowledge/analysis_delta.md`
 
 ### 5. `agents/planner.md`
+
 - [ ] Обновить все `ls .claude/context/project_overview.md` → `knowledge/project_overview.md`
 - [ ] Обновить `analysis_delta.md` → `knowledge/analysis_delta.md`
 - [ ] Обновить фразу "After writing task_context.md, update `.claude/context/project_overview.md`"
 
 ### 6. `plugins/orchestrator/commands/triage.md`
+
 - [ ] `ls .claude/context/project_overview.md` → `knowledge/project_overview.md`
 
 ### 7. `plugins/orchestrator/commands/implement.md`
+
 - [ ] `.claude/context/triage_ts.md` → `knowledge/triage_ts.md` (2 строки)
 
 ### 8. `src/agents/TriageAgent.ts`
+
 - [ ] Строка 426: путь записи `triage_ts.md` → `knowledge/triage_ts.md`
 - [ ] Проверить `contextDir` откуда берётся — возможно нужно поменять переменную
 
 ### 9. `src/core/Orchestrator.ts`
+
 - [ ] Строка 142: `join(this.contextDir, 'review_instructions.md')` → `join(this.repoDir, 'knowledge', 'review_instructions.md')` (или ввести `knowledgeDir`)
 
 ### 10. `documentation/AGENTS.md`
+
 - [ ] Обновить упоминания `.claude/context/project_overview.md` → `knowledge/project_overview.md`
 
 ### 11. `commands/learn.md` (если ссылается на `review_learn_*.md`)
+
 - [ ] Проверить и обновить пути
 
 ## Временные файлы (остаются в `.claude/context/`)
 
 Для ориентира — эти файлы НЕ трогаем:
+
 - `task_context_<domain>.md`
 - `task_context_augmented_<domain>.md`
 - `codegen_instructions.md`
