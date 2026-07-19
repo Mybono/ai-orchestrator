@@ -411,8 +411,11 @@ export class Orchestrator {
         } catch { /* ignore */ }
       }
 
-      // Extract reviewer issues (bullet points from review output, comma-separated)
-      const issues = reviewOutput
+      // Extract reviewer issues (bullet points from the ISSUES section only —
+      // not FILES REVIEWED or SUMMARY, which also use bullet/plain lines)
+      const issuesSectionMatch = /ISSUES\s*\(if any\):?\s*\n([\s\S]*?)(?:\n[A-Z][A-Z \t]*:|$)/.exec(reviewOutput);
+      const issuesSection = issuesSectionMatch?.[1] ?? '';
+      const issues = issuesSection
         .split('\n')
         .filter(l => /^[-*]\s+.{10,}/.test(l))
         .slice(0, 5)

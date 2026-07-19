@@ -55,6 +55,7 @@ jq -cn \
     --arg  task             "$TASK" \
     --arg  task_type        "$TASK_TYPE" \
     --argjson files_changed "$FILES_COUNT" \
+    --argjson files         "$(echo "$FILES" | jq -R 'split(" ") | map(select(length > 0))')" \
     --arg  verdict          "$VERDICT" \
     --arg  model            "$MODEL" \
     --arg  reviewer_issues  "$REVIEWER_ISSUES" \
@@ -64,6 +65,7 @@ jq -cn \
         task:            $task,
         task_type:       $task_type,
         files_changed:   $files_changed,
+        files:           $files,
         verdict:         $verdict,
         model:           $model,
         reviewer_issues: (if ($reviewer_issues | test("^\\s*$")) then [] else ($reviewer_issues | split(",") | map(ltrimstr(" ") | rtrimstr(" "))) end),
