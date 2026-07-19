@@ -272,7 +272,7 @@ wc -c .claude/context/task_context.md
    #   def process(self, config: BarConfig) -> BarResult: ...
    ```
 
-2. **If still too large** — split into multiple context files. Create `task_context_1.md`, `task_context_2.md`, etc., each covering a subset of the files to change. At the top of each file add:
+1. **If still too large** — split into multiple context files. Create `task_context_1.md`, `task_context_2.md`, etc., each covering a subset of the files to change. At the top of each file add:
 
    ```markdown
    # Task Context — Part N of M
@@ -294,16 +294,17 @@ wc -c .claude/context/task_context.md
 
 - skills/humanizer.md
 
-
 ---
 
 Based on the context above, follow these instructions:
 You are a markdown expert. Fix the reported markdownlint errors in the file provided in context.
 
 Common fixes required:
+
 - MD040: Fenced code blocks must have a language specifier. Add an appropriate language (e.g. bash, json, text, typescript, python, yaml, sh) after the opening fence. Use 'text' for plain output/examples with no programming language.
 
 CRITICAL RULES:
+
 - Return the FULL corrected file content with ALL fixes applied.
 - Preserve ALL existing content, structure, code blocks, and formatting exactly.
 - Do NOT add, remove, or reword any content beyond what is required to fix the lint errors.
